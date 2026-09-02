@@ -15,7 +15,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach($foto as $item)
                     <div class="group relative aspect-square rounded-xl overflow-hidden bg-slate-100">
-                        <img src="{{ asset('storage/'.$item->percorso) }}" alt="{{ $item->didascalia }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('uploads/'.$item->percorso) }}" alt="{{ $item->didascalia }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300">
                         @if($item->attivita)
                             <a href="{{ route('attivita.show', $item->attivita->slug) }}" class="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition">
                                 <span class="p-3 text-xs font-semibold text-white">{{ $item->attivita->titolo }}</span>

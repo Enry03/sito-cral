@@ -51,7 +51,7 @@
                     <a href="{{ route('attivita.show', $attivita->slug) }}" class="group block rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition overflow-hidden">
                         <div class="aspect-[16/10] bg-gradient-to-br from-orange-100 to-amber-50 flex items-center justify-center">
                             @if($attivita->immagine_copertina)
-                                <img src="{{ asset('storage/'.$attivita->immagine_copertina) }}" alt="{{ $attivita->titolo }}" class="h-full w-full object-cover">
+                                <img src="{{ asset('uploads/'.$attivita->immagine_copertina) }}" alt="{{ $attivita->titolo }}" class="h-full w-full object-cover">
                             @else
                                 <svg class="h-12 w-12 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M4 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                             @endif
@@ -89,7 +89,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     @foreach($fotoRecenti as $foto)
                         <div class="aspect-square rounded-xl overflow-hidden bg-slate-200">
-                            <img src="{{ asset('storage/'.$foto->percorso) }}" alt="{{ $foto->didascalia }}" class="h-full w-full object-cover hover:scale-105 transition duration-300">
+                            <img src="{{ asset('uploads/'.$foto->percorso) }}" alt="{{ $foto->didascalia }}" class="h-full w-full object-cover hover:scale-105 transition duration-300">
                         </div>
                     @endforeach
                 </div>

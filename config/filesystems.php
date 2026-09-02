@@ -40,8 +40,8 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'root' => public_path('uploads'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/uploads',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -73,8 +73,8 @@ return [
     |
     */
 
-    'links' => [
-        public_path('storage') => storage_path('app/public'),
-    ],
+    // Nessun symlink storage:link necessario: il disco "public" scrive
+    // direttamente in public/uploads, compatibile con hosting solo-FTP.
+    'links' => [],
 
 ];
