@@ -24,3 +24,4 @@ Homestead.yaml
 Thumbs.db
 /build-tmp
 /deploy
+/deploy-update

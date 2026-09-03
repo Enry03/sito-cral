@@ -1,7 +1,7 @@
 <x-public-layout title="Attività - CRAL">
     <section class="bg-cral-navy text-white border-b-4 border-cral-red">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-            <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-white/60">/// Manifesto attività</span>
+            <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-white/60">Manifesto attività</span>
             <h1 class="mt-3 font-display uppercase text-4xl sm:text-5xl tracking-wide">Attività</h1>
             <p class="mt-3 text-white/75 max-w-xl">Tutte le iniziative organizzate dal CRAL per i soci.</p>
         </div>

@@ -5,7 +5,7 @@
 
             <div class="lg:col-span-3">
                 <span class="inline-flex items-center gap-2 font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">
-                    /// L'associazione del dopolavoro aziendale
+                    Chi dice che dopo il lavoro devi per forza tornare a casa?
                 </span>
                 <h1 class="mt-5 font-display uppercase text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-wide">
                     Attività, eventi e vantaggi per tutti i colleghi
@@ -28,7 +28,7 @@
             <div class="lg:col-span-2">
                 <div class="border-2 border-cral-navy bg-white">
                     <div class="flex items-center justify-between px-5 py-3 border-b-2 border-cral-navy">
-                        <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">/// Prossime attività</span>
+                        <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">Prossime attività</span>
                         <span class="font-grotesk text-[10px] font-bold tracking-widest uppercase text-cral-navy-soft">Manifesto</span>
                     </div>
 
@@ -97,7 +97,7 @@
             </div>
         </div>
         <div class="lg:col-span-3 order-1 lg:order-2">
-            <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">/// La tua tessera</span>
+            <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">La tua tessera</span>
             <h2 class="mt-3 font-display uppercase text-4xl sm:text-5xl leading-[0.95] tracking-wide">Una tessera vera, non una semplice mail</h2>
             <p class="mt-5 text-cral-navy-soft leading-relaxed max-w-lg">
                 Quando ti iscrivi, la richiesta viene esaminata da un amministratore. Una volta approvata, ricevi
@@ -116,7 +116,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-end justify-between mb-10">
                     <div>
-                        <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">/// Dalla galleria</span>
+                        <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">Dalla galleria</span>
                         <h2 class="mt-3 font-display uppercase text-3xl sm:text-4xl tracking-wide">Un assaggio delle nostre attività</h2>
                     </div>
                     <a href="{{ route('foto.index') }}" class="hidden sm:inline-flex text-xs font-bold tracking-[0.15em] uppercase hover:text-cral-red transition">

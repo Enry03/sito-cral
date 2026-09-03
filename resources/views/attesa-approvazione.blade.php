@@ -13,9 +13,7 @@
 
     <div class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
         <div class="w-full max-w-md border-2 border-cral-navy bg-white stack-shadow p-8 sm:p-10">
-            <span class="flex h-14 w-14 mx-auto items-center justify-center bg-cral-navy text-white font-display text-lg tracking-wide ring-2 ring-cral-red ring-offset-2 ring-offset-white">
-                CR
-            </span>
+            <img src="{{ asset('images/logo-cral.png') }}" alt="CRAL" class="h-16 w-16 object-contain mx-auto">
 
             <span class="mt-6 inline-block bg-cral-red text-white text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5">
                 Richiesta in attesa

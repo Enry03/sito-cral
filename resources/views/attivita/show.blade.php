@@ -35,7 +35,7 @@
 
         @if($attivita->foto->isNotEmpty())
             <div class="mt-14">
-                <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">/// Foto dell'evento</span>
+                <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">Foto dell'evento</span>
                 <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-4">
                     @foreach($attivita->foto as $foto)
                         <div class="aspect-square border-2 border-cral-navy overflow-hidden">

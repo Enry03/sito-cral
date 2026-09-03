@@ -13,16 +13,12 @@
 
     <div class="min-h-screen flex flex-col items-center py-10 px-4">
         <a href="{{ route('home') }}" class="flex items-center gap-3 mb-8">
-            <span class="flex h-11 w-11 items-center justify-center bg-cral-navy text-white font-display text-xl tracking-wide ring-2 ring-cral-red ring-offset-2 ring-offset-cral-cream">CR</span>
-            <span class="leading-none">
-                <span class="block font-display text-2xl tracking-wide">CRAL</span>
-                <span class="block text-[10px] font-semibold tracking-[0.2em] text-cral-navy-soft uppercase -mt-0.5">Associazione dopolavoro</span>
-            </span>
+            <img src="{{ asset('images/logo-cral.png') }}" alt="CRAL" class="h-16 w-16 object-contain">
         </a>
 
         <div class="w-full max-w-2xl border-2 border-cral-navy bg-white stack-shadow">
             <div class="flex items-center justify-between px-8 py-4 border-b-2 border-cral-navy bg-cral-navy text-white">
-                <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase">/// Modulo di iscrizione</span>
+                <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase">Modulo di iscrizione</span>
                 <span class="font-grotesk text-[10px] font-bold tracking-widest uppercase text-white/60">Nuovo socio</span>
             </div>
 

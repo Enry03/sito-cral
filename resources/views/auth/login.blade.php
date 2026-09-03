@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="flex items-center justify-between pb-5 mb-6 border-b-2 border-dashed border-cral-navy/30">
-        <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">/// Accesso soci</span>
+        <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red">Accesso soci</span>
     </div>
 
     <h1 class="font-display uppercase text-3xl tracking-wide mb-6">Accedi</h1>

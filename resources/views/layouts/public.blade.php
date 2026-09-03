@@ -37,13 +37,8 @@ and product clarity.
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
-                        <span class="flex h-11 w-11 items-center justify-center bg-cral-navy text-white font-display text-xl tracking-wide ring-2 ring-cral-red ring-offset-2 ring-offset-cral-cream">
-                            CR
-                        </span>
-                        <span class="leading-none">
-                            <span class="block font-display text-2xl tracking-wide">CRAL</span>
-                            <span class="block text-[10px] font-semibold tracking-[0.2em] text-cral-navy-soft uppercase -mt-0.5">Associazione dopolavoro</span>
-                        </span>
+                        <img src="{{ asset('images/logo-cral.png') }}" alt="CRAL" class="h-14 w-14 object-contain">
+                        <span class="hidden sm:block text-[10px] font-semibold tracking-[0.2em] text-cral-navy-soft uppercase leading-snug max-w-[9rem]">{{ $headerTagline ?? 'Il dopolavoro che ti aspetti diverso' }}</span>
                     </a>
 
                     <nav class="hidden md:flex items-center gap-1 text-xs font-bold tracking-[0.15em] uppercase">
@@ -106,14 +101,11 @@ and product clarity.
         <footer class="bg-cral-navy text-white border-t-4 border-cral-red mt-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="flex h-9 w-9 items-center justify-center bg-white text-cral-navy font-display text-base">CR</span>
-                        <span class="font-display text-xl tracking-wide">CRAL</span>
-                    </div>
-                    <p class="text-sm text-white/70 leading-relaxed">L'associazione del dopolavoro aziendale: attività, eventi e vantaggi per tutti i soci.</p>
+                    <img src="{{ asset('images/logo-cral.png') }}" alt="CRAL" class="h-14 w-14 object-contain mb-4 bg-white p-1">
+                    <p class="text-sm text-white/70 leading-relaxed">Il luogo di lavoro può essere molto divertente e stimolante: scopri cosa organizza il CRAL per i colleghi.</p>
                 </div>
                 <div>
-                    <h3 class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red mb-4">/// Esplora</h3>
+                    <h3 class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red mb-4">Esplora</h3>
                     <ul class="space-y-2.5 text-sm text-white/80">
                         <li><a href="{{ route('attivita.index') }}" class="hover:text-white transition">Attività</a></li>
                         <li><a href="{{ route('foto.index') }}" class="hover:text-white transition">Foto</a></li>
@@ -121,15 +113,15 @@ and product clarity.
                     </ul>
                 </div>
                 <div>
-                    <h3 class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red mb-4">/// Soci</h3>
+                    <h3 class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red mb-4">Soci</h3>
                     <ul class="space-y-2.5 text-sm text-white/80">
                         <li><a href="{{ route('login') }}" class="hover:text-white transition">Accedi</a></li>
                         <li><a href="{{ route('dashboard') }}" class="hover:text-white transition">Area riservata</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red mb-4">/// Contatti</h3>
-                    <p class="text-sm text-white/80">info@[dominio-associazione].it</p>
+                    <h3 class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-cral-red mb-4">Contatti</h3>
+                    <p class="text-sm text-white/80"><a href="mailto:info@cralchietildo.it" class="hover:text-white transition">info@cralchietildo.it</a></p>
                 </div>
             </div>
             <div class="border-t border-white/15">

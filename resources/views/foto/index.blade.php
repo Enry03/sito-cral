@@ -1,7 +1,7 @@
 <x-public-layout title="Foto - CRAL">
     <section class="bg-cral-navy text-white border-b-4 border-cral-red">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-            <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-white/60">/// Album fotografico</span>
+            <span class="font-grotesk text-xs font-bold tracking-[0.2em] uppercase text-white/60">Album fotografico</span>
             <h1 class="mt-3 font-display uppercase text-4xl sm:text-5xl tracking-wide">Galleria foto</h1>
             <p class="mt-3 text-white/75 max-w-xl">I momenti più belli delle nostre attività.</p>
         </div>
