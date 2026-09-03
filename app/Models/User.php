@@ -62,6 +62,24 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (User $user) {
+            if ($user->isDirty('stato_iscrizione') && $user->stato_iscrizione === 'attivo' && empty($user->numero_tessera)) {
+                $lastNumber = static::whereNotNull('numero_tessera')
+                    ->pluck('numero_tessera')
+                    ->map(fn ($value) => preg_match('/^CRAL-(\d+)$/', $value, $m) ? (int) $m[1] : 0)
+                    ->max();
+
+                $user->numero_tessera = 'CRAL-'.str_pad(((int) $lastNumber) + 1, 4, '0', STR_PAD_LEFT);
+
+                if (empty($user->data_iscrizione)) {
+                    $user->data_iscrizione = now();
+                }
+            }
+        });
+    }
+
     public function isAdmin(): bool
     {
         return $this->ruolo === 'admin';

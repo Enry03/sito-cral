@@ -63,7 +63,10 @@ class UserResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('numero_tessera')
                             ->label('Numero tessera')
-                            ->maxLength(255),
+                            ->helperText('Generato automaticamente quando lo stato passa ad "Attivo".')
+                            ->maxLength(255)
+                            ->disabled()
+                            ->dehydrated(),
                         Forms\Components\Select::make('ruolo')
                             ->options([
                                 'socio' => 'Socio',
