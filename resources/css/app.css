@@ -5,3 +5,81 @@
 [x-cloak] {
     display: none !important;
 }
+
+/*
+ * Ticket/coupon-book motifs used only on the public marketing pages
+ * (home, attivita, foto, iscriviti, login). The private member area and
+ * admin panel intentionally do not use these.
+ */
+@layer components {
+    /* Punch-hole notches on the left/right edge of a ticket card.
+       Set --notch-bg to whatever sits behind the card (page cream,
+       white section, etc.) so the "holes" read as true cutouts. */
+    .ticket-card {
+        --notch-bg: theme('colors.cral.cream');
+        position: relative;
+    }
+
+    .ticket-card::before,
+    .ticket-card::after {
+        content: '';
+        position: absolute;
+        width: 1.25rem;
+        height: 1.25rem;
+        background: var(--notch-bg);
+        border: 2px solid theme('colors.cral.navy');
+        border-radius: 9999px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .ticket-card::before {
+        left: -0.7rem;
+    }
+
+    .ticket-card::after {
+        right: -0.7rem;
+    }
+
+    .ticket-card--no-notch::before,
+    .ticket-card--no-notch::after {
+        content: none;
+    }
+
+    /* Dashed tear line, used where a coupon perforates. */
+    .tear-line {
+        background-image: repeating-linear-gradient(
+            to right,
+            theme('colors.cral.navy') 0,
+            theme('colors.cral.navy') 6px,
+            transparent 6px,
+            transparent 12px
+        );
+        height: 2px;
+    }
+
+    .tear-line-v {
+        background-image: repeating-linear-gradient(
+            to bottom,
+            theme('colors.cral.navy') 0,
+            theme('colors.cral.navy') 6px,
+            transparent 6px,
+            transparent 12px
+        );
+        width: 2px;
+    }
+
+    /* Hard offset "stacked paper" shadow instead of a soft blur. */
+    .stack-shadow {
+        box-shadow: 6px 6px 0 0 theme('colors.cral.navy');
+    }
+
+    .stack-shadow-sm {
+        box-shadow: 4px 4px 0 0 theme('colors.cral.navy');
+    }
+
+    .stack-shadow-red {
+        box-shadow: 6px 6px 0 0 theme('colors.cral.red');
+    }
+}

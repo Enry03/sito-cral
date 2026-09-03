@@ -13,6 +13,19 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                // Public-site-only voices (ticket/coupon world) — never used
+                // in the private area or admin, which keep Figtree.
+                display: ['Anton', ...defaultTheme.fontFamily.sans],
+                grotesk: ['Archivo', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                cral: {
+                    red: '#E4002B',
+                    navy: '#14213D',
+                    'navy-soft': '#4A5878',
+                    cream: '#F5F2EA',
+                    paper: '#FFFDF9',
+                },
             },
         },
     },
