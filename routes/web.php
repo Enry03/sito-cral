@@ -18,6 +18,10 @@ Route::get('/foto', [FotoController::class, 'index'])->name('foto.index');
 
 Route::get('/tessera/{numeroTessera}', [TesseraVerificaController::class, 'show'])->name('tessera.verifica');
 
+Route::get('/privacy-policy', function () {
+    return view('privacy');
+})->name('privacy');
+
 Route::get('/attesa-approvazione', function () {
     return view('attesa-approvazione');
 })->middleware('auth')->name('attesa-approvazione');

@@ -44,6 +44,7 @@ class AttivitaResource extends Resource
                 Forms\Components\FileUpload::make('immagine_copertina')
                     ->label('Immagine di copertina')
                     ->image()
+                    ->maxSize(5120)
                     ->directory('attivita')
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('pubblicata')

@@ -1,0 +1,15 @@
+# Questa cartella riceve file caricati dagli utenti (foto, documenti).
+# Anche se i tipi di file sono già filtrati dal pannello admin, blocchiamo
+# comunque qui l'esecuzione di qualsiasi script: se qualcuno riuscisse a
+# caricare un file .php camuffato da immagine/documento, non potrebbe
+# comunque essere eseguito dal server.
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|pht|phar|cgi|pl|py|sh|exe)$">
+    Require all denied
+</FilesMatch>
+
+Options -Indexes -ExecCGI

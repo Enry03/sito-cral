@@ -23,8 +23,7 @@
 
         <div>
             <label for="password" class="block font-grotesk text-[10px] font-bold tracking-[0.2em] uppercase text-cral-navy-soft mb-1.5">Password</label>
-            <input id="password" type="password" name="password" required autocomplete="current-password"
-                class="block w-full border-2 border-cral-navy px-4 py-3 font-grotesk font-semibold focus:outline-none focus:ring-2 focus:ring-cral-red focus:border-cral-red">
+            <x-password-input ticket name="password" required autocomplete="current-password" />
             @error('password') <p class="mt-1.5 text-xs font-semibold text-cral-red">{{ $message }}</p> @enderror
         </div>
 

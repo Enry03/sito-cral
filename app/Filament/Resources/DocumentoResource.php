@@ -38,6 +38,16 @@ class DocumentoResource extends Resource
                 Forms\Components\FileUpload::make('percorso')
                     ->label('File')
                     ->directory('documenti')
+                    ->acceptedFileTypes([
+                        'application/pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/vnd.ms-excel',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        'image/jpeg',
+                        'image/png',
+                    ])
+                    ->maxSize(10240)
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\Hidden::make('caricato_da')

@@ -41,6 +41,9 @@ class RegisteredUserController extends Controller
             'codice_fiscale' => ['required', 'string', 'max:16'],
             'indirizzo' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'privacy' => ['accepted'],
+        ], [
+            'privacy.accepted' => 'Devi accettare l\'informativa sulla privacy per iscriverti.',
         ]);
 
         $user = User::create([

@@ -47,7 +47,6 @@ and product clarity.
                                 ['href' => route('home'), 'label' => 'Home', 'active' => request()->routeIs('home')],
                                 ['href' => route('attivita.index'), 'label' => 'Attività', 'active' => request()->routeIs('attivita.*')],
                                 ['href' => route('foto.index'), 'label' => 'Foto', 'active' => request()->routeIs('foto.*')],
-                                ['href' => route('register'), 'label' => 'Iscriviti', 'active' => request()->routeIs('register')],
                             ];
                         @endphp
                         @foreach($navItems as $item)
@@ -98,10 +97,10 @@ and product clarity.
             {{ $slot }}
         </main>
 
-        <footer class="bg-cral-navy text-white border-t-4 border-cral-red mt-24">
+        <footer class="bg-cral-navy text-white border-t-4 border-cral-red">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                    <img src="{{ asset('images/logo-cral.png') }}" alt="CRAL" class="h-14 w-14 object-contain mb-4 bg-white p-1">
+                    <img src="{{ asset('images/logo-cral-white.png') }}" alt="CRAL" class="h-16 w-16 object-contain mb-4">
                     <p class="text-sm text-white/70 leading-relaxed">Il luogo di lavoro può essere molto divertente e stimolante: scopri cosa organizza il CRAL per i colleghi.</p>
                 </div>
                 <div>
@@ -125,8 +124,9 @@ and product clarity.
                 </div>
             </div>
             <div class="border-t border-white/15">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 text-[11px] tracking-widest uppercase text-white/50">
-                    &copy; {{ date('Y') }} CRAL — Tutti i diritti riservati
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-3 text-[11px] tracking-widest uppercase text-white/50">
+                    <span>&copy; {{ date('Y') }} CRAL — Tutti i diritti riservati</span>
+                    <a href="{{ route('privacy') }}" class="hover:text-white transition">Privacy Policy</a>
                 </div>
             </div>
         </footer>

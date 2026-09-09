@@ -79,19 +79,29 @@
                     <div class="grid sm:grid-cols-2 gap-5">
                         <div>
                             <label for="password" class="block font-grotesk text-[10px] font-bold tracking-[0.2em] uppercase text-cral-navy-soft mb-1.5">Password</label>
-                            <input id="password" type="password" name="password" required autocomplete="new-password"
-                                class="block w-full border-2 border-cral-navy px-4 py-3 font-grotesk font-semibold focus:outline-none focus:ring-2 focus:ring-cral-red focus:border-cral-red">
+                            <x-password-input ticket name="password" required autocomplete="new-password" />
+                            <p class="mt-1.5 text-xs text-cral-navy-soft">Almeno 10 caratteri, con maiuscole, minuscole e numeri.</p>
                             @error('password') <p class="mt-1.5 text-xs font-semibold text-cral-red">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="password_confirmation" class="block font-grotesk text-[10px] font-bold tracking-[0.2em] uppercase text-cral-navy-soft mb-1.5">Conferma password</label>
-                            <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"
-                                class="block w-full border-2 border-cral-navy px-4 py-3 font-grotesk font-semibold focus:outline-none focus:ring-2 focus:ring-cral-red focus:border-cral-red">
+                            <x-password-input ticket name="password_confirmation" required autocomplete="new-password" />
                             @error('password_confirmation') <p class="mt-1.5 text-xs font-semibold text-cral-red">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
-                    <div class="border-t-2 border-dashed border-cral-navy/30 pt-6 flex items-center justify-between gap-4">
+                    <div class="border-t-2 border-dashed border-cral-navy/30 pt-6">
+                        <label class="flex items-start gap-3 text-sm">
+                            <input type="checkbox" name="privacy" value="1" required
+                                class="mt-0.5 border-2 border-cral-navy text-cral-red focus:ring-cral-red rounded-none">
+                            <span class="text-cral-navy-soft">
+                                Ho letto e accetto l'<a href="{{ route('privacy') }}" target="_blank" class="font-bold text-cral-navy hover:text-cral-red underline">informativa sulla privacy</a> e acconsento al trattamento dei miei dati personali per la gestione dell'iscrizione al CRAL.
+                            </span>
+                        </label>
+                        @error('privacy') <p class="mt-1.5 text-xs font-semibold text-cral-red">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="pt-2 flex items-center justify-between gap-4">
                         <a class="text-xs font-bold tracking-widest uppercase text-cral-navy-soft hover:text-cral-red transition" href="{{ route('login') }}">
                             Hai già un account?
                         </a>

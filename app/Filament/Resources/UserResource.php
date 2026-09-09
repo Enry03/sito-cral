@@ -55,6 +55,7 @@ class UserResource extends Resource
                         Forms\Components\FileUpload::make('foto_profilo')
                             ->label('Foto tessera')
                             ->image()
+                            ->maxSize(5120)
                             ->directory('soci')
                             ->columnSpanFull(),
                     ]),

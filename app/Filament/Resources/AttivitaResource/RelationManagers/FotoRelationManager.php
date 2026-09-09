@@ -21,6 +21,7 @@ class FotoRelationManager extends RelationManager
                 Forms\Components\FileUpload::make('percorso')
                     ->label('Immagine')
                     ->image()
+                    ->maxSize(5120)
                     ->directory('galleria')
                     ->required()
                     ->columnSpanFull(),
