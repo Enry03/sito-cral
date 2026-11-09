@@ -79,7 +79,7 @@ class ListFotos extends ListRecords
                         ->columnSpanFull(),
                     FotoUpload::make('percorso')
                         ->label('Nuove immagini')
-                        ->helperText('Verrà creata una foto per ciascuna immagine, tutte in questo album. Chi non è socio con tessera vede solo le prime due.')
+                        ->helperText('Verrà creata una foto per ciascuna immagine, tutte in questo album. Le vede solo chi è iscritto al sito o socio CRAL.')
                         ->multiple()
                         ->columnSpanFull(),
                     FotoArchivio::scelta('foto_archivio')

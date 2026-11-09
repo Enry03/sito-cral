@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\DatiAzienda;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -175,7 +176,7 @@ class User extends Authenticatable implements FilamentUser
 
     public static function quotaTessera(): float
     {
-        return (float) config('cral.quota_tessera');
+        return app(DatiAzienda::class)->quotaTessera();
     }
 
     /**
@@ -186,15 +187,51 @@ class User extends Authenticatable implements FilamentUser
     public static function metodiPagamento(): array
     {
         return [
-            'contanti' => 'Paga in contanti in azienda',
-            'email' => 'Contattaci per email',
+            'contanti' => 'Paga in azienda in contanti',
+            'bonifico' => 'Paga tramite bonifico',
             'paypal' => 'Paga con PayPal',
         ];
     }
 
     public static function paypalAttivo(): bool
     {
-        return filled(config('cral.paypal.email')) && self::quotaTessera() > 0;
+        return filled(app(DatiAzienda::class)->paypalEmail()) && self::quotaTessera() > 0;
+    }
+
+    /**
+     * Il bonifico si può scegliere solo quando l'amministratore ha inserito i dati
+     * del conto (pannello → Dati dell'azienda): altrimenti non ci sarebbe nulla da mostrare.
+     */
+    public static function bonificoAttivo(): bool
+    {
+        return app(DatiAzienda::class)->bonificoAttivo();
+    }
+
+    /**
+     * Modi di pagamento che si possono scegliere adesso.
+     *
+     * @return array<int, string>
+     */
+    public static function metodiAmmessi(): array
+    {
+        return array_values(array_filter(
+            array_keys(self::metodiPagamento()),
+            fn (string $metodo) => match ($metodo) {
+                'bonifico' => self::bonificoAttivo(),
+                'paypal' => self::paypalAttivo(),
+                default => true,
+            },
+        ));
+    }
+
+    /**
+     * Foto e album sono per chi ha un account approvato (iscritti al sito, soci
+     * CRAL e amministratori). Gli ospiti, e chi è ancora in attesa di approvazione,
+     * vedono solo anteprime sfocate.
+     */
+    public function puoVedereFoto(): bool
+    {
+        return $this->haAccessoSito();
     }
 
     public function metodoPagamentoLabel(): ?string
@@ -230,7 +267,7 @@ class User extends Authenticatable implements FilamentUser
             'action' => "https://{$host}/cgi-bin/webscr",
             'campi' => [
                 'cmd' => '_xclick',
-                'business' => (string) config('cral.paypal.email'),
+                'business' => (string) app(DatiAzienda::class)->paypalEmail(),
                 'item_name' => 'CRAL - Quota tessera socio',
                 'amount' => number_format(self::quotaTessera(), 2, '.', ''),
                 'currency_code' => (string) config('cral.paypal.valuta'),

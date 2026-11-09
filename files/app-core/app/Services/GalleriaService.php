@@ -15,9 +15,12 @@ class GalleriaService
      *
      * - scegliendo un album esistente dell'attività, le foto vanno lì;
      * - con più di una foto l'album si crea da solo (o si usa quello già
-     *   esistente dell'attività) e le foto sono riservate ai soci oltre le prime due;
-     * - con una sola foto resta una foto singola, visibile a tutti, a meno che
-     *   l'amministratore non chieda esplicitamente di creare/usare un album.
+     *   esistente dell'attività);
+     * - con una sola foto resta una foto singola, a meno che l'amministratore
+     *   non chieda esplicitamente di creare/usare un album.
+     *
+     * Album e foto singole le vede solo chi ha un account approvato (vedi
+     * FotoController): gli altri vedono anteprime sfocate.
      *
      * @param  array<int, string>|string|null  $percorsi
      * @return array{foto: int, album: ?Album}

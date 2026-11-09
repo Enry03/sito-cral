@@ -2,14 +2,6 @@
     $tipo = old('tipo', request('tipo') === 'iscritto' ? 'iscritto' : 'socio');
     $metodo = old('metodo_pagamento');
     $quota = \App\Models\User::quotaTessera();
-    $paypalAttivo = \App\Models\User::paypalAttivo();
-    $contatto = config('mail.admin_address');
-
-    $metodi = [
-        'contanti' => ['Paga in contanti in azienda', 'Porti la quota a un amministratore del CRAL.'],
-        'email' => ['Contattaci per email', 'Ci scrivi e ti spieghiamo come procedere.'],
-        'paypal' => ['Paga con PayPal', $paypalAttivo ? 'Dopo l\'invio della richiesta trovi il pulsante per pagare.' : 'Presto disponibile.'],
-    ];
 @endphp
 
 <x-guest-layout title="Iscriviti — CRAL" :wide="true">
@@ -36,7 +28,7 @@
                             <span class="font-display text-lg font-bold tracking-tight">Socio CRAL</span>
                             <span class="choice-dot mt-1" aria-hidden="true"></span>
                         </span>
-                        <span class="mt-1 block text-sm leading-relaxed text-cral-navy-soft">Tessera associativa: tutte le foto, iscrizione alle attività e prestito dei libri.</span>
+                        <span class="mt-1 block text-sm leading-relaxed text-cral-navy-soft">Tessera associativa: foto e album, convenzioni con aziende e negozi, iscrizione alle attività e prestito dei libri.</span>
                     </span>
                 </label>
                 <label class="block">
@@ -46,7 +38,7 @@
                             <span class="font-display text-lg font-bold tracking-tight">Solo iscrizione al sito</span>
                             <span class="choice-dot mt-1" aria-hidden="true"></span>
                         </span>
-                        <span class="mt-1 block text-sm leading-relaxed text-cral-navy-soft">Bastano email e password: puoi consultare il catalogo della libreria. Potrai chiedere la tessera in seguito.</span>
+                        <span class="mt-1 block text-sm leading-relaxed text-cral-navy-soft">Bastano email e password: vedi foto e album e consulti il catalogo della libreria. Potrai chiedere la tessera in seguito.</span>
                     </span>
                 </label>
             </div>
@@ -102,22 +94,7 @@
                     <fieldset>
                         <legend class="label">Come vuoi pagare la quota di tessera?{{ $quota > 0 ? ' (€ '.number_format($quota, 2, ',', '.').')' : '' }}</legend>
                         <p class="help mb-3 mt-0">Un amministratore riceve la tua richiesta e approva la tessera quando la quota è stata pagata.</p>
-                        <div class="grid gap-3 sm:grid-cols-3">
-                            @foreach($metodi as $valore => [$titolo, $descrizione])
-                                @php $disattivo = $valore === 'paypal' && ! $paypalAttivo; @endphp
-                                <label class="block">
-                                    <input type="radio" name="metodo_pagamento" value="{{ $valore }}" class="peer sr-only" data-socio-required
-                                        @checked($metodo === $valore) @disabled($disattivo)>
-                                    <span class="choice-box">
-                                        <span class="flex items-start justify-between gap-3">
-                                            <span class="font-semibold leading-snug">{{ $titolo }}</span>
-                                            <span class="choice-dot mt-0.5" aria-hidden="true"></span>
-                                        </span>
-                                        <span class="mt-1 block text-sm leading-relaxed text-cral-navy-soft">{{ $descrizione }}</span>
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
+                        <x-scelta-pagamento :selected="$metodo" :requiredSocio="true" />
                         <x-input-error :messages="$errors->get('metodo_pagamento')" />
                     </fieldset>
                 </div>

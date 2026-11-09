@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Mail\NuovaRichiestaIscrizione;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 /**
  * Un iscritto al sito (senza tessera) può chiedere di diventare socio CRAL:
@@ -40,7 +40,7 @@ class RichiestaSocioController extends Controller
             'data_nascita' => ['required', 'date', 'before:today'],
             'codice_fiscale' => ['required', 'string', 'max:16'],
             'indirizzo' => ['required', 'string', 'max:255'],
-            'metodo_pagamento' => ['required', Rule::in(RegisteredUserController::metodiAmmessi())],
+            'metodo_pagamento' => ['required', Rule::in(User::metodiAmmessi())],
         ], [
             'metodo_pagamento.required' => 'Scegli come vuoi pagare la quota di tessera.',
             'metodo_pagamento.in' => 'Questo modo di pagamento non è disponibile: scegline un altro.',

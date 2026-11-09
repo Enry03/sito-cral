@@ -28,16 +28,6 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Modi di pagamento che si possono scegliere ora: PayPal solo quando è configurato.
-     *
-     * @return array<int, string>
-     */
-    public static function metodiAmmessi(): array
-    {
-        return User::paypalAttivo() ? array_keys(User::metodiPagamento()) : ['contanti', 'email'];
-    }
-
-    /**
      * Handle an incoming registration request.
      *
      * @throws ValidationException
@@ -54,7 +44,7 @@ class RegisteredUserController extends Controller
             'data_nascita' => ['required_if:tipo,socio', 'nullable', 'date', 'before:today'],
             'codice_fiscale' => ['required_if:tipo,socio', 'nullable', 'string', 'max:16'],
             'indirizzo' => ['required_if:tipo,socio', 'nullable', 'string', 'max:255'],
-            'metodo_pagamento' => ['required_if:tipo,socio', 'nullable', Rule::in(self::metodiAmmessi())],
+            'metodo_pagamento' => ['required_if:tipo,socio', 'nullable', Rule::in(User::metodiAmmessi())],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'privacy' => ['accepted'],
         ], [

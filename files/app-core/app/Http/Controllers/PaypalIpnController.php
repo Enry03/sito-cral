@@ -51,10 +51,10 @@ class PaypalIpnController extends Controller
             return;
         }
 
-        $contoAtteso = strtolower((string) config('cral.paypal.email'));
+        $contoAtteso = strtolower((string) app(\App\Services\DatiAzienda::class)->paypalEmail());
         $contoRicevente = strtolower((string) ($dati['receiver_email'] ?? $dati['business'] ?? ''));
 
-        if ($contoRicevente !== $contoAtteso
+        if ($contoAtteso === '' || $contoRicevente !== $contoAtteso
             || strtoupper((string) ($dati['mc_currency'] ?? '')) !== strtoupper((string) config('cral.paypal.valuta'))
             || (float) ($dati['mc_gross'] ?? 0) + 0.001 < User::quotaTessera()) {
             Log::warning('Notifica PayPal con conto, valuta o importo non corretti, ignorata.', ['txn' => $dati['txn_id'] ?? null]);

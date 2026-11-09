@@ -25,7 +25,7 @@
                 <div class="max-w-xl">
                     <span class="chip chip-soft">Iscritto al sito</span>
                     <p class="mt-3 leading-relaxed text-cral-navy-soft">
-                        Puoi consultare il catalogo della libreria. Con la tessera di socio vedi anche tutte le foto, ti iscrivi alle attività e prendi in prestito i libri.
+                        Puoi vedere le foto e gli album e consultare il catalogo della libreria. Con la tessera di socio accedi anche alle convenzioni, ti iscrivi alle attività e prendi in prestito i libri.
                     </p>
                 </div>
                 @if($utente->richiede_tessera)
@@ -43,7 +43,10 @@
                     ['href' => route('attivita.index'), 'titolo' => 'Attività', 'testo' => $utente->isSocioCral() ? 'Scopri cosa organizza il CRAL e iscriviti.' : 'Scopri cosa organizza il CRAL per i soci.', 'icona' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
                 ];
 
+                $voci[] = ['href' => route('foto.index'), 'titolo' => 'Foto', 'testo' => 'Rivivi i momenti più belli delle attività del CRAL.', 'icona' => 'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M15 13a3 3 0 11-6 0 3 3 0 016 0z'];
+
                 if ($utente->isSocioCral()) {
+                    $voci[] = ['href' => route('convenzioni.index'), 'titolo' => 'Convenzioni', 'testo' => 'Sconti e vantaggi presso aziende e negozi convenzionati.', 'icona' => 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'];
                     $voci[] = ['href' => route('libreria.prestiti'), 'titolo' => 'I miei prestiti', 'testo' => 'Controlla i libri che hai in prestito e le scadenze.', 'icona' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'];
                     $voci[] = ['href' => route('documenti.index'), 'titolo' => 'Documenti', 'testo' => 'Consulta i documenti caricati dall\'associazione.', 'icona' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'];
                     $voci[] = ['href' => route('account.show'), 'titolo' => 'Il mio account', 'testo' => 'I tuoi dati e il codice di verifica della tessera.', 'icona' => 'M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z'];

@@ -98,7 +98,7 @@ class RichiestaResource extends Resource
                     ->color(fn (User $record): string => match ($record->metodo_pagamento) {
                         'paypal' => 'info',
                         'contanti' => 'success',
-                        'email' => 'warning',
+                        'bonifico' => 'warning',
                         default => 'gray',
                     })
                     ->placeholder('—'),
@@ -109,12 +109,12 @@ class RichiestaResource extends Resource
                         ! $record->chiedeTessera() => null,
                         $record->pagatoConPaypal() => 'PayPal: pagamento ricevuto',
                         (bool) $record->quota_pagata => 'Pagata',
-                        $record->pagamento_dichiarato_il !== null => 'PayPal dichiarato (da verificare)',
+                        $record->pagamento_dichiarato_il !== null => 'Pagamento dichiarato (da verificare)',
                         default => 'Non ancora pagata',
                     })
                     ->color(fn (?string $state): string => match ($state) {
                         'PayPal: pagamento ricevuto', 'Pagata' => 'success',
-                        'PayPal dichiarato (da verificare)' => 'warning',
+                        'Pagamento dichiarato (da verificare)' => 'warning',
                         default => 'gray',
                     })
                     ->placeholder('—'),
@@ -170,7 +170,7 @@ class RichiestaResource extends Resource
                             ->default($record->quota_pagata || $record->pagamento_dichiarato_il !== null)
                             ->helperText(match (true) {
                                 $record->pagatoConPaypal() => 'PayPal ha confermato il pagamento il '.$record->quota_pagata_il?->format('d/m/Y').' (operazione '.$record->paypal_txn_id.').',
-                                $record->pagamento_dichiarato_il !== null => 'Ha segnalato il pagamento con PayPal il '.$record->pagamento_dichiarato_il->format('d/m/Y').': verifica l\'incasso nel tuo conto PayPal.',
+                                $record->pagamento_dichiarato_il !== null => 'Ha segnalato il pagamento ('.($record->metodo_pagamento === 'bonifico' ? 'bonifico' : 'PayPal').') il '.$record->pagamento_dichiarato_il->format('d/m/Y').': verifica l\'incasso sul '.($record->metodo_pagamento === 'bonifico' ? 'conto bancario.' : 'tuo conto PayPal.'),
                                 default => 'Scelta dell\'utente: '.($record->metodoPagamentoLabel() ?? 'nessuna').'. Spunta se hai già ricevuto la quota (di persona, con bonifico o altro).',
                             }),
                     ] : [])

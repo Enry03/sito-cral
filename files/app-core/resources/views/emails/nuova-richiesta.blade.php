@@ -51,6 +51,15 @@
                 <p style="margin:16px 0 0; font-size:14px; color:#4A5878; line-height:1.6;">
                     Ha scelto PayPal: appena paga ricevi una seconda email con la conferma dell'incasso.
                 </p>
+            @elseif($socio->metodo_pagamento === 'bonifico')
+                <p style="margin:16px 0 0; font-size:14px; color:#4A5878; line-height:1.6;">
+                    Ha scelto il bonifico: vede i dati del conto e, quando lo ha fatto, ti avvisa con un'altra email. Controlla l'accredito prima di approvare.
+                    Causale attesa: <strong>{{ app(\App\Services\DatiAzienda::class)->causale($socio->name) }}</strong>.
+                </p>
+            @elseif($socio->metodo_pagamento === 'contanti')
+                <p style="margin:16px 0 0; font-size:14px; color:#4A5878; line-height:1.6;">
+                    Pagherà in contanti in azienda: spunta "Quota incassata" quando approvi la richiesta.
+                </p>
             @endif
 
             <a href="{{ url('/admin/richieste') }}" style="display:inline-block; margin-top:24px; background:#E4002B; color:#ffffff; text-decoration:none; padding:14px 26px; border-radius:999px; font-size:14px; font-weight:bold;">

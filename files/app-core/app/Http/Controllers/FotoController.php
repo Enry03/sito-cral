@@ -6,9 +6,14 @@ use App\Models\Album;
 use App\Models\Foto;
 use Illuminate\Http\Request;
 
+/**
+ * Foto e album: le vede solo chi ha un account approvato (iscritto al sito, socio
+ * CRAL o amministratore). Gli altri vedono le stesse pagine con anteprime sfocate
+ * di pochi pixel: l'indirizzo delle foto vere non compare mai nella pagina.
+ */
 class FotoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $album = Album::has('foto')
             ->with('copertinaFoto')
@@ -18,7 +23,11 @@ class FotoController extends Controller
 
         $foto = Foto::pubbliche()->sciolte()->with('attivita')->latest()->paginate(24);
 
-        return view('foto.index', compact('album', 'foto'));
+        return view('foto.index', [
+            'album' => $album,
+            'foto' => $foto,
+            'accesso' => (bool) $request->user()?->puoVedereFoto(),
+        ]);
     }
 
     public function album(Request $request, Album $album)
@@ -27,14 +36,9 @@ class FotoController extends Controller
 
         $album->load(['foto' => fn ($query) => $query->oldest(), 'attivita']);
 
-        // Solo i soci CRAL con tessera vedono tutto l'album: gli altri vedono le
-        // prime foto e, al posto delle altre, un'anteprima sfocata.
-        $accessoCompleto = (bool) $request->user()?->isSocioCral();
-        $visibili = (int) config('cral.album_foto_visibili_ospiti');
-
-        $fotoSbloccate = $accessoCompleto ? $album->foto : $album->foto->take($visibili);
-        $fotoBloccate = $accessoCompleto ? collect() : $album->foto->slice($visibili);
-
-        return view('foto.album', compact('album', 'fotoSbloccate', 'fotoBloccate', 'accessoCompleto'));
+        return view('foto.album', [
+            'album' => $album,
+            'accesso' => (bool) $request->user()?->puoVedereFoto(),
+        ]);
     }
 }

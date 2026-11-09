@@ -1,4 +1,4 @@
-<x-public-layout title="CRAL Chieti — attività, eventi e vantaggi per i colleghi" description="Scopri le iniziative del CRAL, guarda le foto delle attività e iscriviti per diventare socio.">
+<x-public-layout title="CRAL Chieti — attività, eventi e vantaggi per i colleghi" description="Scopri le iniziative del CRAL, iscriviti per vedere le foto delle attività e diventa socio per usare le convenzioni.">
 
     {{-- ====================================================== apertura --}}
     <section class="hero-bg relative isolate overflow-hidden text-white">
@@ -16,7 +16,7 @@
                 </h1>
 
                 <p class="mt-7 max-w-lg text-lg leading-relaxed text-white/85" data-reveal data-delay="0.45">
-                    Scopri le iniziative del CRAL, guarda le foto delle nostre attività e diventa socio per ricevere la tua tessera associativa.
+                    Scopri le iniziative del CRAL, iscriviti per vedere le foto delle nostre attività e diventa socio per ricevere la tua tessera associativa e usare le convenzioni.
                 </p>
 
                 <div class="mt-9 flex flex-wrap items-center gap-3" data-reveal data-delay="0.55">
@@ -108,6 +108,7 @@
             <div class="bg-cral-navy-tint p-7 sm:p-9">
                 <h3 class="text-xl font-bold tracking-tight">Iscritto al sito</h3>
                 <ul class="mt-4 space-y-3 text-cral-navy-soft">
+                    <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-navy" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Vedi foto e album degli eventi</li>
                     <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-navy" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Consulti il catalogo della libreria</li>
                     <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-navy" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Puoi chiedere la tessera quando vuoi</li>
                 </ul>
@@ -115,7 +116,7 @@
             <div class="bg-cral-red-tint p-7 sm:p-9">
                 <h3 class="text-xl font-bold tracking-tight text-cral-red-dark">Socio CRAL con tessera</h3>
                 <ul class="mt-4 space-y-3 text-cral-navy">
-                    <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-red" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Tutte le foto degli album</li>
+                    <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-red" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Convenzioni con aziende e negozi</li>
                     <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-red" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Iscrizione alle attività e agli eventi</li>
                     <li class="flex gap-3"><svg class="mt-0.5 h-5 w-5 shrink-0 text-cral-red" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>Prestito dei libri e documenti dell'associazione</li>
                 </ul>

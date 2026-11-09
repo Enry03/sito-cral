@@ -80,8 +80,8 @@ trait GestisceFotoAttivita
 
         $messaggio = $totale.($totale === 1 ? ' foto aggiunta' : ' foto aggiunte');
         $messaggio .= $album
-            ? " all'album \"".$album->titolo.'" (le foto oltre le prime due sono riservate ai soci con tessera).'
-            : ' come foto singola, visibile a tutti.';
+            ? " all'album \"".$album->titolo.'" (visibile a chi è iscritto al sito o socio CRAL).'
+            : ' come foto singola (visibile a chi è iscritto al sito o socio CRAL).';
 
         Notification::make()->success()->title($messaggio)->send();
 

@@ -13,6 +13,7 @@
             ['href' => route('home'), 'label' => 'Home', 'active' => request()->routeIs('home')],
             ['href' => route('attivita.index'), 'label' => 'Attività', 'active' => request()->routeIs('attivita.*')],
             ['href' => route('foto.index'), 'label' => 'Foto', 'active' => request()->routeIs('foto.*')],
+            ['href' => route('convenzioni.index'), 'label' => 'Convenzioni', 'active' => request()->routeIs('convenzioni.*')],
         ];
 
         // La libreria è visibile solo a chi ha un account approvato.
@@ -143,6 +144,7 @@
                 <ul class="mt-4 space-y-3 text-[0.95rem] text-white/70">
                     <li><a href="{{ route('attivita.index') }}" class="transition hover:text-white">Attività</a></li>
                     <li><a href="{{ route('foto.index') }}" class="transition hover:text-white">Foto</a></li>
+                    <li><a href="{{ route('convenzioni.index') }}" class="transition hover:text-white">Convenzioni</a></li>
                     <li><a href="{{ route('register') }}" class="transition hover:text-white">Iscriviti</a></li>
                 </ul>
             </div>

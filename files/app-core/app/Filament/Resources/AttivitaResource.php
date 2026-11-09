@@ -150,7 +150,7 @@ class AttivitaResource extends Resource
                     ->columns(2),
 
                 Forms\Components\Section::make('Foto dell\'attività')
-                    ->description('Con più di una foto l\'album viene creato automaticamente: chi non è socio con tessera vede solo le prime due, le altre restano oscurate. Con una sola foto resta una foto singola visibile a tutti, a meno che tu non scelga di creare un album.')
+                    ->description('Le foto le vede solo chi è iscritto al sito o socio CRAL: gli altri vedono anteprime sfocate. Con più di una foto l\'album viene creato automaticamente; con una sola foto resta una foto singola, a meno che tu non scelga di creare un album.')
                     ->schema([
                         FotoUpload::make('foto_nuove')
                             ->label('Aggiungi foto')

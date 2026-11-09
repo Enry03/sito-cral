@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Una sola lettura dei dati dell'azienda per richiesta (e per ogni test).
+        $this->app->singleton(\App\Services\DatiAzienda::class);
     }
 
     /**

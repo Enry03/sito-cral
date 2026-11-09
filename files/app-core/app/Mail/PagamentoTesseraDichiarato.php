@@ -10,8 +10,8 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Avviso agli amministratori: chi chiede la tessera è tornato sul sito dopo
- * aver pagato con PayPal. L'incasso va verificato su PayPal prima di approvare.
+ * Avviso agli amministratori: chi chiede la tessera dice di aver pagato (con
+ * PayPal o con bonifico). L'incasso va verificato prima di approvare.
  */
 class PagamentoTesseraDichiarato extends Mailable
 {
@@ -23,11 +23,19 @@ class PagamentoTesseraDichiarato extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Pagamento tessera con PayPal — '.$this->richiedente->name);
+        return new Envelope(subject: 'Pagamento tessera con '.$this->nomeMetodo().' — '.$this->richiedente->name);
+    }
+
+    public function nomeMetodo(): string
+    {
+        return $this->richiedente->metodo_pagamento === 'bonifico' ? 'bonifico' : 'PayPal';
     }
 
     public function content(): Content
     {
-        return new Content(view: 'emails.pagamento-dichiarato');
+        return new Content(view: 'emails.pagamento-dichiarato', with: [
+            'bonifico' => $this->richiedente->metodo_pagamento === 'bonifico',
+            'metodo' => $this->nomeMetodo(),
+        ]);
     }
 }

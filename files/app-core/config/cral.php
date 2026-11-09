@@ -16,19 +16,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Foto
-    |--------------------------------------------------------------------------
-    | Quante foto di un album può vedere chi non è socio CRAL con tessera.
-    */
-    'album_foto_visibili_ospiti' => 2,
-
-    /*
-    |--------------------------------------------------------------------------
     | Tessera socio
     |--------------------------------------------------------------------------
-    | Importo della quota associativa (in euro). Serve al pulsante "Paga con
-    | PayPal" della richiesta di tessera: finché non è impostato (.env:
-    | CRAL_QUOTA_TESSERA=25) il pulsante resta disattivato.
+    | Importo della quota associativa (in euro). Si può scrivere dal pannello di
+    | amministrazione (Dati dell'azienda), che ha la precedenza; in alternativa qui
+    | sotto da .env (CRAL_QUOTA_TESSERA=25). Finché non è impostato il pulsante
+    | "Paga con PayPal" resta disattivato.
     */
     'quota_tessera' => (float) env('CRAL_QUOTA_TESSERA', 0),
 
@@ -36,8 +29,9 @@ return [
     |--------------------------------------------------------------------------
     | PayPal
     |--------------------------------------------------------------------------
-    | Per attivare il pulsante "Paga con PayPal" basta impostare nel file .env
-    | l'indirizzo PayPal che riceve i pagamenti:
+    | Per attivare il pulsante "Paga con PayPal" basta scrivere l'indirizzo PayPal
+    | che riceve i pagamenti nel pannello di amministrazione (Dati dell'azienda), che
+    | ha la precedenza, oppure nel file .env:
     |
     |     PAYPAL_BUSINESS_EMAIL=pagamenti@cralchietildo.it
     |

@@ -1,17 +1,11 @@
 @php
     $metodo = old('metodo_pagamento', $utente->metodo_pagamento);
     $quota = \App\Models\User::quotaTessera();
-    $paypalAttivo = \App\Models\User::paypalAttivo();
-    $metodi = [
-        'contanti' => ['Paga in contanti in azienda', 'Porti la quota a un amministratore del CRAL.'],
-        'email' => ['Contattaci per email', 'Ci scrivi e ti spieghiamo come procedere.'],
-        'paypal' => ['Paga con PayPal', $paypalAttivo ? 'Dopo l\'invio della richiesta trovi il pulsante per pagare.' : 'Presto disponibile.'],
-    ];
 @endphp
 
 <x-public-layout title="Diventa socio CRAL">
     <x-page-hero kicker="La mia area" title="Diventa socio CRAL"
-        subtitle="Con la tessera vedi tutte le foto, ti iscrivi alle attività e prendi in prestito i libri." tone="navy" />
+        subtitle="Con la tessera accedi alle convenzioni, ti iscrivi alle attività e prendi in prestito i libri." tone="navy" />
 
     <div class="container-x -mt-2 max-w-3xl pb-24 sm:pb-32">
         @if(session('ok_pagamento'))
@@ -24,7 +18,7 @@
                 <h2 class="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Stiamo esaminando la tua richiesta</h2>
                 <p class="mt-3 leading-relaxed text-cral-navy-soft">
                     Un amministratore approverà la tua tessera a breve e ti scriverà una email con la tessera intestata a te.
-                    Quando succederà potrai vedere tutte le foto, iscriverti alle attività e prendere in prestito i libri della libreria.
+                    Quando succederà potrai usare le convenzioni, iscriverti alle attività e prendere in prestito i libri della libreria.
                 </p>
                 <x-richiesta-stato :utente="$utente" class="mt-8" />
             </section>
@@ -67,22 +61,7 @@
 
                     <fieldset>
                         <legend class="label">Come vuoi pagare la quota di tessera?{{ $quota > 0 ? ' (€ '.number_format($quota, 2, ',', '.').')' : '' }}</legend>
-                        <div class="mt-3 grid gap-3 sm:grid-cols-3">
-                            @foreach($metodi as $valore => [$titolo, $descrizione])
-                                @php $disattivo = $valore === 'paypal' && ! $paypalAttivo; @endphp
-                                <label class="block">
-                                    <input type="radio" name="metodo_pagamento" value="{{ $valore }}" class="peer sr-only" required
-                                        @checked($metodo === $valore) @disabled($disattivo)>
-                                    <span class="choice-box">
-                                        <span class="flex items-start justify-between gap-3">
-                                            <span class="font-semibold leading-snug">{{ $titolo }}</span>
-                                            <span class="choice-dot mt-0.5" aria-hidden="true"></span>
-                                        </span>
-                                        <span class="mt-1 block text-sm leading-relaxed text-cral-navy-soft">{{ $descrizione }}</span>
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
+                        <x-scelta-pagamento class="mt-3" :selected="$metodo" :required="true" :nome="$utente->name" />
                         <x-input-error :messages="$errors->get('metodo_pagamento')" />
                     </fieldset>
 

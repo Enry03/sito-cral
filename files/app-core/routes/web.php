@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AttivitaController;
+use App\Http\Controllers\ConvenzioneController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\FotoController;
 use App\Http\Controllers\HomeController;
@@ -30,6 +31,11 @@ Route::get('/attivita/{slug}', [AttivitaController::class, 'show'])->name('attiv
 Route::get('/foto', [FotoController::class, 'index'])->name('foto.index');
 Route::get('/foto/album/{album}', [FotoController::class, 'album'])->name('foto.album');
 
+// Convenzioni: pagina aperta a tutti, ma i contenuti li vedono solo i soci con
+// tessera (il controllo è nel controller: gli altri vedono come ottenere l'accesso).
+Route::get('/convenzioni', [ConvenzioneController::class, 'index'])->name('convenzioni.index');
+Route::get('/convenzioni/{slug}', [ConvenzioneController::class, 'show'])->name('convenzioni.show');
+
 // Notifica automatica di PayPal: arriva da PayPal, non da un utente (niente login né CSRF).
 Route::post('/paypal/ipn', PaypalIpnController::class)->middleware('throttle:60,1')->name('paypal.ipn');
 
@@ -56,6 +62,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/richiesta-tessera/metodo', [PagamentoTesseraController::class, 'metodo'])
         ->middleware('throttle:10,1')
         ->name('tessera.metodo');
+
+    // "Ho fatto il bonifico": avvisa gli amministratori di controllare l'accredito.
+    Route::post('/richiesta-tessera/bonifico-effettuato', [PagamentoTesseraController::class, 'bonificoEffettuato'])
+        ->middleware('throttle:10,1')
+        ->name('tessera.bonifico');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

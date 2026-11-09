@@ -57,6 +57,7 @@ class AttivitaController extends Controller
             'album' => $album,
             'statoIscrizioni' => $attivita->statoIscrizioni(),
             'iscrizione' => $iscrizione,
+            'accesso' => (bool) $utente?->puoVedereFoto(),
         ]);
     }
 

@@ -159,19 +159,29 @@
             </div>
         @endif
 
-        {{-- Foto: singole visibili a tutti, album con le regole di accesso --}}
+        {{-- Foto dell'evento: le vede solo chi ha un account approvato, gli altri le vedono sfocate --}}
         @if($fotoSingole->isNotEmpty() || $album->isNotEmpty())
-            <div class="mt-16" x-data="galleria">
+            <div class="mt-16" @if($accesso) x-data="galleria" @endif>
                 <h2 class="text-3xl font-bold tracking-[-0.03em]" data-reveal>Le foto dell'evento</h2>
+
+                @unless($accesso)
+                    <x-foto-riservate-avviso class="mt-6" />
+                @endunless
 
                 @if($album->isNotEmpty())
                     <div class="mt-6 grid gap-5 sm:grid-cols-2" data-stagger="0.08">
                         @foreach($album as $albumItem)
-                            <a href="{{ route('foto.album', $albumItem) }}" class="group block" data-reveal>
+                            <a href="{{ route('foto.album', $albumItem) }}" class="group block" data-reveal @unless($accesso) data-foto-riservata @endunless>
                                 <div class="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-cral-navy shadow-soft transition duration-500 ease-premium group-hover:-translate-y-1 group-hover:shadow-lift">
-                                    <img src="{{ $albumItem->copertinaFoto->miniaturaUrl() }}" alt="" loading="lazy" decoding="async" class="h-full w-full object-cover transition duration-[900ms] ease-premium group-hover:scale-110">
+                                    <img src="{{ $accesso ? $albumItem->copertinaFoto->miniaturaUrl() : $albumItem->copertinaFoto->sfocataUrl() }}" alt="" loading="lazy" decoding="async"
+                                        class="h-full w-full object-cover transition duration-[900ms] ease-premium group-hover:scale-110 {{ $accesso ? '' : 'scale-110 blur-md' }}">
                                     <div class="absolute inset-0 bg-gradient-to-t from-cral-navy-deep/70 via-transparent to-transparent"></div>
                                     <span class="chip chip-glass absolute left-4 top-4">Album · {{ $albumItem->foto_count }} foto</span>
+                                    @unless($accesso)
+                                        <span class="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-cral-red shadow-soft" aria-hidden="true">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>
+                                        </span>
+                                    @endunless
                                 </div>
                                 <h3 class="mt-4 px-1 font-display text-xl font-bold tracking-tight transition group-hover:text-cral-red">{{ $albumItem->titolo }}</h3>
                             </a>
@@ -183,18 +193,19 @@
                     <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3" data-stagger="0.05">
                         @foreach($fotoSingole as $foto)
                             <div data-reveal="scale">
-                                <button type="button" data-foto data-src="{{ $foto->url() }}" data-didascalia="{{ $foto->didascalia }}" @click="apri($el)"
-                                    class="group block aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-cral-navy-tint" aria-label="Ingrandisci la foto{{ $foto->didascalia ? ': '.$foto->didascalia : '' }}">
-                                    <img src="{{ $foto->miniaturaUrl() }}" alt="{{ $foto->didascalia }}" loading="lazy" decoding="async" class="h-full w-full object-cover transition duration-[900ms] ease-premium group-hover:scale-110">
-                                </button>
-                                @if($foto->didascalia)
+                                <x-foto-miniatura :foto="$foto" :accesso="$accesso" :quadrata="true" />
+                                @if($accesso && $foto->didascalia)
                                     <p class="mt-2 text-sm text-cral-navy-soft">{{ $foto->didascalia }}</p>
                                 @endif
                             </div>
                         @endforeach
                     </div>
+                @endif
 
+                @if($accesso)
                     <x-lightbox />
+                @else
+                    <x-foto-riservate-popup />
                 @endif
             </div>
         @endif
@@ -202,7 +213,7 @@
         @guest
             <div class="cta-bg relative isolate mt-20 overflow-hidden rounded-[2rem] px-7 py-12 text-center text-white sm:px-12" data-reveal>
                 <h3 class="mx-auto max-w-lg text-3xl font-bold leading-tight tracking-[-0.03em]">Vuoi partecipare alle prossime attività?</h3>
-                <p class="mx-auto mt-3 max-w-md text-white/85">Diventa socio CRAL per iscriverti agli eventi, vedere tutte le foto e prendere in prestito i libri.</p>
+                <p class="mx-auto mt-3 max-w-md text-white/85">Iscriviti al sito per vedere le foto degli eventi, oppure diventa socio CRAL per iscriverti alle attività, usare le convenzioni e prendere in prestito i libri.</p>
                 <a href="{{ route('register') }}" class="btn btn-white mt-7">Iscriviti ora</a>
             </div>
         @endguest
