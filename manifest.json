@@ -1,0 +1,733 @@
+{
+    "generato": "2026-11-09T11:25:28+01:00",
+    "file": {
+        "app-core/app/Filament/Resources/AlbumResource.php": {
+            "size": 2856,
+            "sha256": "c91a0550bbad53335230b3befa90d0be0354d9fdb8bab7319e6b2784000ed6cf"
+        },
+        "app-core/app/Filament/Resources/AlbumResource/Pages/EditAlbum.php": {
+            "size": 401,
+            "sha256": "ac8f2d97ddcfe914095ab8aea327bc3630818db1fe53e64bdea97f897e4280ef"
+        },
+        "app-core/app/Filament/Resources/AlbumResource/Pages/ListAlbums.php": {
+            "size": 648,
+            "sha256": "78ffed357c40d74486937a12738b0e33a07a23408f2601bc51e041fddac1543e"
+        },
+        "app-core/app/Filament/Resources/AlbumResource/RelationManagers/FotoRelationManager.php": {
+            "size": 3589,
+            "sha256": "f58476dff370a2e37fb2196aabefa7812b12494f1f2dd758bdaa332b91f11fe5"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource.php": {
+            "size": 12549,
+            "sha256": "30d443bae4cc12d0ce63a6817a1d58ac5d680401936bf372d5d0a9f3400a9ab6"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource/Concerns/GestisceFotoAttivita.php": {
+            "size": 3281,
+            "sha256": "9e4f2093d68fcb360dd8b50e4655f5801fb5425e72405af000971c4c328df774"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource/Pages/CreateAttivita.php": {
+            "size": 594,
+            "sha256": "33fe78a793a219c01365f4b801c9534d42f482fd282aee5915677571ae703535"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource/Pages/EditAttivita.php": {
+            "size": 947,
+            "sha256": "be6d0f881ea41ac53d2da07203a9ad8d3d96d05611b7a211c1bf9dc5bca08f5b"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource/Pages/ListAttivitas.php": {
+            "size": 416,
+            "sha256": "91e02fccd2b68f7c9152057379710963c4a7ee60da4b729412bc682532e8f5b1"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource/RelationManagers/FotoRelationManager.php": {
+            "size": 3408,
+            "sha256": "ec44697ad29aa82cbe959f4c4934b0a1452dc96aab8ae30ba52fb7de32286f37"
+        },
+        "app-core/app/Filament/Resources/AttivitaResource/RelationManagers/IscrizioniRelationManager.php": {
+            "size": 4214,
+            "sha256": "726ee60a311f11954aaeaf538b4a486eccb0a1200795567ed9caae22e2f1c6df"
+        },
+        "app-core/app/Filament/Resources/DocumentoResource.php": {
+            "size": 3088,
+            "sha256": "bd6c603c05e021f130d715263f0cad0625eaaf2347905ad04e336568caf8d037"
+        },
+        "app-core/app/Filament/Resources/DocumentoResource/Pages/CreateDocumento.php": {
+            "size": 291,
+            "sha256": "99ad1c4e70b0dcb7e65ddf344fad15246613aea0f0bd2b1f92b3d30be5126867"
+        },
+        "app-core/app/Filament/Resources/DocumentoResource/Pages/EditDocumento.php": {
+            "size": 417,
+            "sha256": "258b1552d12a4aee4366d2ffa62716fc90b6aeeb986bfc498856b74fa3b9b037"
+        },
+        "app-core/app/Filament/Resources/DocumentoResource/Pages/ListDocumentos.php": {
+            "size": 420,
+            "sha256": "26aabcaeda5bcddc823b92389fd3f3578bd69b85e20100260e861ff70947df34"
+        },
+        "app-core/app/Filament/Resources/FotoResource.php": {
+            "size": 8225,
+            "sha256": "9acf96d6436c349c88bdb4c99d6b4c223500f3b8778668d6d96d7367a86a8804"
+        },
+        "app-core/app/Filament/Resources/FotoResource/Pages/EditFoto.php": {
+            "size": 397,
+            "sha256": "7e255a3996bc8eb7ecb093e3b4118e4aea7dc8d7aeb92e81ee288dce80013364"
+        },
+        "app-core/app/Filament/Resources/FotoResource/Pages/ListFotos.php": {
+            "size": 6029,
+            "sha256": "f468df99bb9726abfa0c36e396c27347af047e703fda584aa76fa612bca676a9"
+        },
+        "app-core/app/Filament/Resources/LibroResource.php": {
+            "size": 5980,
+            "sha256": "8b1ed5ae6890838123303aac5d3c6a08b828a084d2d28d6c15b958dbf1489205"
+        },
+        "app-core/app/Filament/Resources/LibroResource/Pages/CreateLibro.php": {
+            "size": 253,
+            "sha256": "f79ca82e80f2d72854ea4fd46af9d1c1cb927d243b7ca062d7db0c0e54c38534"
+        },
+        "app-core/app/Filament/Resources/LibroResource/Pages/EditLibro.php": {
+            "size": 1000,
+            "sha256": "d51d69dda260a1469478eabd88dc3a6b8cc8665dea2791fbe9c8c962b5be5145"
+        },
+        "app-core/app/Filament/Resources/LibroResource/Pages/ListLibri.php": {
+            "size": 3289,
+            "sha256": "70e99e8ca97e69d022cb38364d3a062b3fd0589ab29aac49d88dd0a1016af2da"
+        },
+        "app-core/app/Filament/Resources/PrestitoResource.php": {
+            "size": 8346,
+            "sha256": "1684cf7704108455058d7eb37e6a1ccff2dcd456f079b81789af8f925daa8332"
+        },
+        "app-core/app/Filament/Resources/PrestitoResource/Pages/CreatePrestito.php": {
+            "size": 1411,
+            "sha256": "ea5341e1e4aa1d9fc5b940724b31d192acd02c6c73febabc133b0abc96af0d17"
+        },
+        "app-core/app/Filament/Resources/PrestitoResource/Pages/ListPrestiti.php": {
+            "size": 463,
+            "sha256": "2cd15f4d20d458bc8c3cf8ef2d91cc6ea56e8749567667752eb26dc958244fa8"
+        },
+        "app-core/app/Filament/Resources/RichiestaResource.php": {
+            "size": 10657,
+            "sha256": "a9f7ec6faaa7f7230c73f07da5e9ff27eafb312ebab11138dec827f881d76f9e"
+        },
+        "app-core/app/Filament/Resources/RichiestaResource/Pages/ListRichieste.php": {
+            "size": 331,
+            "sha256": "293128d487904aeb755931256c3033ea599a6384f40e82cc2081f0215e74d085"
+        },
+        "app-core/app/Filament/Resources/UserResource.php": {
+            "size": 9107,
+            "sha256": "d2963d8c6ab92e2ad74d019c4a914454ea3f296bf084b989d7add42129c19e4a"
+        },
+        "app-core/app/Filament/Resources/UserResource/Pages/CreateUser.php": {
+            "size": 271,
+            "sha256": "9c09ae2c509330b0fd4487c04a1b6349705f71358f7df8801db82869c06f8ed7"
+        },
+        "app-core/app/Filament/Resources/UserResource/Pages/EditUser.php": {
+            "size": 397,
+            "sha256": "a27776cb08e303fb05ad812ae94c381be7d6c9d98e0ca4959f9b1e46eeb7c571"
+        },
+        "app-core/app/Filament/Resources/UserResource/Pages/ListUsers.php": {
+            "size": 400,
+            "sha256": "6fb2f8de6d768e7b71a3ddfc4acba1dac8730528e875c29fe888670dd072d2a0"
+        },
+        "app-core/app/Filament/Support/FotoArchivio.php": {
+            "size": 1994,
+            "sha256": "9e2d7fd272d6266a8c0704a4657531aeab8b196d0aa35fbe057f7be394c4261c"
+        },
+        "app-core/app/Filament/Support/FotoUpload.php": {
+            "size": 781,
+            "sha256": "042243492235fad2eb1eaedba03ed97bb6296b0a3771e1339d4ba2456351fc6f"
+        },
+        "app-core/app/Http/Controllers/AccountController.php": {
+            "size": 838,
+            "sha256": "11637376b39ba07efc8b03d4b6240d0292fbe285624cae4e94b5564d439b42ef"
+        },
+        "app-core/app/Http/Controllers/AttivitaController.php": {
+            "size": 3239,
+            "sha256": "0e09fb92711dca84ce3351ae7830d647a4af61a85e6027b88a1ba79dc72303d1"
+        },
+        "app-core/app/Http/Controllers/Auth/AuthenticatedSessionController.php": {
+            "size": 1038,
+            "sha256": "aaea7217b1eeeaa061b07c4e820d995fe180e6816e5866a62295c2f6f0c12f4b"
+        },
+        "app-core/app/Http/Controllers/Auth/ConfirmablePasswordController.php": {
+            "size": 1024,
+            "sha256": "7322ce4e2ccdf76d1583cd84d27f5708436ffc91d7d00ee7abbde40f3e403ba7"
+        },
+        "app-core/app/Http/Controllers/Auth/EmailVerificationNotificationController.php": {
+            "size": 630,
+            "sha256": "24d5704b7534ad365800a33e7c537bf63467f1271c4bc801b351c8a05a77e5b9"
+        },
+        "app-core/app/Http/Controllers/Auth/EmailVerificationPromptController.php": {
+            "size": 564,
+            "sha256": "6b5b4b75fc25c43c1b31106f63f7b1f854b729527b2f5c067f122f4857f85e3a"
+        },
+        "app-core/app/Http/Controllers/Auth/NewPasswordController.php": {
+            "size": 2234,
+            "sha256": "64300ff2989baeb1924c6b0d698cdcd189796ed45d5b14135a03c4607e4007af"
+        },
+        "app-core/app/Http/Controllers/Auth/PasswordController.php": {
+            "size": 795,
+            "sha256": "81f68e0aa74f66038082364499dde9a1b1d93ca961448bd8b46bc77aa17117fd"
+        },
+        "app-core/app/Http/Controllers/Auth/PasswordResetLinkController.php": {
+            "size": 1335,
+            "sha256": "82a07fee8b04223bf3587e5d3458de77275335104efa304aaf9e4a2dad1dea8c"
+        },
+        "app-core/app/Http/Controllers/Auth/RegisteredUserController.php": {
+            "size": 3843,
+            "sha256": "33a6f6ba3d7f8be6401ed1dd6fb1fed2ce49ea6c47824a778561ddf8ce783461"
+        },
+        "app-core/app/Http/Controllers/Auth/VerifyEmailController.php": {
+            "size": 800,
+            "sha256": "5f6080a239709740135d9138085ceb1857c5570a0fea35e62c976fc90929631e"
+        },
+        "app-core/app/Http/Controllers/Controller.php": {
+            "size": 77,
+            "sha256": "25d1c1ef8e6cc8a376553faacfba2b07d9dfaee9bdbb84f14f77517580e9deb1"
+        },
+        "app-core/app/Http/Controllers/DocumentoController.php": {
+            "size": 471,
+            "sha256": "0c889f4498a3172e6540b5a7f461acdd10babc2d821f9979bcda860f29849248"
+        },
+        "app-core/app/Http/Controllers/FotoController.php": {
+            "size": 1313,
+            "sha256": "996e394d18af6189348c24977ee2997eacec66bf08182ee8e4cc0a4b6eb9480d"
+        },
+        "app-core/app/Http/Controllers/HomeController.php": {
+            "size": 692,
+            "sha256": "64018f31f28443389bd693d8cc7d1ef1fd7389a27ee67ddb1973fb046017decc"
+        },
+        "app-core/app/Http/Controllers/LibreriaController.php": {
+            "size": 3210,
+            "sha256": "548f2da123bf17e323bda190ee4583a6e3b3f04c3bbe9e528896f39915adfad7"
+        },
+        "app-core/app/Http/Controllers/PagamentoTesseraController.php": {
+            "size": 2563,
+            "sha256": "311b083b362e1e2933489c16f8adce67798a5d03487ca24190bb4171df74d0e3"
+        },
+        "app-core/app/Http/Controllers/PaypalIpnController.php": {
+            "size": 3608,
+            "sha256": "e92c91d285652bad3ee300acd8b13ce5faccf9d513324608f8b00340f8b27d1d"
+        },
+        "app-core/app/Http/Controllers/ProfileController.php": {
+            "size": 1416,
+            "sha256": "01586a456c9162ecf08234897b47ab29828e67b185e68983932ecc41a76ed355"
+        },
+        "app-core/app/Http/Controllers/RichiestaSocioController.php": {
+            "size": 2195,
+            "sha256": "47a218108aeb099dd956c28159a6a3228b46b42e9bf5033bfba954c63ef00cb5"
+        },
+        "app-core/app/Http/Controllers/TesseraVerificaController.php": {
+            "size": 310,
+            "sha256": "231b46dcac6ba52d369fdc74d6236d500e7610c23be506d590276abbc54d7ea2"
+        },
+        "app-core/app/Http/Middleware/EnsureSocioAttivo.php": {
+            "size": 444,
+            "sha256": "dc2cab6b88fd6893ede15ada3dad6cedfe8a1b10cc9177a03e55eddb5ac4bdc3"
+        },
+        "app-core/app/Http/Middleware/EnsureSocioTessera.php": {
+            "size": 647,
+            "sha256": "c2a2c4c6dd5897e8969586f6a5c08a6f70bc523727fe780d1e94bbcb207fb2ea"
+        },
+        "app-core/app/Http/Middleware/SecurityHeaders.php": {
+            "size": 776,
+            "sha256": "64806a8ad1eda9ea35c3597d96e370ef2e17a21b082986b8dc508dd44bc64a0d"
+        },
+        "app-core/app/Http/Requests/Auth/LoginRequest.php": {
+            "size": 2206,
+            "sha256": "d64740bf9748fcd0b33a14d72aa42ec2868f2579746b3e1701426006c7eaa6a3"
+        },
+        "app-core/app/Http/Requests/ProfileUpdateRequest.php": {
+            "size": 762,
+            "sha256": "720b4e00a5f02025c8448fd8a3bac93eb0e55a64d5ff861581b6a00c26dfd871"
+        },
+        "app-core/app/Mail/IscrizioneSitoApprovata.php": {
+            "size": 704,
+            "sha256": "4c69f124dbabada58ad9780e3ad4d2fa7f8124d6bbfaa6e028c57e3c9b45a2c0"
+        },
+        "app-core/app/Mail/NuovaRichiestaIscrizione.php": {
+            "size": 1180,
+            "sha256": "9788193bfe82d3d74c669f578aeb4e387d4c93b5002533fafd95bc32b012e0f8"
+        },
+        "app-core/app/Mail/PagamentoPaypalRicevuto.php": {
+            "size": 803,
+            "sha256": "c8f485333d7bf9061b409769faf9b3bae9a53b21b42f3b42f92a3c602d946eba"
+        },
+        "app-core/app/Mail/PagamentoTesseraDichiarato.php": {
+            "size": 828,
+            "sha256": "a156f3b3be8a8933335e9b8f99f55422193b9b885c9296d3f2f78e410abd7966"
+        },
+        "app-core/app/Mail/TesseraApprovata.php": {
+            "size": 1084,
+            "sha256": "7de9d1409e7f2fa96adf379e2f5a6d795a33a81f87dc9e77f138015b0db2c74b"
+        },
+        "app-core/app/Models/Album.php": {
+            "size": 662,
+            "sha256": "b69dbc366996436479461e3c9f07750eb65342fa0dacfcad5272404f90b2537e"
+        },
+        "app-core/app/Models/Attivita.php": {
+            "size": 9573,
+            "sha256": "3e03f37b8c4ae501a7c875910a82824a7c92de718725b9cce499293f0db5565d"
+        },
+        "app-core/app/Models/Documento.php": {
+            "size": 444,
+            "sha256": "403b8ca6bdc643b423c754c52f554ba425406d7e95d2345ed3f7aa308aa88845"
+        },
+        "app-core/app/Models/Foto.php": {
+            "size": 3625,
+            "sha256": "ee13eef8c163400f6d4cd9771f2908601a2d129175e17d5637bb2ba123ab1caa"
+        },
+        "app-core/app/Models/IscrizioneAttivita.php": {
+            "size": 2341,
+            "sha256": "89f059de5627eefde9f43a8d63850d575be588d114f3aa3d80fc7388a81b354a"
+        },
+        "app-core/app/Models/Libro.php": {
+            "size": 2026,
+            "sha256": "06de3cd97d84fe14a7b0602e829328d2a4edf40d19d0b361016ba684b7493c31"
+        },
+        "app-core/app/Models/Prestito.php": {
+            "size": 2732,
+            "sha256": "5f8e55804aa2e0c761fe750e43d44ae68567d9a2bea3d264bd3cacb19ea9dd59"
+        },
+        "app-core/app/Models/User.php": {
+            "size": 9849,
+            "sha256": "ce6a7aaccf34aed92648ddf69fb44233adeb3eb76971838dafd26067da749583"
+        },
+        "app-core/app/Providers/AppServiceProvider.php": {
+            "size": 611,
+            "sha256": "d2d88c2f1c30ab929354f839f871946f01100a73c2d2f35cd20a5358164e8882"
+        },
+        "app-core/app/Providers/Filament/AdminPanelProvider.php": {
+            "size": 2649,
+            "sha256": "001b12208eb1826cf1e3c9f8a325f893594949dd4e972a000803108f1e602571"
+        },
+        "app-core/app/Services/GalleriaService.php": {
+            "size": 5549,
+            "sha256": "d8f8c1502f0d96aa5352a5d9bc6fd847f0f74b775532629b0f5064962fcf64c5"
+        },
+        "app-core/app/Services/ImageOptimizer.php": {
+            "size": 8589,
+            "sha256": "6a09813f86d8bb5ca6678dc11a78e3149aef1189cec8a18c22dd428d16e1a029"
+        },
+        "app-core/app/Services/IscrizioneAttivitaService.php": {
+            "size": 2949,
+            "sha256": "c40a16eee73847b6bc153c4c957118b1839fe1446131a2e75b22e755cbd28084"
+        },
+        "app-core/app/Services/LibraryThingImporter.php": {
+            "size": 10723,
+            "sha256": "85880f1480e12c3f64c72fb18647e4ff582ae260b3789786449185ed0d8ad3e8"
+        },
+        "app-core/app/Services/OperazioneNonConsentita.php": {
+            "size": 268,
+            "sha256": "f07902fc677ee654009dada7ee26164f30d0ccecc18ad8d2b1fa477942b2a836"
+        },
+        "app-core/app/Services/PrestitoService.php": {
+            "size": 2355,
+            "sha256": "e79b9325d12aba6a36910195d31d24e5cf03cd1137dfce07e74f9ac911500017"
+        },
+        "app-core/app/Services/RichiesteIscrizioneService.php": {
+            "size": 4166,
+            "sha256": "0c07ccbf2fc9f61ab3b4dc7f8365eee5f22e129e32963e1ca2ac320b78787a95"
+        },
+        "app-core/app/Services/TesseraCard.php": {
+            "size": 4510,
+            "sha256": "8c24008d3e1a60538b2a08995bddb6f13ebc96b04602457aa8be325652316241"
+        },
+        "app-core/app/View/Components/GuestLayout.php": {
+            "size": 482,
+            "sha256": "efc7da8056696c33fb486cce8a4f2ae1a67bb7545e6e24e6cf9f70cc14b8f0ba"
+        },
+        "app-core/app/View/Components/PublicLayout.php": {
+            "size": 413,
+            "sha256": "54f8bd6ac7a13648f3cf583315dd769485a5d87e923a28172bf6b513fce7777b"
+        },
+        "app-core/bootstrap/app.php": {
+            "size": 1287,
+            "sha256": "e5536fcdb767a06381df0bd4eb38ebed27f05e231ef7852432b9ad4b0a655645"
+        },
+        "app-core/bootstrap/providers.php": {
+            "size": 120,
+            "sha256": "cae5305bb1d2798398d19cf1928b25d60bfd0361c8d160e654a23b1eff66b7ab"
+        },
+        "app-core/config/app.php": {
+            "size": 4272,
+            "sha256": "78dcd36b226fd7b24057cb95f567cb6e96561c2406653892d8aef6dcea8461e4"
+        },
+        "app-core/config/auth.php": {
+            "size": 4040,
+            "sha256": "c7e204e9785c9f596d66fb884b493f658f2327f157646bdb4088efd6b3a7773f"
+        },
+        "app-core/config/cache.php": {
+            "size": 3683,
+            "sha256": "b8bcf382283330b94c0a602ff06452de819041ea709e28eea5065d51d1d7d085"
+        },
+        "app-core/config/cral.php": {
+            "size": 1944,
+            "sha256": "40137d87c237e9963aadadc88e2b9c6f25c2ea666993d6755c6a17e2784ba8ac"
+        },
+        "app-core/config/database.php": {
+            "size": 6982,
+            "sha256": "06759b7b36b8641e9025fe03dd728970c4cb02d5b58ff709cbb0649987b4bfc2"
+        },
+        "app-core/config/filesystems.php": {
+            "size": 2606,
+            "sha256": "ed2ecf0ae3605a10c58d5712ca1a061dc0eeb912a627a36add75e2c9c3a476ad"
+        },
+        "app-core/config/logging.php": {
+            "size": 4340,
+            "sha256": "299ec1ba5b5a803c8e20f666ae7628e442e856cc2ff7ac9e2adb17b97e8ad63b"
+        },
+        "app-core/config/mail.php": {
+            "size": 4028,
+            "sha256": "3046d2d69e34b6855871f85026b0e17799eadfd4361687f13429fec9b7a5da62"
+        },
+        "app-core/config/queue.php": {
+            "size": 4199,
+            "sha256": "6101774da7c8b79af46d0028f2b8b31a484c3f7eda10b76e5b27b6093ad364a4"
+        },
+        "app-core/config/services.php": {
+            "size": 1039,
+            "sha256": "8258c4487eb1d73a97e569eb0e411e3f25368044812df4cba807860432be1d92"
+        },
+        "app-core/config/session.php": {
+            "size": 7848,
+            "sha256": "f2e75e189021597e29940c0859c00c3088ec591e403768fff5143c5687a80f59"
+        },
+        "app-core/database/migrations/0001_01_01_000000_create_users_table.php": {
+            "size": 1473,
+            "sha256": "10d79883bc08ce46510f9ad8b1830b4d06d586dc56ae2c8bac3b3e491f69a90f"
+        },
+        "app-core/database/migrations/0001_01_01_000001_create_cache_table.php": {
+            "size": 867,
+            "sha256": "2ca8398390ecef8eaf72aeac7fefce67f7de631b6f2ec7b7081c8db8953215dc"
+        },
+        "app-core/database/migrations/0001_01_01_000002_create_jobs_table.php": {
+            "size": 1812,
+            "sha256": "7c9c712adf4091c87bf2612f4d0dccdfa1df4501553e4ac068b83d7bd5462fa5"
+        },
+        "app-core/database/migrations/2026_09_02_190827_add_socio_fields_to_users_table.php": {
+            "size": 1732,
+            "sha256": "329ccd9446b3059b2ba701e0acbea18731a9ef5c6c6758ad557b1b5c5a1e75ce"
+        },
+        "app-core/database/migrations/2026_09_02_190828_create_attivita_table.php": {
+            "size": 884,
+            "sha256": "77a39bcd6e2ef338e27ea2d4d9edd31111e06278ab95193d75ad2ab95d3e52a8"
+        },
+        "app-core/database/migrations/2026_09_02_190828_create_foto_table.php": {
+            "size": 718,
+            "sha256": "4b9dc7f84ea62d0d107534915759db7ec5aff2b350387003af28f39b7fd27eaa"
+        },
+        "app-core/database/migrations/2026_09_02_190829_create_documenti_table.php": {
+            "size": 762,
+            "sha256": "8f3342126b32150df5c9c52cc5f59e4ebc3e38a9cea950766ed7f5d90e9bf08c"
+        },
+        "app-core/database/migrations/2026_09_09_190000_create_album_table.php": {
+            "size": 983,
+            "sha256": "695a22d2004651f9a62097b49acc341377a83df37b59908555562604d999dd2a"
+        },
+        "app-core/database/migrations/2026_10_05_100000_add_livello_iscritto_to_users_table.php": {
+            "size": 1018,
+            "sha256": "51b4d3e3562121469f4059223bf97bdde6c24f4e7950c70c8fdfab1ed2f65caa"
+        },
+        "app-core/database/migrations/2026_10_05_100100_add_periodo_e_iscrizioni_to_attivita_table.php": {
+            "size": 2356,
+            "sha256": "e9601bb2567edf91382208a447f3a050bcbaccc0cd10d3bdf6f5369cf4469153"
+        },
+        "app-core/database/migrations/2026_10_05_100200_create_libreria_tables.php": {
+            "size": 2162,
+            "sha256": "9a5e91aa25c565bf62bd17856aecc663455afb311819f7cd251881b8d38ef618"
+        },
+        "app-core/database/migrations/2026_10_06_090000_add_richieste_e_quota_to_users_table.php": {
+            "size": 1599,
+            "sha256": "f2b0ee27a8899a43e85da809b08799273fcd61bb4c51e26b8a4fdcc36dc5fe66"
+        },
+        "app-core/database/migrations/2026_10_07_090000_add_metodo_pagamento_e_archivio_foto.php": {
+            "size": 1282,
+            "sha256": "360f1811a2084dbc6d0963b07c7764db693b073c7347c3b70bf0d7e130315156"
+        },
+        "app-core/database/migrations/2026_10_07_090100_raggruppa_foto_secondo_torneo_biliardino.php": {
+            "size": 1545,
+            "sha256": "cf7acedd55a63dfe434547757c2fdebcf1a7fc41e5afe99aff7c37cdab2aea6e"
+        },
+        "app-core/database/post-aggiornamento.php": {
+            "size": 9247,
+            "sha256": "ee18c7c430acdc7f45f2982e75ead8221a8ce89bfdde7eb795fb406b98beaca3"
+        },
+        "app-core/lang/it.json": {
+            "size": 3006,
+            "sha256": "bbcff8b00a6cb12015b571d3947851b30487a4fd3ba24644c5e49e5c5d7323a1"
+        },
+        "app-core/lang/it/validation.php": {
+            "size": 4291,
+            "sha256": "2df69b8419d49ba1b5130bd7a93504f0bcfaa4bf5a7b7a6a9716762896e1c20c"
+        },
+        "app-core/resources/fonts/Lato-Bold.ttf": {
+            "size": 656544,
+            "sha256": "8a0aace75d33794eece4b28187bfc1df0bbd2888b5d8a56e01788c8d65d16be1"
+        },
+        "app-core/resources/views/account/show.blade.php": {
+            "size": 3233,
+            "sha256": "5fd35c5185d4554046eb5198f4efec34b144cddae51d3afa2318e699acf4ff13"
+        },
+        "app-core/resources/views/attesa-approvazione.blade.php": {
+            "size": 3026,
+            "sha256": "f60d7729fa8a9abc48f543218e6cca16111aa4a1566031bf1f9a42a358ba1ec2"
+        },
+        "app-core/resources/views/attivita/index.blade.php": {
+            "size": 1593,
+            "sha256": "ca5726c7b8a02637d3aebda9d949778b181b90908331802e53ed8a5048c45305"
+        },
+        "app-core/resources/views/attivita/show.blade.php": {
+            "size": 14127,
+            "sha256": "f74f423b4c3dedce3b0d9d61ed59dbc1a776d879ef1c4e764848c551d32c7dc5"
+        },
+        "app-core/resources/views/auth/confirm-password.blade.php": {
+            "size": 741,
+            "sha256": "c8fb0d44fb1ee1ab05a5db7ccd9a310da33321a0d5230dcff551393d5a349ff1"
+        },
+        "app-core/resources/views/auth/forgot-password.blade.php": {
+            "size": 1041,
+            "sha256": "0d36fdd847d7f44ad8603d918431a70fab06026df6e2547a545f7454c2b6f9d1"
+        },
+        "app-core/resources/views/auth/login.blade.php": {
+            "size": 2024,
+            "sha256": "24cddecef15a08f60a7730df7610eb6422225e793b36524584b92b2abaffa924"
+        },
+        "app-core/resources/views/auth/register.blade.php": {
+            "size": 11037,
+            "sha256": "12c4bb8ed75eb06ad5f85e431ef376638e906692ae0a0eebd2b2c6b5f91f37bc"
+        },
+        "app-core/resources/views/auth/reset-password.blade.php": {
+            "size": 1415,
+            "sha256": "d202d3096a3c7c74499e3ce16abe4bd653fda1ca6d5f4e1225659c2f053ea970"
+        },
+        "app-core/resources/views/auth/verify-email.blade.php": {
+            "size": 1123,
+            "sha256": "e64c2d7b8b282a37f584f9ce263788c9290a209522f57e9fd7bce46ab226bc04"
+        },
+        "app-core/resources/views/components/application-logo.blade.php": {
+            "size": 125,
+            "sha256": "3e81b70837f694e4088fdeba3f4f7b3df0ec95484e81d60fe3b5bda80e9f4003"
+        },
+        "app-core/resources/views/components/attivita/card.blade.php": {
+            "size": 2398,
+            "sha256": "05b264827438cbe902a7dc9a7e6b93492228c8fdafe07624bf58a9bbecd0dfcb"
+        },
+        "app-core/resources/views/components/auth-session-status.blade.php": {
+            "size": 146,
+            "sha256": "8b1051cec626eecd478f0991b3b741ff91922c5d92bff056fe8fbae596d92712"
+        },
+        "app-core/resources/views/components/danger-button.blade.php": {
+            "size": 171,
+            "sha256": "21a065afc99edbdf38a7c68aed7306368bdc2958ffcf126b02f4b1df0f1f212a"
+        },
+        "app-core/resources/views/components/input-error.blade.php": {
+            "size": 243,
+            "sha256": "0a244bf34868c0d073b49c6d88ffb9ef69fbc3fb0949bd9073a1443ad126f96c"
+        },
+        "app-core/resources/views/components/input-label.blade.php": {
+            "size": 109,
+            "sha256": "c3b392e92450ceb614b89e50f587a9e187bb2f907110663764a1e15deccf9b10"
+        },
+        "app-core/resources/views/components/lightbox.blade.php": {
+            "size": 2846,
+            "sha256": "41e709a69e1214ad955e2f8cce74b6277874843459ea15b54e531af3db83f6eb"
+        },
+        "app-core/resources/views/components/modal.blade.php": {
+            "size": 3168,
+            "sha256": "2c7a9a11118e639e9c65c6584f0c2b296cf8599d474369be27ab0a8f594801b2"
+        },
+        "app-core/resources/views/components/page-hero.blade.php": {
+            "size": 2322,
+            "sha256": "c488c7064ccfee697d2cdfa5cf4dba547efc529f9d9e081e48c74b9437f90cd4"
+        },
+        "app-core/resources/views/components/password-input.blade.php": {
+            "size": 1819,
+            "sha256": "0bb70dd08c7a8c6e5871b8331171d1ed3a490935150db91c5852a380f6761ab9"
+        },
+        "app-core/resources/views/components/paypal-button.blade.php": {
+            "size": 1276,
+            "sha256": "9514dea2e2060a2e72699a46baa252d0eb078682f29800070e8bb9ff66fbb621"
+        },
+        "app-core/resources/views/components/primary-button.blade.php": {
+            "size": 112,
+            "sha256": "05fce38ac9d4f0ca07ca30590ec104e2e426d68ec7fb7548f3e03190f914e330"
+        },
+        "app-core/resources/views/components/richiesta-stato.blade.php": {
+            "size": 1547,
+            "sha256": "2f29c84875103b4df44b411290b9d6bcb0dc11454983e714cf8ca3da27936d24"
+        },
+        "app-core/resources/views/components/secondary-button.blade.php": {
+            "size": 110,
+            "sha256": "a55ca815a842ef0ad648889b2419c3910374491d0d0703ad6c017bbdb2a85028"
+        },
+        "app-core/resources/views/components/tessera-pagamento.blade.php": {
+            "size": 6185,
+            "sha256": "d9c83ae94acec2241a8cb16c64c616d0d085ac7e9f3e2602fca2facc91552fab"
+        },
+        "app-core/resources/views/components/text-input.blade.php": {
+            "size": 127,
+            "sha256": "32ad9787e0676c82993a53731b254b8c5be785a27f9745c499e939b8c77500ef"
+        },
+        "app-core/resources/views/components/wave.blade.php": {
+            "size": 842,
+            "sha256": "1fa116754b27ef81a61ad91ea5f5b1e8540525145b1de8547f032cf419a923b3"
+        },
+        "app-core/resources/views/dashboard.blade.php": {
+            "size": 5620,
+            "sha256": "458ffcd1a2e4d470add687c7a16e5ccf3c187d15f0aa56f75cb7bdfdcbb8f091"
+        },
+        "app-core/resources/views/documenti/index.blade.php": {
+            "size": 2121,
+            "sha256": "11a59d591a8c320f79a0695e9e93a5f7cd2c611c51426f4fd4ec17775144ba8a"
+        },
+        "app-core/resources/views/emails/iscrizione-sito-approvata.blade.php": {
+            "size": 1876,
+            "sha256": "eb88e91f4b3a203b614216871f38eac4e5435e8b889d1863e65ca8765747f533"
+        },
+        "app-core/resources/views/emails/nuova-richiesta.blade.php": {
+            "size": 3096,
+            "sha256": "57d731cb3dda2819f983606ec6f294e51456b42f2bd7793631b895576b959916"
+        },
+        "app-core/resources/views/emails/pagamento-dichiarato.blade.php": {
+            "size": 1514,
+            "sha256": "162dba4cacf5e927efd2b224bdba205ad547b894e59123e939ed06615d5301b3"
+        },
+        "app-core/resources/views/emails/pagamento-paypal-ricevuto.blade.php": {
+            "size": 1471,
+            "sha256": "9fcc7134a0b969b79d4700bae8549f36abede3bb8b8cce04814e2a848d2ab0f1"
+        },
+        "app-core/resources/views/emails/tessera-approvata.blade.php": {
+            "size": 3172,
+            "sha256": "5c61c42b898d0538c210cf28391ae7f2cf537c56a50b8cabf2bfd7bb0a5124b5"
+        },
+        "app-core/resources/views/foto/album.blade.php": {
+            "size": 4188,
+            "sha256": "31eb7d232de0feb074360dd76d36c53e6e8a44d6e6f9e3b01d1f423456f41b8d"
+        },
+        "app-core/resources/views/foto/index.blade.php": {
+            "size": 4960,
+            "sha256": "e6cd1cbb261f22bc3d5d06afc76d04d08d3ffce2b55919eb22ae02771919c2e3"
+        },
+        "app-core/resources/views/home.blade.php": {
+            "size": 15687,
+            "sha256": "56b5dc670ce13b330a1eddd52d54b8af6181fb02b00d64cd4a30376c49b65850"
+        },
+        "app-core/resources/views/layouts/guest.blade.php": {
+            "size": 1624,
+            "sha256": "07007af20a795df4bb5e110bc754c033a3cb8f35d0a47011c24aa27b6b332b9e"
+        },
+        "app-core/resources/views/layouts/partials/head.blade.php": {
+            "size": 902,
+            "sha256": "19763690214f28409f0bd2fb303616ee7cd2a2aa97976b933b191ed97bfac87d"
+        },
+        "app-core/resources/views/layouts/partials/motion.blade.php": {
+            "size": 4558,
+            "sha256": "c9b15b0aa189504e7459569035f1aac06ed0c965376df925f732dfceb86ace01"
+        },
+        "app-core/resources/views/layouts/public.blade.php": {
+            "size": 11286,
+            "sha256": "cfce50dc60919fe064f702c16890873d68b65ad1d7ed42d69e02954afe271b6f"
+        },
+        "app-core/resources/views/libreria/index.blade.php": {
+            "size": 4495,
+            "sha256": "3d17fdf53b0f6d407291e0aef19da5c132e9fe3bb831fb93fd2cff7950e78c46"
+        },
+        "app-core/resources/views/libreria/prestiti.blade.php": {
+            "size": 2543,
+            "sha256": "da97f940cb431b99f94b0d730e3ca7252df5182f2c284048a9f862d02028d74f"
+        },
+        "app-core/resources/views/libreria/show.blade.php": {
+            "size": 5225,
+            "sha256": "491b59bcb1a789c322641d84022e7c8ddf474640da62187461c6e7d9701d3723"
+        },
+        "app-core/resources/views/privacy.blade.php": {
+            "size": 5951,
+            "sha256": "57868d7fa37b71a255a5358967adc2b6b8a77bfd80e59b48c657abca53d81ba2"
+        },
+        "app-core/resources/views/profile/edit.blade.php": {
+            "size": 677,
+            "sha256": "dbf00cbc267aa4dbfee582f8920b8d46a7bcbaae8dddcae7fc1157672f32a1ce"
+        },
+        "app-core/resources/views/profile/partials/delete-user-form.blade.php": {
+            "size": 2116,
+            "sha256": "cf2edaef7f8b71f51179dac3647739a93fbffda12d244557c09fc8309d37022e"
+        },
+        "app-core/resources/views/profile/partials/update-password-form.blade.php": {
+            "size": 2017,
+            "sha256": "b5a70e56e4c114884f40811ac0a559286d125b1c54659b6e6333e8ce0b027b4c"
+        },
+        "app-core/resources/views/profile/partials/update-profile-information-form.blade.php": {
+            "size": 2557,
+            "sha256": "8a97f3c569dbf69a9fb72e5144e4ba922e784c413cf1f517fca3611737de3be2"
+        },
+        "app-core/resources/views/socio/richiesta.blade.php": {
+            "size": 6225,
+            "sha256": "48671ee9df9e1a7ff78b779f6969fa3d9930de23bc3bede0e5d62692f0387bf2"
+        },
+        "app-core/resources/views/tessera/verifica.blade.php": {
+            "size": 2113,
+            "sha256": "f0611e3c687f9d14011e2b8304e9a6dcbff7bb53b8d26dab9c5597971f2b55c9"
+        },
+        "app-core/resources/views/vendor/pagination/tailwind.blade.php": {
+            "size": 2091,
+            "sha256": "0d7bedf22c05e07ad6810a63f37e9b65b782c44066e20643f2ce47b8bef64076"
+        },
+        "app-core/routes/auth.php": {
+            "size": 2474,
+            "sha256": "b6c5806f9231d3b604fff67560a74f4093dd4934af782cc70846a32afdd867f5"
+        },
+        "app-core/routes/console.php": {
+            "size": 210,
+            "sha256": "9adccc33e7dd400683e434774077c7fdb2f299c5712cedf16a43fdf56f2850fa"
+        },
+        "app-core/routes/web.php": {
+            "size": 4954,
+            "sha256": "0904e396af464dc7ce29411121ecce3ee795a0a845f69332d9ade281c3041b33"
+        },
+        "build/assets/app-CFiJDSPT.css": {
+            "size": 68052,
+            "sha256": "832bd5c5ac0c8029f95359d48a62c22316b8851c2c967feedc266603fa471c49"
+        },
+        "build/assets/app-CeGsd0iW.js": {
+            "size": 55820,
+            "sha256": "623ee417d71a76bdc38998da1f94466133cbfeb528e3ba9fe87dc46f3973ff18"
+        },
+        "build/manifest.json": {
+            "size": 331,
+            "sha256": "034ccbb5c635a8cddac8c8916e5c661f87b2348f1e03a299d61f082fbe09d761"
+        },
+        "favicon.ico": {
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "fonts/bricolage-latin-ext.woff2": {
+            "size": 30736,
+            "sha256": "776f6dcaf03636cd69a5802c94808cc8896c0a66c8e9ce0fe147231b6ee01957"
+        },
+        "fonts/bricolage-latin.woff2": {
+            "size": 76888,
+            "sha256": "a79fdb52d4a5c76552452f69202add96e287401fff03d3e8c0e38b4dcb5a99cd"
+        },
+        "fonts/figtree-latin-ext.woff2": {
+            "size": 10280,
+            "sha256": "bf7828e2c258cffcfa50a048ee388a36b95bc16b452e8d36fa797635dbe15965"
+        },
+        "fonts/figtree-latin.woff2": {
+            "size": 20156,
+            "sha256": "4ba7d3d096695818fe0686be4f1e82c6b05134e18a22260336130335027462dd"
+        },
+        "images/foto-riservata.svg": {
+            "size": 230,
+            "sha256": "db115b0f5ffff585a9377b76e35434791a421e170d994b6678e70ca6d748d499"
+        },
+        "images/logo-cral-white.png": {
+            "size": 7757,
+            "sha256": "55a2a1ed3d8ac8cd717b481b028811d8ec1b27c22ab17cb80dfb0a1cda74ed7d"
+        },
+        "images/logo-cral.png": {
+            "size": 8054,
+            "sha256": "4e2da57908ce2e5647df98f864ff24861b4b5039bacbb3c00b3cfa99fe40e446"
+        },
+        "robots.txt": {
+            "size": 24,
+            "sha256": "e5c4b84484ee4216e9373be99380320c25dd94805f99f0a805846f087636553f"
+        }
+    }
+}

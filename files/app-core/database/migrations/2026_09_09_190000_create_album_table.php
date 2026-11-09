@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('album', function (Blueprint $table) {
+            $table->id();
+            $table->string('titolo');
+            $table->foreignId('attivita_id')->nullable()->constrained('attivita')->nullOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::table('foto', function (Blueprint $table) {
+            $table->foreignId('album_id')->nullable()->after('attivita_id')->constrained('album')->nullOnDelete();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('foto', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('album_id');
+        });
+
+        Schema::dropIfExists('album');
+    }
+};
