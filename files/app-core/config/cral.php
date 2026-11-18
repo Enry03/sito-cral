@@ -16,6 +16,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Anno della tessera
+    |--------------------------------------------------------------------------
+    | Anno stampato sulla grafica della tessera e da cui vale: chi diventa socio
+    | adesso lo è dal 2027. Serve solo per i testi del sito.
+    */
+    'tessera_anno' => (int) env('CRAL_TESSERA_ANNO', 2027),
+
+    /*
+    |--------------------------------------------------------------------------
     | Tessera socio
     |--------------------------------------------------------------------------
     | Importo della quota associativa (in euro). Si può scrivere dal pannello di

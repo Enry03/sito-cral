@@ -105,18 +105,15 @@ class RichiestaResource extends Resource
                 Tables\Columns\TextColumn::make('quota')
                     ->label('Quota tessera')
                     ->badge()
-                    ->state(fn (User $record): ?string => match (true) {
-                        ! $record->chiedeTessera() => null,
-                        $record->pagatoConPaypal() => 'PayPal: pagamento ricevuto',
-                        (bool) $record->quota_pagata => 'Pagata',
-                        $record->pagamento_dichiarato_il !== null => 'Pagamento dichiarato (da verificare)',
-                        default => 'Non ancora pagata',
-                    })
+                    ->state(fn (User $record): ?string => $record->chiedeTessera() ? $record->statoPagamentoQuota() : null)
                     ->color(fn (?string $state): string => match ($state) {
-                        'PayPal: pagamento ricevuto', 'Pagata' => 'success',
-                        'Pagamento dichiarato (da verificare)' => 'warning',
+                        User::PAGAMENTO_PAGATA => 'success',
+                        User::PAGAMENTO_IN_ELABORAZIONE => 'warning',
                         default => 'gray',
                     })
+                    ->tooltip(fn (User $record): ?string => $record->pagatoConPaypal()
+                        ? 'PayPal ha confermato il pagamento (operazione '.$record->paypal_txn_id.').'
+                        : ($record->statoPagamentoQuota() === User::PAGAMENTO_IN_ELABORAZIONE ? 'Dice di aver pagato: verifica l\'incasso prima di approvare.' : null))
                     ->placeholder('—'),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
@@ -154,24 +151,26 @@ class RichiestaResource extends Resource
                     ->color('success')
                     ->modalHeading(fn (User $record): string => 'Accetta: '.$record->richiestaLabel())
                     ->modalDescription(fn (User $record): string => $record->chiedeTessera()
-                        ? "{$record->name} diventa socio CRAL e riceve via email la tessera con il suo nome."
+                        ? "{$record->name} diventa socio CRAL: la tessera con il suo nome compare nella sua area e gli arriva via email."
                         : "{$record->name} potrà accedere al sito e riceve una email di conferma.")
                     ->modalSubmitActionLabel('Accetta')
                     ->form(fn (User $record): array => $record->chiedeTessera() ? [
                         Forms\Components\TextInput::make('numero_tessera')
                             ->label('Numero di tessera')
-                            ->helperText('Proposto in automatico: puoi cambiarlo. Compare sulla tessera inviata via email.')
+                            ->helperText('Proposto in automatico: puoi cambiarlo. Compare sulla tessera: si parte da 1 e si prosegue in ordine (sulla tessera si legge solo il numero, es. 1, 2, 3).')
                             ->default(fn () => User::prossimoNumeroTessera())
                             ->required()
                             ->maxLength(255)
                             ->unique(table: User::class, column: 'numero_tessera', ignorable: $record),
                         Forms\Components\Toggle::make('quota_pagata')
-                            ->label('Quota di tessera incassata')
-                            ->default($record->quota_pagata || $record->pagamento_dichiarato_il !== null)
+                            ->label('Ho verificato che la quota di tessera è stata incassata')
+                            // Preimpostata solo se l'incasso è già certo (PayPal l'ha confermato): se la
+                            // persona dice soltanto di aver pagato, è l'amministratore a spuntarla dopo il controllo.
+                            ->default((bool) $record->quota_pagata)
                             ->helperText(match (true) {
                                 $record->pagatoConPaypal() => 'PayPal ha confermato il pagamento il '.$record->quota_pagata_il?->format('d/m/Y').' (operazione '.$record->paypal_txn_id.').',
                                 $record->pagamento_dichiarato_il !== null => 'Ha segnalato il pagamento ('.($record->metodo_pagamento === 'bonifico' ? 'bonifico' : 'PayPal').') il '.$record->pagamento_dichiarato_il->format('d/m/Y').': verifica l\'incasso sul '.($record->metodo_pagamento === 'bonifico' ? 'conto bancario.' : 'tuo conto PayPal.'),
-                                default => 'Scelta dell\'utente: '.($record->metodoPagamentoLabel() ?? 'nessuna').'. Spunta se hai già ricevuto la quota (di persona, con bonifico o altro).',
+                                default => 'Attenzione: il pagamento non risulta ancora arrivato (scelta dell\'utente: '.($record->metodoPagamentoLabel() ?? 'nessuna').'). Spunta solo se hai già ricevuto la quota (di persona, con bonifico o altro).',
                             }),
                     ] : [])
                     ->action(function (User $record, array $data) {

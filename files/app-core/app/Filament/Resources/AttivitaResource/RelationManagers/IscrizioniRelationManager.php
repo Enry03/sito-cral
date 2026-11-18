@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AttivitaResource\RelationManagers;
 
+use App\Filament\Resources\IscrizioneAttivitaResource;
 use App\Models\IscrizioneAttivita;
 use App\Models\User;
 use Filament\Forms;
@@ -14,7 +15,7 @@ class IscrizioniRelationManager extends RelationManager
 {
     protected static string $relationship = 'iscrizioni';
 
-    protected static ?string $title = 'Partecipanti';
+    protected static ?string $title = 'Partecipanti e richieste';
 
     protected static ?string $modelLabel = 'iscrizione';
 
@@ -25,17 +26,21 @@ class IscrizioniRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->label('Socio')
+                    ->label('Persona')
                     ->options(fn () => User::query()
-                        ->where('ruolo', 'socio')
+                        ->whereIn('ruolo', ['socio', 'iscritto'])
                         ->where('stato_iscrizione', 'attivo')
-                        ->whereNotNull('numero_tessera')
                         ->orderBy('name')
                         ->get()
-                        ->mapWithKeys(fn (User $u) => [$u->id => $u->name.' ('.$u->numero_tessera.')']))
+                        ->mapWithKeys(fn (User $u) => [$u->id => $u->name.($u->numero_tessera ? ' ('.$u->numero_tessera.')' : ' — iscritto al sito')]))
                     ->searchable()
                     ->required()
                     ->unique(ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->where('attivita_id', $this->getOwnerRecord()->id)),
+                Forms\Components\Select::make('stato')
+                    ->label('Stato')
+                    ->options(IscrizioneAttivita::stati())
+                    ->default(IscrizioneAttivita::CONFERMATA)
+                    ->required(),
                 Forms\Components\TextInput::make('importo')
                     ->numeric()
                     ->prefix('€')
@@ -53,10 +58,20 @@ class IscrizioniRelationManager extends RelationManager
             ->defaultSort('created_at')
             ->columns([
                 Tables\Columns\TextColumn::make('user.numero_tessera')
-                    ->label('Tessera'),
+                    ->label('Tessera')
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('Socio')
+                    ->label('Persona')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('stato')
+                    ->label('Stato')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => IscrizioneAttivita::stati()[$state] ?? $state)
+                    ->color(fn (string $state): string => match ($state) {
+                        IscrizioneAttivita::CONFERMATA => 'success',
+                        IscrizioneAttivita::RIFIUTATA => 'danger',
+                        default => 'warning',
+                    }),
                 Tables\Columns\TextColumn::make('user.email')
                     ->label('Email')
                     ->toggleable(),
@@ -64,7 +79,7 @@ class IscrizioniRelationManager extends RelationManager
                     ->label('Telefono')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Iscritto il')
+                    ->label('Richiesta del')
                     ->dateTime('d/m/Y H:i'),
                 Tables\Columns\TextColumn::make('importo')
                     ->money('EUR'),
@@ -74,19 +89,22 @@ class IscrizioniRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Iscrivi un socio')
+                    ->label('Iscrivi una persona')
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['pagato_il'] = ! empty($data['pagato']) ? now() : null;
+                        $data['gestita_il'] = ($data['stato'] ?? IscrizioneAttivita::CONFERMATA) === IscrizioneAttivita::IN_ATTESA ? null : now();
 
                         return $data;
                     }),
             ])
             ->actions([
+                IscrizioneAttivitaResource::azioneConferma(),
+                IscrizioneAttivitaResource::azioneRifiuta(),
                 Tables\Actions\Action::make('segnaPagato')
                     ->label('Segna pagato')
                     ->icon('heroicon-o-banknotes')
                     ->color('success')
-                    ->visible(fn (IscrizioneAttivita $record): bool => ! $record->pagato)
+                    ->visible(fn (IscrizioneAttivita $record): bool => $record->confermata() && ! $record->pagato)
                     ->requiresConfirmation()
                     ->action(fn (IscrizioneAttivita $record) => $record->update(['pagato' => true, 'pagato_il' => now()])),
                 Tables\Actions\EditAction::make()
@@ -96,7 +114,7 @@ class IscrizioniRelationManager extends RelationManager
                         return $data;
                     }),
                 Tables\Actions\DeleteAction::make()
-                    ->modalDescription('Il socio non risulterà più iscritto a questa attività.'),
+                    ->modalDescription('La persona non risulterà più iscritta a questa attività.'),
             ]);
     }
 }

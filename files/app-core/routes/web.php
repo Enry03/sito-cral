@@ -90,6 +90,15 @@ Route::middleware(['auth', 'socio.attivo'])->group(function () {
             ->name('prestito');
     });
 
+    // Richiesta di iscrizione a un'attività (torneo, gita, uscita...): chi ha un
+    // account approvato la manda, l'amministratore la conferma o la declina.
+    Route::post('/attivita/{slug}/partecipa', [AttivitaController::class, 'partecipa'])
+        ->middleware('throttle:20,1')
+        ->name('attivita.partecipa');
+    Route::delete('/attivita/{slug}/partecipa', [AttivitaController::class, 'annullaPartecipazione'])
+        ->middleware('throttle:20,1')
+        ->name('attivita.annulla');
+
     // Un iscritto può chiedere la tessera di socio.
     Route::get('/diventa-socio', [RichiestaSocioController::class, 'show'])->name('socio.richiesta');
     Route::post('/diventa-socio', [RichiestaSocioController::class, 'store'])
@@ -100,16 +109,11 @@ Route::middleware(['auth', 'socio.attivo'])->group(function () {
 // Soci CRAL con tessera.
 Route::middleware(['auth', 'socio.attivo', 'socio.tessera'])->group(function () {
     Route::get('/account', [AccountController::class, 'show'])->name('account.show');
+    Route::get('/account/tessera.jpg', [AccountController::class, 'tessera'])->name('account.tessera');
 
     Route::get('/documenti', [DocumentoController::class, 'index'])->name('documenti.index');
     Route::get('/documenti/{documento}/scarica', [DocumentoController::class, 'download'])->name('documenti.download');
 
-    Route::post('/attivita/{slug}/partecipa', [AttivitaController::class, 'partecipa'])
-        ->middleware('throttle:20,1')
-        ->name('attivita.partecipa');
-    Route::delete('/attivita/{slug}/partecipa', [AttivitaController::class, 'annullaPartecipazione'])
-        ->middleware('throttle:20,1')
-        ->name('attivita.annulla');
 });
 
 require __DIR__.'/auth.php';

@@ -4,9 +4,9 @@ namespace App\Services;
 
 /**
  * Genera l'immagine della tessera CRAL con nome (e numero) scritti nei campi
- * bianchi della grafica ufficiale. Serve solo per l'email che l'amministratore
- * invia quando approva la richiesta: sul sito la tessera non viene mai mostrata
- * né scaricabile, così nessuno può copiarla scrivendoci un altro nome.
+ * bianchi della grafica ufficiale. Si usa nell'email che parte quando l'amministratore
+ * approva la richiesta e nell'area personale del socio (AccountController): la
+ * grafica vuota non è mai raggiungibile dal sito, solo la tessera già intestata.
  *
  * Se sul server mancano GD o FreeType non succede nulla di grave: i metodi
  * restituiscono null e chi li usa ripiega sulla grafica "vuota" più il nome
@@ -59,11 +59,17 @@ class TesseraCard
     }
 
     /**
-     * Sulla tessera compare solo la parte numerica ("CRAL-0042" → "0042").
+     * Sulla tessera compare solo il numero, senza prefisso né zeri davanti:
+     * "CRAL-0001" → "1", "CRAL-0042" → "42". Un numero scelto a mano che non
+     * segue il formato ("A-17") resta com'è.
      */
     public static function numeroBreve(?string $numero): string
     {
         $numero = trim((string) $numero);
+
+        if (preg_match('/^CRAL-(\d+)$/i', $numero, $m)) {
+            return (string) ((int) $m[1]);
+        }
 
         return preg_match('/^CRAL-(.+)$/i', $numero, $m) ? $m[1] : $numero;
     }

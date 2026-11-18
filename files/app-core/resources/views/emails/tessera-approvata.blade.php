@@ -32,6 +32,7 @@
         <div style="padding:8px 28px 32px;">
             <p style="margin:14px 0; font-size:16px; line-height:1.6;">
                 Il tuo numero di tessera è <strong>{{ $socio->numero_tessera }}</strong>. Conservala: è personale e non va condivisa.
+                La trovi anche sempre nella tua area personale sul sito, sotto «Il mio account». Vale dal {{ config('cral.tessera_anno') }}.
             </p>
             <p style="margin:14px 0 6px; font-size:16px; line-height:1.6;">Da adesso puoi:</p>
             <ul style="margin:0 0 22px; padding-left:20px; font-size:16px; line-height:1.8;">

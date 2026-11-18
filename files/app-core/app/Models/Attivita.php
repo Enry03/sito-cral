@@ -88,6 +88,17 @@ class Attivita extends Model
         return $this->hasMany(IscrizioneAttivita::class);
     }
 
+    /** Per i conteggi: withCount('iscrizioniConfermate') dà iscrizioni_confermate_count. */
+    public function iscrizioniConfermate()
+    {
+        return $this->hasMany(IscrizioneAttivita::class)->where('stato', IscrizioneAttivita::CONFERMATA);
+    }
+
+    public function iscrizioniInAttesa()
+    {
+        return $this->hasMany(IscrizioneAttivita::class)->where('stato', IscrizioneAttivita::IN_ATTESA);
+    }
+
     // ------------------------------------------------------------------- scope
 
     public function scopeInProgramma($query)
@@ -277,9 +288,13 @@ class Attivita extends Model
 
     // -------------------------------------------------------------- iscrizioni
 
+    /**
+     * Quanti hanno l'iscrizione confermata: solo loro occupano un posto (le
+     * richieste in attesa o non accolte no).
+     */
     public function iscrittiCount(): int
     {
-        return $this->iscrizioni_count ?? $this->iscrizioni()->count();
+        return $this->iscrizioni_confermate_count ?? $this->iscrizioni()->confermate()->count();
     }
 
     public function postiRimasti(): ?int

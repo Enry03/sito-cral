@@ -30,7 +30,7 @@
                     @if($utente->pagatoConPaypal())
                         Abbiamo ricevuto il tuo pagamento con PayPal.
                     @endif
-                    Un amministratore approverà la richiesta e ti invierà la tessera via email.
+                    Un amministratore approverà la richiesta e la tua tessera comparirà nella tua area (ti scriviamo anche una email).
                 </p>
             </div>
         </div>
@@ -39,7 +39,7 @@
             Quota associativa{{ $importo ? ' — '.$importo : '' }}
         </h2>
         <p class="mt-1 text-cral-navy-soft">
-            Scegli come preferisci pagare. Appena la quota è stata saldata, un amministratore approva la richiesta e ti invia la tessera via email.
+            Scegli come preferisci pagare. Appena la quota è stata saldata, un amministratore verifica il pagamento, approva la richiesta e la tua tessera compare nella tua area.
         </p>
 
         {{-- Scelta del modo di pagamento (finché non hai segnalato di aver pagato) --}}

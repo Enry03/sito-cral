@@ -76,7 +76,7 @@
             <h2 class="mt-3 text-4xl font-bold leading-[1.05] tracking-[-0.03em] sm:text-5xl">Diventare socio è semplice</h2>
             <p class="mt-5 text-lg leading-relaxed text-cral-navy-soft">
                 Ti iscrivi dal sito, scegli come pagare la quota e un amministratore approva la richiesta.
-                La tessera ti arriva via email, intestata a te.
+                La tessera la trovi nella tua area, intestata a te.
             </p>
         </div>
 
@@ -94,12 +94,12 @@
                 <li data-reveal>
                     <span class="grid h-14 w-14 place-items-center rounded-full bg-cral-red font-display text-xl font-bold text-white shadow-glow">2</span>
                     <h3 class="mt-6 text-xl font-bold tracking-tight">Scegli come pagare la quota</h3>
-                    <p class="mt-2 leading-relaxed text-cral-navy-soft">In contanti in azienda, scrivendoci per email oppure con PayPal.</p>
+                    <p class="mt-2 leading-relaxed text-cral-navy-soft">In contanti in azienda, con bonifico oppure con PayPal.</p>
                 </li>
                 <li data-reveal>
                     <span class="grid h-14 w-14 place-items-center rounded-full bg-cral-navy font-display text-xl font-bold text-white shadow-lift">3</span>
-                    <h3 class="mt-6 text-xl font-bold tracking-tight">Ricevi la tessera via email</h3>
-                    <p class="mt-2 leading-relaxed text-cral-navy-soft">Un amministratore approva la richiesta e ti scrive con la tua tessera personale e il tuo numero.</p>
+                    <h3 class="mt-6 text-xl font-bold tracking-tight">Trovi la tessera nella tua area</h3>
+                    <p class="mt-2 leading-relaxed text-cral-navy-soft">Quando un amministratore ha verificato il pagamento e approvato la richiesta, la tua tessera con nome e numero compare nella tua area personale e ti arriva anche via email.</p>
                 </li>
             </ol>
         </div>
@@ -187,7 +187,7 @@
         <div class="container-x py-28 text-center sm:py-40">
             <h2 class="mx-auto max-w-3xl text-4xl font-bold leading-[1.04] tracking-[-0.035em] sm:text-6xl" data-reveal>Diventa socio del CRAL</h2>
             <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/85" data-reveal data-delay="0.1">
-                Iscriviti in pochi minuti: dopo l'approvazione ricevi la tessera via email e accedi all'area riservata
+                Iscriviti in pochi minuti: dopo l'approvazione trovi la tessera nella tua area riservata
                 con documenti, libreria e iscrizioni alle attività.
             </p>
             <div class="mt-10" data-reveal data-delay="0.2">

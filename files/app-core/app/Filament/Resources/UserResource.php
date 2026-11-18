@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -135,6 +136,18 @@ class UserResource extends Resource
                         'primary' => 'socio',
                         'danger' => 'admin',
                     ]),
+                Tables\Columns\TextColumn::make('quota')
+                    ->label('Pagamento quota')
+                    ->badge()
+                    ->state(fn (User $record): ?string => $record->statoPagamentoQuota())
+                    ->color(fn (?string $state): string => match ($state) {
+                        User::PAGAMENTO_PAGATA => 'success',
+                        User::PAGAMENTO_IN_ELABORAZIONE => 'warning',
+                        User::PAGAMENTO_DA_PAGARE => 'danger',
+                        default => 'gray',
+                    })
+                    ->tooltip(fn (User $record): ?string => $record->metodoPagamentoLabel())
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('richiede_tessera')
                     ->label('Richiesta')
                     ->badge()
@@ -177,6 +190,19 @@ class UserResource extends Resource
                     ]),
                 Tables\Filters\TernaryFilter::make('richiede_tessera')
                     ->label('Chiede la tessera'),
+                Tables\Filters\SelectFilter::make('pagamento_quota')
+                    ->label('Pagamento quota')
+                    ->options([
+                        User::PAGAMENTO_DA_PAGARE => 'Da pagare',
+                        User::PAGAMENTO_IN_ELABORAZIONE => 'In elaborazione',
+                        User::PAGAMENTO_PAGATA => 'Pagata',
+                    ])
+                    ->query(fn (Builder $query, array $data) => match ($data['value'] ?? null) {
+                        User::PAGAMENTO_PAGATA => $query->where('ruolo', '!=', 'admin')->where('quota_pagata', true),
+                        User::PAGAMENTO_IN_ELABORAZIONE => $query->chiedonoTessera()->where('quota_pagata', false)->whereNotNull('pagamento_dichiarato_il'),
+                        User::PAGAMENTO_DA_PAGARE => $query->chiedonoTessera()->where('quota_pagata', false)->whereNull('pagamento_dichiarato_il'),
+                        default => $query,
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

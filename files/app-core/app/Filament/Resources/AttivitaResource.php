@@ -110,7 +110,7 @@ class AttivitaResource extends Resource
                     ->columns(2),
 
                 Forms\Components\Section::make('Iscrizioni dei soci')
-                    ->description('Solo i soci CRAL con tessera possono iscriversi (non basta l\'iscrizione al sito).')
+                    ->description('Vale per ogni tipo di attività (torneo, gita, uscita...). Chi ha un account approvato manda una richiesta di iscrizione: tu la confermi o la declini dalla voce "Iscrizioni attività" (o dalla scheda Partecipanti di questa attività). I posti li occupano solo le iscrizioni confermate.')
                     ->schema([
                         Forms\Components\Toggle::make('iscrizione_abilitata')
                             ->label('Permetti ai soci di iscriversi a questa attività')
@@ -181,7 +181,7 @@ class AttivitaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->withCount('iscrizioni'))
+            ->modifyQueryUsing(fn (Builder $query) => $query->withCount(['iscrizioniConfermate', 'iscrizioniInAttesa']))
             ->defaultSort('data_evento', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('immagine_copertina')
@@ -195,11 +195,17 @@ class AttivitaResource extends Resource
                 Tables\Columns\TextColumn::make('luogo')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('iscrizioni_count')
+                Tables\Columns\TextColumn::make('iscrizioni_confermate_count')
                     ->label('Iscritti')
                     ->state(fn (Attivita $record): string => $record->iscrizione_abilitata
-                        ? $record->iscrizioni_count.($record->posti_max ? ' / '.$record->posti_max : '')
+                        ? $record->iscrizioni_confermate_count.($record->posti_max ? ' / '.$record->posti_max : '')
                         : '—'),
+                Tables\Columns\TextColumn::make('iscrizioni_in_attesa_count')
+                    ->label('Da confermare')
+                    ->badge()
+                    ->color(fn (?string $state): string => (int) $state > 0 ? 'warning' : 'gray')
+                    ->state(fn (Attivita $record): ?string => $record->iscrizione_abilitata ? (string) $record->iscrizioni_in_attesa_count : null)
+                    ->placeholder('—'),
                 Tables\Columns\IconColumn::make('pubblicata')
                     ->label('Pubblicata')
                     ->boolean(),

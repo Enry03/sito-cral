@@ -125,6 +125,18 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+     * Chi sta chiedendo la tessera di socio: una nuova iscrizione come socio in
+     * attesa, oppure un iscritto al sito che l'ha richiesta.
+     */
+    public function scopeChiedonoTessera($query)
+    {
+        return $query->where(function ($q) {
+            $q->where(fn ($q) => $q->where('stato_iscrizione', 'in_attesa')->where('ruolo', 'socio'))
+                ->orWhere(fn ($q) => $q->where('stato_iscrizione', 'attivo')->where('ruolo', 'iscritto')->where('richiede_tessera', true));
+        });
+    }
+
+    /**
      * socio   = nuova iscrizione come socio CRAL (con tessera)
      * upgrade = un iscritto al sito che chiede la tessera
      * sito    = iscrizione al solo sito
@@ -232,6 +244,44 @@ class User extends Authenticatable implements FilamentUser
     public function puoVedereFoto(): bool
     {
         return $this->haAccessoSito();
+    }
+
+    public const PAGAMENTO_PAGATA = 'Pagata';
+
+    public const PAGAMENTO_IN_ELABORAZIONE = 'In elaborazione';
+
+    public const PAGAMENTO_DA_PAGARE = 'Da pagare';
+
+    public const PAGAMENTO_NON_REGISTRATA = 'Non registrata';
+
+    /**
+     * Stato della quota di tessera per gli elenchi del pannello:
+     *
+     * - Pagata: la quota è stata incassata (PayPal l'ha confermata, o l'ha segnata un amministratore);
+     * - In elaborazione: la persona dice di aver pagato (bonifico o PayPal) ma l'incasso non è ancora verificato;
+     * - Da pagare: richiesta di tessera aperta, nessun pagamento;
+     * - Non registrata: socio già approvato per cui non risulta l'incasso (es. iscritto prima di questa funzione);
+     * - null: non riguarda questa persona (iscritti al solo sito, amministratori).
+     */
+    public function statoPagamentoQuota(): ?string
+    {
+        if ($this->isAdmin()) {
+            return null;
+        }
+
+        if ($this->chiedeTessera()) {
+            return match (true) {
+                (bool) $this->quota_pagata => self::PAGAMENTO_PAGATA,
+                $this->pagamento_dichiarato_il !== null => self::PAGAMENTO_IN_ELABORAZIONE,
+                default => self::PAGAMENTO_DA_PAGARE,
+            };
+        }
+
+        if ($this->ruolo === 'socio' && in_array($this->stato_iscrizione, ['attivo', 'sospeso', 'scaduto'], true)) {
+            return $this->quota_pagata ? self::PAGAMENTO_PAGATA : self::PAGAMENTO_NON_REGISTRATA;
+        }
+
+        return null;
     }
 
     public function metodoPagamentoLabel(): ?string

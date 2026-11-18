@@ -17,7 +17,7 @@
                 <span class="chip chip-soft">Richiesta inviata</span>
                 <h2 class="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Stiamo esaminando la tua richiesta</h2>
                 <p class="mt-3 leading-relaxed text-cral-navy-soft">
-                    Un amministratore approverà la tua tessera a breve e ti scriverà una email con la tessera intestata a te.
+                    Un amministratore verificherà il pagamento e approverà la tua tessera a breve: la vedrai nella tua area personale e ti arriverà anche via email.
                     Quando succederà potrai usare le convenzioni, iscriverti alle attività e prendere in prestito i libri della libreria.
                 </p>
                 <x-richiesta-stato :utente="$utente" class="mt-8" />
@@ -30,7 +30,7 @@
             <section class="surface p-6 sm:p-8" data-reveal>
                 <h2 class="text-2xl font-bold tracking-tight">Completa i tuoi dati</h2>
                 <p class="mt-2 leading-relaxed text-cral-navy-soft">
-                    La tessera viene intestata al nome del tuo account ({{ $utente->name }}) e ti arriva via email quando un amministratore approva la richiesta.
+                    La tessera viene intestata al nome del tuo account ({{ $utente->name }}) e compare nella tua area (e via email) quando un amministratore approva la richiesta.
                 </p>
 
                 <form method="POST" action="{{ route('socio.richiesta.invia') }}" class="mt-8 space-y-7">

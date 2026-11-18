@@ -17,7 +17,7 @@
         <p class="mt-4 leading-relaxed text-cral-navy-soft">
             Ciao {{ $utente->name }}, abbiamo ricevuto la tua richiesta.
             @if($richiedeTessera)
-                Appena un amministratore l'avrà approvata riceverai una email con la tua tessera e potrai accedere all'area riservata.
+                Appena un amministratore l'avrà approvata la tua tessera comparirà nella tua area personale (ti scriviamo anche una email) e potrai accedere all'area riservata.
             @else
                 Un amministratore la esaminerà a breve: riceverai una email di conferma e potrai accedere all'area riservata e consultare la libreria.
             @endif

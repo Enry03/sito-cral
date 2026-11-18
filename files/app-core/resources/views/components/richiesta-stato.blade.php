@@ -6,7 +6,7 @@
         ['Richiesta inviata', true],
         ['Pagamento della quota', (bool) $utente->quota_pagata],
         ['Approvazione di un amministratore', false],
-        ['Tessera via email', false],
+        ['Tessera nella tua area', false],
     ];
 
     $corrente = collect($passi)->search(fn ($passo) => ! $passo[1]);
