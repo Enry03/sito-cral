@@ -7,6 +7,7 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\FotoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LibreriaController;
+use App\Http\Controllers\PagamentoAttivitaController;
 use App\Http\Controllers\PagamentoTesseraController;
 use App\Http\Controllers\PaypalIpnController;
 use App\Http\Controllers\ProfileController;
@@ -90,14 +91,26 @@ Route::middleware(['auth', 'socio.attivo'])->group(function () {
             ->name('prestito');
     });
 
-    // Richiesta di iscrizione a un'attività (torneo, gita, uscita...): chi ha un
-    // account approvato la manda, l'amministratore la conferma o la declina.
+    // Iscrizione a un'attività (torneo, gita, uscita...): chi ha un account
+    // approvato si iscrive da solo, in automatico, senza conferma dell'amministratore.
     Route::post('/attivita/{slug}/partecipa', [AttivitaController::class, 'partecipa'])
         ->middleware('throttle:20,1')
         ->name('attivita.partecipa');
     Route::delete('/attivita/{slug}/partecipa', [AttivitaController::class, 'annullaPartecipazione'])
         ->middleware('throttle:20,1')
         ->name('attivita.annulla');
+
+    // Pagamento della quota dell'attività: modo scelto (contanti, bonifico, PayPal),
+    // "ho fatto il bonifico" e ritorno da PayPal.
+    Route::post('/attivita/{slug}/pagamento/metodo', [PagamentoAttivitaController::class, 'metodo'])
+        ->middleware('throttle:20,1')
+        ->name('attivita.pagamento.metodo');
+    Route::post('/attivita/{slug}/pagamento/bonifico', [PagamentoAttivitaController::class, 'bonificoEffettuato'])
+        ->middleware('throttle:10,1')
+        ->name('attivita.pagamento.bonifico');
+    Route::get('/attivita/{slug}/pagamento/ritorno', [PagamentoAttivitaController::class, 'ritorno'])
+        ->middleware('throttle:10,1')
+        ->name('attivita.pagamento.ritorno');
 
     // Un iscritto può chiedere la tessera di socio.
     Route::get('/diventa-socio', [RichiestaSocioController::class, 'show'])->name('socio.richiesta');

@@ -61,7 +61,7 @@
             {!! $attivita->descrizione !!}
         </div>
 
-        {{-- Iscrizione all'attività: chi ha un account approvato manda la richiesta, l'amministratore la conferma o la declina --}}
+        {{-- Iscrizione all'attività: chi ha un account approvato si iscrive da solo, subito, e poi paga la quota se c'è --}}
         @if($attivita->iscrizione_abilitata)
             <div id="iscrizione" class="navy-bg relative isolate mt-14 overflow-hidden rounded-[2rem] p-7 text-white shadow-lift sm:p-10" data-reveal>
                 <div class="pointer-events-none absolute -right-20 -top-20 -z-10 h-64 w-64 rounded-full bg-cral-red/40 blur-3xl" aria-hidden="true"></div>
@@ -101,50 +101,44 @@
                 <div class="mt-8">
                     @auth
                         @if(! auth()->user()->haAccessoSito())
-                            <p class="text-lg font-bold">Potrai chiedere di partecipare appena la tua iscrizione al sito sarà approvata.</p>
+                            <p class="text-lg font-bold">Potrai iscriverti appena la tua iscrizione al sito sarà approvata.</p>
                             <a href="{{ route('attesa-approvazione') }}" class="btn btn-primary mt-5">Stato della richiesta</a>
                         @else
                             @if($iscrizione)
-                                {{-- La richiesta passa sempre dall'amministratore: in attesa → confermata o non accolta --}}
-                                @if($iscrizione->isInAttesa())
-                                    <p class="flex items-center gap-2 text-lg font-bold">
-                                        <svg class="h-6 w-6 text-cral-red-glow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .2.08.39.22.53l3 3a.75.75 0 101.06-1.06l-2.78-2.78V5z" clip-rule="evenodd"/></svg>
-                                        Richiesta inviata: in attesa di conferma.
-                                    </p>
-                                    <p class="mt-2 text-white/75">Un amministratore la confermerà o la declinerà: ti avviseremo via email.</p>
-                                @elseif($iscrizione->confermata())
+                                {{-- L'iscrizione è automatica: subito iscritto, e se c'è una quota si sceglie come pagare --}}
+                                @if($iscrizione->confermata())
                                     <p class="flex items-center gap-2 text-lg font-bold">
                                         <svg class="h-6 w-6 text-cral-red-glow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.58 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>
-                                        Iscrizione confermata.
+                                        Sei iscritto a questa attività.
                                     </p>
 
                                     @if($iscrizione->pagato)
-                                        <p class="mt-2 text-white/75">Quota saldata. Grazie!</p>
+                                        <p class="mt-2 text-white/75">Quota saldata{{ $iscrizione->metodo_pagamento === 'paypal' ? ' con PayPal' : '' }}. Grazie!</p>
                                     @elseif($iscrizione->richiedePagamento())
-                                        <div class="mt-4">
-                                            <x-paypal-button :iscrizione="$iscrizione" />
-                                        </div>
+                                        <x-attivita-pagamento :iscrizione="$iscrizione" class="mt-5" />
                                     @endif
                                 @else
-                                    <p class="text-lg font-bold">La tua richiesta di iscrizione non è stata accolta.</p>
+                                    <p class="text-lg font-bold">Non risulti iscritto a questa attività.</p>
                                     <p class="mt-2 text-white/75">Per saperne di più scrivi a <a href="mailto:{{ config('mail.admin_address') }}" class="font-semibold underline underline-offset-4">{{ config('mail.admin_address') }}</a>.</p>
                                 @endif
 
-                                @if(! $iscrizione->rifiutata() && ! $iscrizione->pagato && ! $attivita->isPassata())
-                                    <form method="POST" action="{{ route('attivita.annulla', $attivita->slug) }}" class="mt-5" onsubmit="return confirm('Vuoi annullare la tua richiesta di iscrizione?')">
+                                @if(! $iscrizione->rifiutata() && ! $iscrizione->pagato && ! $iscrizione->pagamento_dichiarato_il && ! $attivita->isPassata())
+                                    <form method="POST" action="{{ route('attivita.annulla', $attivita->slug) }}" class="mt-5" onsubmit="return confirm('Vuoi annullare la tua iscrizione?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-sm font-semibold text-white/70 underline underline-offset-4 transition hover:text-white">{{ $iscrizione->isInAttesa() ? 'Annulla la richiesta' : 'Annulla la mia iscrizione' }}</button>
+                                        <button type="submit" class="text-sm font-semibold text-white/70 underline underline-offset-4 transition hover:text-white">Annulla la mia iscrizione</button>
                                     </form>
                                 @endif
                             @elseif($statoIscrizioni === 'aperte')
                                 <form method="POST" action="{{ route('attivita.partecipa', $attivita->slug) }}">
                                     @csrf
                                     <button type="submit" class="btn btn-primary">
-                                        Richiedi l'iscrizione{{ $attivita->prezzoLabel() ? ' — '.$attivita->prezzoLabel() : '' }}
+                                        Iscriviti{{ $attivita->prezzoLabel() ? ' — '.$attivita->prezzoLabel() : '' }}
                                     </button>
                                 </form>
-                                <p class="mt-3 max-w-md text-sm text-white/70">Non devi compilare nulla: la richiesta arriva agli amministratori, che la confermano o la declinano.</p>
+                                <p class="mt-3 max-w-md text-sm text-white/70">
+                                    Un clic e sei iscritto: non devi compilare nulla e non serve nessuna conferma.{{ $attivita->haPrezzo() ? ' Subito dopo scegli come pagare la quota.' : '' }}
+                                </p>
                             @else
                                 <p class="text-lg font-bold">
                                     @if($statoIscrizioni === 'non_ancora')
@@ -160,7 +154,7 @@
                             @endif
                         @endif
                     @else
-                        <p class="text-lg font-bold">Per chiedere di partecipare devi avere un account sul sito.</p>
+                        <p class="text-lg font-bold">Per iscriverti devi avere un account sul sito.</p>
                         <div class="mt-5 flex flex-wrap items-center gap-4">
                             <a href="{{ route('login') }}" class="btn btn-primary">Accedi</a>
                             <a href="{{ route('register') }}" class="text-sm font-semibold text-white/80 underline underline-offset-4 transition hover:text-white">Non hai un account? Iscriviti</a>

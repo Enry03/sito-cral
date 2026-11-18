@@ -62,7 +62,7 @@
             @if($metodo === 'contanti')
                 <p class="font-semibold">Paga in azienda in contanti</p>
                 <p class="mt-1 text-cral-navy-soft">
-                    Porta la quota{{ $importo ? ' di '.$importo : '' }} a un amministratore del CRAL. Quando l'avrà ricevuta approverà la tua richiesta.
+                    Porta la quota{{ $importo ? ' di '.$importo : '' }} a {{ app(\App\Services\DatiAzienda::class)->referenteContanti() }}, in azienda. Quando l'avrà ricevuta approverà la tua richiesta.
                 </p>
             @elseif($metodo === 'bonifico')
                 @if($utente->pagamento_dichiarato_il)

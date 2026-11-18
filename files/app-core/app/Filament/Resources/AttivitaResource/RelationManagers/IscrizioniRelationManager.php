@@ -15,7 +15,7 @@ class IscrizioniRelationManager extends RelationManager
 {
     protected static string $relationship = 'iscrizioni';
 
-    protected static ?string $title = 'Partecipanti e richieste';
+    protected static ?string $title = 'Iscritti e pagamenti';
 
     protected static ?string $modelLabel = 'iscrizione';
 
@@ -45,6 +45,10 @@ class IscrizioniRelationManager extends RelationManager
                     ->numeric()
                     ->prefix('€')
                     ->default(fn () => $this->getOwnerRecord()->haPrezzo() ? $this->getOwnerRecord()->prezzo : null),
+                Forms\Components\Select::make('metodo_pagamento')
+                    ->label('Modo di pagamento')
+                    ->options(User::metodiPagamento())
+                    ->placeholder('Non scelto'),
                 Forms\Components\Toggle::make('pagato')
                     ->label('Quota pagata')
                     ->inline(false),
@@ -67,11 +71,7 @@ class IscrizioniRelationManager extends RelationManager
                     ->label('Stato')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => IscrizioneAttivita::stati()[$state] ?? $state)
-                    ->color(fn (string $state): string => match ($state) {
-                        IscrizioneAttivita::CONFERMATA => 'success',
-                        IscrizioneAttivita::RIFIUTATA => 'danger',
-                        default => 'warning',
-                    }),
+                    ->color(fn (string $state): string => $state === IscrizioneAttivita::RIFIUTATA ? 'danger' : 'success'),
                 Tables\Columns\TextColumn::make('user.email')
                     ->label('Email')
                     ->toggleable(),
@@ -79,34 +79,31 @@ class IscrizioniRelationManager extends RelationManager
                     ->label('Telefono')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Richiesta del')
+                    ->label('Iscritto il')
                     ->dateTime('d/m/Y H:i'),
                 Tables\Columns\TextColumn::make('importo')
-                    ->money('EUR'),
-                Tables\Columns\IconColumn::make('pagato')
-                    ->label('Pagato')
-                    ->boolean(),
+                    ->money('EUR')
+                    ->placeholder('—'),
+                IscrizioneAttivitaResource::colonnaMetodoPagamento(),
+                IscrizioneAttivitaResource::colonnaStatoPagamento(),
+            ])
+            ->filters([
+                IscrizioneAttivitaResource::filtroPagamento(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Iscrivi una persona')
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['pagato_il'] = ! empty($data['pagato']) ? now() : null;
-                        $data['gestita_il'] = ($data['stato'] ?? IscrizioneAttivita::CONFERMATA) === IscrizioneAttivita::IN_ATTESA ? null : now();
+                        $data['gestita_il'] = now();
 
                         return $data;
                     }),
             ])
             ->actions([
+                IscrizioneAttivitaResource::azioneSegnaPagato(),
                 IscrizioneAttivitaResource::azioneConferma(),
                 IscrizioneAttivitaResource::azioneRifiuta(),
-                Tables\Actions\Action::make('segnaPagato')
-                    ->label('Segna pagato')
-                    ->icon('heroicon-o-banknotes')
-                    ->color('success')
-                    ->visible(fn (IscrizioneAttivita $record): bool => $record->confermata() && ! $record->pagato)
-                    ->requiresConfirmation()
-                    ->action(fn (IscrizioneAttivita $record) => $record->update(['pagato' => true, 'pagato_il' => now()])),
                 Tables\Actions\EditAction::make()
                     ->mutateFormDataUsing(function (array $data, IscrizioneAttivita $record): array {
                         $data['pagato_il'] = ! empty($data['pagato']) ? ($record->pagato_il ?? now()) : null;

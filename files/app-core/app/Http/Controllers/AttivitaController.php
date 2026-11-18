@@ -66,12 +66,17 @@ class AttivitaController extends Controller
         $attivita = Attivita::where('slug', $slug)->where('pubblicata', true)->firstOrFail();
 
         try {
-            $servizio->richiedi($request->user(), $attivita);
+            $iscrizione = $servizio->iscrivi($request->user(), $attivita);
         } catch (OperazioneNonConsentita $e) {
             return redirect(route('attivita.show', $slug).'#iscrizione')->with('errore_iscrizione', $e->getMessage());
         }
 
-        return redirect(route('attivita.show', $slug).'#iscrizione')->with('ok_iscrizione', 'Richiesta inviata! Un amministratore la confermerà o la declinerà e ti avviseremo via email.');
+        return redirect(route('attivita.show', $slug).'#iscrizione')->with(
+            'ok_iscrizione',
+            $iscrizione->richiedePagamento()
+                ? 'Sei iscritto! Ora scegli come pagare la quota.'
+                : 'Sei iscritto! Ti aspettiamo.',
+        );
     }
 
     public function annullaPartecipazione(Request $request, string $slug, IscrizioneAttivitaService $servizio): RedirectResponse
@@ -84,6 +89,6 @@ class AttivitaController extends Controller
             return redirect(route('attivita.show', $slug).'#iscrizione')->with('errore_iscrizione', $e->getMessage());
         }
 
-        return redirect(route('attivita.show', $slug).'#iscrizione')->with('ok_iscrizione', 'La tua richiesta di iscrizione è stata annullata.');
+        return redirect(route('attivita.show', $slug).'#iscrizione')->with('ok_iscrizione', 'La tua iscrizione è stata annullata.');
     }
 }

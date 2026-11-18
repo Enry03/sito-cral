@@ -7,10 +7,10 @@
 <body style="margin:0; padding:24px 12px; background:#F3F5FA; font-family:Arial, Helvetica, sans-serif; color:#14213D;">
     <div style="max-width:520px; margin:0 auto; background:#ffffff; border-radius:20px; overflow:hidden;">
         <div style="background:#E4002B; color:#ffffff; padding:22px 28px; font-size:13px; font-weight:bold; letter-spacing:0.04em;">
-            Nuova richiesta di iscrizione a un'attività
+            Nuova iscrizione a un'attività
         </div>
         <div style="padding:28px;">
-            <p style="margin:0 0 18px; font-size:16px; line-height:1.55;">Qualcuno vuole partecipare a un'attività: la richiesta aspetta la tua conferma.</p>
+            <p style="margin:0 0 18px; font-size:16px; line-height:1.55;">Qualcuno si è iscritto a un'attività. L'iscrizione è automatica: non devi confermare nulla.</p>
 
             <table style="width:100%; border-collapse:collapse; font-size:15px;">
                 <tr>
@@ -44,8 +44,11 @@
             </table>
 
             <a href="{{ url('/admin/iscrizioni-attivita') }}" style="display:inline-block; margin-top:24px; background:#E4002B; color:#ffffff; text-decoration:none; padding:14px 26px; border-radius:999px; font-size:14px; font-weight:bold;">
-                Conferma o declina la richiesta
+                Vedi le iscrizioni
             </a>
+            @if($iscrizione->importo)
+                <p style="margin:18px 0 0; font-size:13px; color:#4A5878; line-height:1.55;">La persona sceglie ora come pagare la quota: riceverai un'altra email quando segnala un bonifico o paga con PayPal. I contanti li segni tu come pagati nel pannello.</p>
+            @endif
         </div>
     </div>
 </body>

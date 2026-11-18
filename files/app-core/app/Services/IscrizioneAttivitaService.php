@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\IscrizioneAttivitaEsito;
 use App\Mail\NuovaIscrizioneAttivita;
+use App\Mail\PagamentoIscrizioneSegnalato;
 use App\Models\Attivita;
 use App\Models\IscrizioneAttivita;
 use App\Models\User;
@@ -12,25 +13,24 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 /**
- * Iscrizioni alle attività (tornei, gite, uscite...). Passano sempre
- * dall'amministratore:
+ * Iscrizioni alle attività (tornei, gite, uscite...).
  *
- * 1. chi ha un account approvato manda la richiesta (richiedi): nessun dato da
- *    compilare, nasce "in attesa" e gli amministratori ricevono un'email;
- * 2. l'amministratore la conferma (conferma) o la declina (rifiuta): l'utente
- *    riceve un'email con l'esito;
- * 3. solo le iscrizioni confermate occupano un posto e, se c'è una quota, danno
- *    accesso al pagamento.
+ * - Chi ha un account approvato (iscritto al sito o socio) si iscrive da solo con
+ *   un clic, in automatico: nessun dato da compilare e nessuna conferma. Gli
+ *   amministratori ricevono solo un'email informativa.
+ * - Se c'è una quota la persona sceglie subito come pagare (contanti, bonifico,
+ *   PayPal) dalla pagina dell'attività.
+ * - L'amministratore può escludere qualcuno (rifiuta) o riammetterlo (conferma).
  */
 class IscrizioneAttivitaService
 {
     /**
-     * Manda la richiesta di iscrizione. Possono farlo iscritti al sito, soci CRAL
-     * e amministratori (cioè chi ha un account approvato).
+     * Iscrive la persona all'attività. Possono farlo iscritti al sito, soci CRAL e
+     * amministratori (cioè chi ha un account approvato).
      *
      * @throws OperazioneNonConsentita
      */
-    public function richiedi(User $utente, Attivita $attivita): IscrizioneAttivita
+    public function iscrivi(User $utente, Attivita $attivita): IscrizioneAttivita
     {
         if (! $utente->haAccessoSito()) {
             throw new OperazioneNonConsentita('Per iscriverti a un\'attività serve un account approvato.');
@@ -38,14 +38,13 @@ class IscrizioneAttivitaService
 
         $iscrizione = DB::transaction(function () use ($utente, $attivita) {
             // Si rilegge l'attività bloccandola: i posti si contano senza che
-            // nessun altro possa richiedere nello stesso istante.
+            // nessun altro possa iscriversi nello stesso istante.
             $attivita = Attivita::whereKey($attivita->getKey())->lockForUpdate()->firstOrFail();
 
             if ($esistente = $attivita->iscrizioni()->where('user_id', $utente->id)->first()) {
                 throw new OperazioneNonConsentita(match ($esistente->stato) {
-                    IscrizioneAttivita::CONFERMATA => 'Sei già iscritto a questa attività.',
-                    IscrizioneAttivita::RIFIUTATA => 'La tua richiesta per questa attività non è stata accolta.',
-                    default => 'Hai già mandato la richiesta: attendi la conferma di un amministratore.',
+                    IscrizioneAttivita::RIFIUTATA => 'Non puoi iscriverti a questa attività: per informazioni scrivi a '.config('mail.admin_address').'.',
+                    default => 'Sei già iscritto a questa attività.',
                 });
             }
 
@@ -64,7 +63,8 @@ class IscrizioneAttivitaService
             return IscrizioneAttivita::create([
                 'user_id' => $utente->id,
                 'attivita_id' => $attivita->id,
-                'stato' => IscrizioneAttivita::IN_ATTESA,
+                'stato' => IscrizioneAttivita::CONFERMATA,
+                'gestita_il' => now(),
                 'importo' => $attivita->haPrezzo() ? $attivita->prezzo : null,
             ]);
         });
@@ -75,7 +75,72 @@ class IscrizioneAttivitaService
     }
 
     /**
-     * Conferma la richiesta (o la riapre se era stata declinata per errore).
+     * La persona sceglie (o cambia) come pagare la quota. Finché non ha segnalato di
+     * aver pagato.
+     *
+     * @throws OperazioneNonConsentita
+     */
+    public function scegliMetodo(IscrizioneAttivita $iscrizione, string $metodo): IscrizioneAttivita
+    {
+        if (! $iscrizione->richiedePagamento()) {
+            throw new OperazioneNonConsentita('Per questa iscrizione non c\'è nulla da pagare.');
+        }
+
+        if (! $iscrizione->puoScegliereMetodo()) {
+            throw new OperazioneNonConsentita('Hai già segnalato il pagamento: se devi cambiare qualcosa scrivi a '.config('mail.admin_address').'.');
+        }
+
+        if (! in_array($metodo, IscrizioneAttivita::metodiAmmessi(), true)) {
+            throw new OperazioneNonConsentita('Questo modo di pagamento non è ancora disponibile.');
+        }
+
+        $iscrizione->update(['metodo_pagamento' => $metodo]);
+
+        return $iscrizione;
+    }
+
+    /**
+     * La persona dice di aver pagato (bonifico fatto, o ritorno da PayPal prima che
+     * PayPal abbia confermato): gli amministratori ricevono l'avviso di controllare
+     * l'incasso. Per PayPal la conferma vera arriva dalla notifica automatica.
+     *
+     * @throws OperazioneNonConsentita
+     */
+    public function segnalaPagamento(IscrizioneAttivita $iscrizione, string $metodo): IscrizioneAttivita
+    {
+        if (! $iscrizione->puoScegliereMetodo()) {
+            return $iscrizione;
+        }
+
+        if (! in_array($metodo, ['bonifico', 'paypal'], true)) {
+            throw new OperazioneNonConsentita('Il pagamento in contanti lo registra un amministratore quando riceve la quota.');
+        }
+
+        $iscrizione->update(['metodo_pagamento' => $metodo, 'pagamento_dichiarato_il' => now()]);
+
+        $this->invia(config('mail.admin_address'), new PagamentoIscrizioneSegnalato($iscrizione->load(['user', 'attivita'])));
+
+        return $iscrizione;
+    }
+
+    /**
+     * Segna la quota come incassata (lo fa l'amministratore, oppure PayPal con la
+     * notifica automatica).
+     */
+    public function segnaPagata(IscrizioneAttivita $iscrizione, ?string $metodo = null, ?string $transazione = null): IscrizioneAttivita
+    {
+        $iscrizione->update(array_filter([
+            'pagato' => true,
+            'pagato_il' => now(),
+            'metodo_pagamento' => $metodo,
+            'paypal_txn_id' => $transazione,
+        ], fn ($valore) => $valore !== null));
+
+        return $iscrizione;
+    }
+
+    /**
+     * Riammette chi era stato escluso.
      *
      * @return array{iscrizione: IscrizioneAttivita, email_inviata: bool}
      *
@@ -87,14 +152,14 @@ class IscrizioneAttivitaService
             $iscrizione = IscrizioneAttivita::whereKey($iscrizione->getKey())->lockForUpdate()->firstOrFail();
 
             if ($iscrizione->confermata()) {
-                throw new OperazioneNonConsentita('Questa iscrizione è già confermata.');
+                throw new OperazioneNonConsentita('Questa persona è già iscritta.');
             }
 
             $attivita = Attivita::whereKey($iscrizione->attivita_id)->lockForUpdate()->firstOrFail();
             $attivita->setAttribute('iscrizioni_confermate_count', $attivita->iscrizioni()->confermate()->count());
 
             if ($attivita->postiEsauriti()) {
-                throw new OperazioneNonConsentita('I posti sono esauriti: per confermare questa iscrizione aumenta i posti disponibili o declina un\'altra richiesta.');
+                throw new OperazioneNonConsentita('I posti sono esauriti: per riammettere questa persona aumenta i posti disponibili o escludi un\'altra iscrizione.');
             }
 
             $iscrizione->update(['stato' => IscrizioneAttivita::CONFERMATA, 'gestita_il' => now()]);
@@ -108,8 +173,8 @@ class IscrizioneAttivitaService
     }
 
     /**
-     * Declina la richiesta. Una iscrizione già pagata non si declina da qui: va
-     * prima gestito il rimborso.
+     * Esclude la persona dall'attività. Una iscrizione già pagata non si esclude da
+     * qui: va prima gestito il rimborso.
      *
      * @return array{iscrizione: IscrizioneAttivita, email_inviata: bool}
      *
@@ -121,7 +186,7 @@ class IscrizioneAttivitaService
             $iscrizione = IscrizioneAttivita::whereKey($iscrizione->getKey())->lockForUpdate()->firstOrFail();
 
             if ($iscrizione->rifiutata()) {
-                throw new OperazioneNonConsentita('Questa richiesta è già stata declinata.');
+                throw new OperazioneNonConsentita('Questa persona è già stata esclusa.');
             }
 
             if ($iscrizione->pagato) {
@@ -139,9 +204,9 @@ class IscrizioneAttivitaService
     }
 
     /**
-     * Annulla la propria richiesta o iscrizione. Non è possibile se la quota è già
-     * stata pagata (serve contattare il CRAL per il rimborso) o se l'attività è
-     * conclusa.
+     * Annulla la propria iscrizione. Non è possibile se la quota è già stata pagata
+     * o segnalata come pagata (serve contattare il CRAL per il rimborso) o se
+     * l'attività è conclusa.
      *
      * @throws OperazioneNonConsentita
      */
@@ -154,11 +219,15 @@ class IscrizioneAttivitaService
         }
 
         if ($iscrizione->rifiutata()) {
-            throw new OperazioneNonConsentita('La tua richiesta non è stata accolta: non c\'è nulla da annullare.');
+            throw new OperazioneNonConsentita('Non risulti iscritto a questa attività: non c\'è nulla da annullare.');
         }
 
         if ($iscrizione->pagato) {
             throw new OperazioneNonConsentita('Hai già pagato la quota: per annullare l\'iscrizione contatta il CRAL.');
+        }
+
+        if ($iscrizione->pagamento_dichiarato_il !== null) {
+            throw new OperazioneNonConsentita('Hai già segnalato il pagamento: per annullare l\'iscrizione contatta il CRAL.');
         }
 
         if ($attivita->isPassata()) {

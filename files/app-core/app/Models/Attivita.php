@@ -94,11 +94,6 @@ class Attivita extends Model
         return $this->hasMany(IscrizioneAttivita::class)->where('stato', IscrizioneAttivita::CONFERMATA);
     }
 
-    public function iscrizioniInAttesa()
-    {
-        return $this->hasMany(IscrizioneAttivita::class)->where('stato', IscrizioneAttivita::IN_ATTESA);
-    }
-
     // ------------------------------------------------------------------- scope
 
     public function scopeInProgramma($query)
@@ -289,8 +284,8 @@ class Attivita extends Model
     // -------------------------------------------------------------- iscrizioni
 
     /**
-     * Quanti hanno l'iscrizione confermata: solo loro occupano un posto (le
-     * richieste in attesa o non accolte no).
+     * Quanti sono iscritti: solo loro occupano un posto (chi è stato escluso
+     * dall'amministratore no).
      */
     public function iscrittiCount(): int
     {

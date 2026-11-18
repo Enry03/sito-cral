@@ -3,12 +3,14 @@
     nel pannello (Dati dell'azienda). Ogni dato utile si copia con un tocco.
     - nome:    nome di chi paga, aggiunto alla causale (facoltativo)
     - importo: importo già formattato, es. "€ 25,00" (facoltativo)
+    - causale: causale già pronta (es. per un'attività); se manca si usa quella della tessera
 --}}
-@props(['nome' => null, 'importo' => null])
+@props(['nome' => null, 'importo' => null, 'causale' => null])
 
 @php
     $bonifico = app(\App\Services\DatiAzienda::class)->bonifico();
-    $causale = app(\App\Services\DatiAzienda::class)->causale($nome);
+    $causaleCompleta = filled($causale);
+    $causale = $causaleCompleta ? $causale : app(\App\Services\DatiAzienda::class)->causale($nome);
 
     $righe = array_filter([
         ['Intestatario', $bonifico['intestatario'] ?? null, null],
@@ -16,7 +18,7 @@
         ['Banca', $bonifico['banca'] ?? null, null],
         ['BIC / SWIFT', $bonifico['bic'] ?? null, null],
         ['Importo', $importo, null],
-        ['Causale', $causale.($nome ? '' : ' + il tuo nome e cognome'), $nome ? $causale : null],
+        ['Causale', $causale.($nome || $causaleCompleta ? '' : ' + il tuo nome e cognome'), $nome || $causaleCompleta ? $causale : null],
     ], fn ($riga) => filled($riga[1]));
 @endphp
 

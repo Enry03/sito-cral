@@ -99,10 +99,20 @@ class ModificaDatiAzienda extends Page implements HasForms
                             ->prefix('€'),
                         Forms\Components\TextInput::make('paypal_email')
                             ->label('Indirizzo PayPal che riceve i pagamenti')
+                            ->helperText('Vale sia per la tessera sia per le attività a pagamento.')
                             ->email()
                             ->maxLength(255),
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('Pagamento in contanti')
+                    ->description('Chi sceglie "Paga in azienda in contanti" (per la tessera o per un\'attività) vede il promemoria di portare la quota a questa persona.')
+                    ->schema([
+                        Forms\Components\TextInput::make('referente_contanti')
+                            ->label('A chi si portano i contanti')
+                            ->placeholder((string) config('cral.referente_contanti'))
+                            ->maxLength(80),
+                    ]),
             ]);
     }
 

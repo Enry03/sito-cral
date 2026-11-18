@@ -17,7 +17,7 @@ use App\Support\Iban;
  */
 class DatiAzienda
 {
-    public const CHIAVI = ['intestatario', 'iban', 'banca', 'bic', 'causale', 'quota_tessera', 'paypal_email'];
+    public const CHIAVI = ['intestatario', 'iban', 'banca', 'bic', 'causale', 'quota_tessera', 'paypal_email', 'referente_contanti'];
 
     public const CAUSALE_PREDEFINITA = 'Quota tessera CRAL';
 
@@ -110,6 +110,30 @@ class DatiAzienda
     public function bonificoAttivo(): bool
     {
         return $this->bonifico() !== null;
+    }
+
+    /**
+     * A chi si portano i contanti, per il promemoria ("Bruna"). Se non è indicato
+     * nessuno, si parla genericamente di un amministratore del CRAL.
+     */
+    public function referenteContanti(): string
+    {
+        return $this->valore('referente_contanti')
+            ?? (filled(config('cral.referente_contanti')) ? trim((string) config('cral.referente_contanti')) : 'un amministratore del CRAL');
+    }
+
+    /**
+     * Causale del bonifico per l'iscrizione a un'attività: "Iscrizione <attività> - <nome>".
+     */
+    public function causaleAttivita(string $titolo, ?string $nome = null): string
+    {
+        $causale = 'Iscrizione '.trim($titolo);
+
+        if (filled($nome)) {
+            $causale .= ' - '.trim($nome);
+        }
+
+        return mb_substr($causale, 0, 140);
     }
 
     /**

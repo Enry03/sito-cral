@@ -14,7 +14,7 @@
     $importo = \App\Models\User::quotaTessera() > 0 ? '€ '.number_format(\App\Models\User::quotaTessera(), 2, ',', '.') : null;
 
     $descrizioni = [
-        'contanti' => 'Porti la quota a un amministratore del CRAL, in azienda.',
+        'contanti' => 'Porti la quota a '.app(\App\Services\DatiAzienda::class)->referenteContanti().', in azienda.',
         'bonifico' => in_array('bonifico', $ammessi, true) ? 'Ti mostriamo subito i dati per fare il bonifico.' : 'Presto disponibile.',
         'paypal' => in_array('paypal', $ammessi, true) ? 'Dopo l\'invio della richiesta trovi il pulsante per pagare.' : 'Presto disponibile.',
     ];

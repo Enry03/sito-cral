@@ -110,10 +110,10 @@ class AttivitaResource extends Resource
                     ->columns(2),
 
                 Forms\Components\Section::make('Iscrizioni dei soci')
-                    ->description('Vale per ogni tipo di attività (torneo, gita, uscita...). Chi ha un account approvato manda una richiesta di iscrizione: tu la confermi o la declini dalla voce "Iscrizioni attività" (o dalla scheda Partecipanti di questa attività). I posti li occupano solo le iscrizioni confermate.')
+                    ->description('Vale per ogni tipo di attività (torneo, gita, uscita...). Chi ha un account approvato (iscritto al sito o socio) si iscrive da solo, subito, senza che tu debba confermare nulla. Se indichi una quota, dopo l\'iscrizione sceglie come pagare (contanti, bonifico o PayPal): dalla voce "Iscrizioni attività" vedi chi è iscritto e chi ha pagato. Gli orari sono in ora italiana.')
                     ->schema([
                         Forms\Components\Toggle::make('iscrizione_abilitata')
-                            ->label('Permetti ai soci di iscriversi a questa attività')
+                            ->label('Permetti l\'iscrizione a questa attività')
                             ->live()
                             ->inline(false)
                             ->columnSpanFull(),
@@ -140,7 +140,7 @@ class AttivitaResource extends Resource
                             ->visible(fn (Get $get): bool => (bool) $get('iscrizione_abilitata')),
                         Forms\Components\TextInput::make('prezzo')
                             ->label('Quota di partecipazione')
-                            ->helperText('Se indichi un importo, dopo l\'iscrizione compare il pulsante "Paga con PayPal".')
+                            ->helperText('Se indichi un importo, dopo l\'iscrizione la persona sceglie come pagare: contanti, bonifico o PayPal.')
                             ->numeric()
                             ->minValue(0)
                             ->step(0.01)
@@ -181,7 +181,7 @@ class AttivitaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->withCount(['iscrizioniConfermate', 'iscrizioniInAttesa']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->withCount('iscrizioniConfermate'))
             ->defaultSort('data_evento', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('immagine_copertina')
@@ -200,12 +200,6 @@ class AttivitaResource extends Resource
                     ->state(fn (Attivita $record): string => $record->iscrizione_abilitata
                         ? $record->iscrizioni_confermate_count.($record->posti_max ? ' / '.$record->posti_max : '')
                         : '—'),
-                Tables\Columns\TextColumn::make('iscrizioni_in_attesa_count')
-                    ->label('Da confermare')
-                    ->badge()
-                    ->color(fn (?string $state): string => (int) $state > 0 ? 'warning' : 'gray')
-                    ->state(fn (Attivita $record): ?string => $record->iscrizione_abilitata ? (string) $record->iscrizioni_in_attesa_count : null)
-                    ->placeholder('—'),
                 Tables\Columns\IconColumn::make('pubblicata')
                     ->label('Pubblicata')
                     ->boolean(),

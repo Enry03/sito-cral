@@ -10,8 +10,8 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Avviso agli amministratori: qualcuno ha chiesto di partecipare a un'attività
- * e la richiesta aspetta la loro conferma.
+ * Avviso informativo agli amministratori: qualcuno si è iscritto a un'attività.
+ * L'iscrizione è automatica, non c'è nulla da confermare.
  */
 class NuovaIscrizioneAttivita extends Mailable
 {
@@ -24,7 +24,7 @@ class NuovaIscrizioneAttivita extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Richiesta di iscrizione a "'.$this->iscrizione->attivita->titolo.'" — '.$this->iscrizione->user->name,
+            subject: 'Nuova iscrizione a "'.$this->iscrizione->attivita->titolo.'" — '.$this->iscrizione->user->name,
         );
     }
 

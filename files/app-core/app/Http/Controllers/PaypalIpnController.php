@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PagamentoIscrizioneSegnalato;
 use App\Mail\PagamentoPaypalRicevuto;
+use App\Models\IscrizioneAttivita;
 use App\Models\User;
+use App\Services\IscrizioneAttivitaService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +26,9 @@ class PaypalIpnController extends Controller
 {
     public function __invoke(Request $request): Response
     {
-        if (! User::paypalAttivo()) {
+        // Senza un conto PayPal impostato non c'è nulla da registrare. La quota di
+        // tessera si controlla più sotto, solo per i pagamenti della tessera.
+        if (blank(app(\App\Services\DatiAzienda::class)->paypalEmail())) {
             return response('', 200);
         }
 
@@ -55,16 +60,33 @@ class PaypalIpnController extends Controller
         $contoRicevente = strtolower((string) ($dati['receiver_email'] ?? $dati['business'] ?? ''));
 
         if ($contoAtteso === '' || $contoRicevente !== $contoAtteso
-            || strtoupper((string) ($dati['mc_currency'] ?? '')) !== strtoupper((string) config('cral.paypal.valuta'))
-            || (float) ($dati['mc_gross'] ?? 0) + 0.001 < User::quotaTessera()) {
-            Log::warning('Notifica PayPal con conto, valuta o importo non corretti, ignorata.', ['txn' => $dati['txn_id'] ?? null]);
+            || strtoupper((string) ($dati['mc_currency'] ?? '')) !== strtoupper((string) config('cral.paypal.valuta'))) {
+            Log::warning('Notifica PayPal con conto o valuta non corretti, ignorata.', ['txn' => $dati['txn_id'] ?? null]);
 
             return;
         }
 
         $transazione = (string) ($dati['txn_id'] ?? '');
+        $custom = (string) ($dati['custom'] ?? '');
+        $importo = (float) ($dati['mc_gross'] ?? 0);
 
-        if ($transazione === '' || ! preg_match('/^tessera-(\d+)$/', (string) ($dati['custom'] ?? ''), $m)) {
+        if ($transazione === '') {
+            return;
+        }
+
+        if (preg_match('/^iscrizione-(\d+)$/', $custom, $m)) {
+            $this->registraIscrizione((int) $m[1], $transazione, $importo);
+
+            return;
+        }
+
+        if (! preg_match('/^tessera-(\d+)$/', $custom, $m)) {
+            return;
+        }
+
+        if (! User::paypalAttivo() || $importo + 0.001 < User::quotaTessera()) {
+            Log::warning('Notifica PayPal con importo non corretto, ignorata.', ['txn' => $transazione]);
+
             return;
         }
 
@@ -93,6 +115,40 @@ class PaypalIpnController extends Controller
             Mail::to(config('mail.admin_address'))->send(new PagamentoPaypalRicevuto($utente));
         } catch (\Throwable $e) {
             Log::warning('Invio email pagamento PayPal ricevuto fallito: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Pagamento della quota di un'attività: l'iscrizione risulta pagata (una volta
+     * sola, solo se l'importo basta) e gli amministratori ricevono l'avviso.
+     */
+    private function registraIscrizione(int $id, string $transazione, float $importo): void
+    {
+        $iscrizione = DB::transaction(function () use ($id, $transazione, $importo) {
+            $iscrizione = IscrizioneAttivita::whereKey($id)->lockForUpdate()->first();
+
+            if (! $iscrizione || ! $iscrizione->confermata() || $iscrizione->pagato
+                || IscrizioneAttivita::where('paypal_txn_id', $transazione)->exists()) {
+                return null;
+            }
+
+            if ($iscrizione->importo === null || $importo + 0.001 < (float) $iscrizione->importo) {
+                Log::warning('Notifica PayPal per un\'attività con importo non corretto, ignorata.', ['txn' => $transazione]);
+
+                return null;
+            }
+
+            return app(IscrizioneAttivitaService::class)->segnaPagata($iscrizione, 'paypal', $transazione);
+        });
+
+        if (! $iscrizione) {
+            return;
+        }
+
+        try {
+            Mail::to(config('mail.admin_address'))->send(new PagamentoIscrizioneSegnalato($iscrizione->load(['user', 'attivita'])));
+        } catch (\Throwable $e) {
+            Log::warning('Invio email pagamento PayPal attività fallito: '.$e->getMessage());
         }
     }
 

@@ -36,6 +36,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Contanti
+    |--------------------------------------------------------------------------
+    | A chi si portano i contanti (quota di tessera o di un'attività). Compare nel
+    | promemoria di chi sceglie "Paga in azienda in contanti". Si può cambiare dal
+    | pannello (Dati dell'azienda) oppure con CRAL_REFERENTE_CONTANTI nel .env.
+    */
+    'referente_contanti' => env('CRAL_REFERENTE_CONTANTI', 'Bruna'),
+
+    /*
+    |--------------------------------------------------------------------------
     | PayPal
     |--------------------------------------------------------------------------
     | Per attivare il pulsante "Paga con PayPal" basta scrivere l'indirizzo PayPal

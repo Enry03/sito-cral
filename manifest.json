@@ -1,9 +1,9 @@
 {
-    "generato": "2026-11-18T12:32:29+01:00",
+    "generato": "2026-11-18T15:30:33+01:00",
     "file": {
         "app-core/app/Filament/Pages/ModificaDatiAzienda.php": {
-            "size": 5346,
-            "sha256": "f0f0bff952af25418fab239bfe0e8eca1f0c58c95f4ee031614aabf3f54a85c0"
+            "size": 6026,
+            "sha256": "d6e01061a44e7bc4cebeaa01131f6313441e5bf4fcb6089f635b5a981b2ceb69"
         },
         "app-core/app/Filament/Resources/AlbumResource.php": {
             "size": 2856,
@@ -22,8 +22,8 @@
             "sha256": "f58476dff370a2e37fb2196aabefa7812b12494f1f2dd758bdaa332b91f11fe5"
         },
         "app-core/app/Filament/Resources/AttivitaResource.php": {
-            "size": 13252,
-            "sha256": "2955532a4f45822a87cc9aceb6e298a07e107167de45b1fc2dd4fa284c9b473b"
+            "size": 12885,
+            "sha256": "e8e1f19e14276bff47ed0e8cccfead5485642a0e6d30053c3f40e6af164aa8cd"
         },
         "app-core/app/Filament/Resources/AttivitaResource/Concerns/GestisceFotoAttivita.php": {
             "size": 3299,
@@ -46,8 +46,8 @@
             "sha256": "ec44697ad29aa82cbe959f4c4934b0a1452dc96aab8ae30ba52fb7de32286f37"
         },
         "app-core/app/Filament/Resources/AttivitaResource/RelationManagers/IscrizioniRelationManager.php": {
-            "size": 5404,
-            "sha256": "f1b197bdc5aaf9fe76f0a9227ad93e89f5c08a6ebd27978c9c84e92c6b9f0890"
+            "size": 5107,
+            "sha256": "94171dcec3f0c36cd45e794abe942168abd63141eddf2cfc3e66097dec1bce4e"
         },
         "app-core/app/Filament/Resources/ConvenzioneResource.php": {
             "size": 6040,
@@ -94,8 +94,8 @@
             "sha256": "110afc37aebca001e73d4bec1fd10dd0d8af7628c1623d075241811430412cf3"
         },
         "app-core/app/Filament/Resources/IscrizioneAttivitaResource.php": {
-            "size": 8040,
-            "sha256": "3ba4daec0a77b995720390c0885f568129cdcfe3b49eb7a5b31e84ccbbb42744"
+            "size": 12649,
+            "sha256": "9af822a21f7c1326e02bf9ec8652f41f6a5ddfd05500890f5a8a9f3d7db7bfc8"
         },
         "app-core/app/Filament/Resources/IscrizioneAttivitaResource/Pages/ListIscrizioniAttivita.php": {
             "size": 369,
@@ -166,8 +166,8 @@
             "sha256": "5ddb6ffc14e51011bc1a9d36b8c0ac43395a8d7f9698bfb726033149f1e4de9e"
         },
         "app-core/app/Http/Controllers/AttivitaController.php": {
-            "size": 3371,
-            "sha256": "d11f5346af0017f879aec3df19c3a956172c168154e9531fd2002fe03328d6f4"
+            "size": 3463,
+            "sha256": "85cced25de4b68c13e938726a338fe86fb88bcb835076897728fb98e965a2384"
         },
         "app-core/app/Http/Controllers/Auth/AuthenticatedSessionController.php": {
             "size": 1038,
@@ -229,13 +229,17 @@
             "size": 3210,
             "sha256": "548f2da123bf17e323bda190ee4583a6e3b3f04c3bbe9e528896f39915adfad7"
         },
+        "app-core/app/Http/Controllers/PagamentoAttivitaController.php": {
+            "size": 3641,
+            "sha256": "7feae2eaf3edd79cfd6b570a83c01842c8becaf53988dd9d98802c3d528559d3"
+        },
         "app-core/app/Http/Controllers/PagamentoTesseraController.php": {
             "size": 3725,
             "sha256": "0ec695ea1a18cc1881179c7d0f8838e70f2f035a95acb9c9b7c968ed06e728cf"
         },
         "app-core/app/Http/Controllers/PaypalIpnController.php": {
-            "size": 3656,
-            "sha256": "1dafa1859a006d26b56f407488191c5ad02a9659ef532731ce2bd282c131a352"
+            "size": 5820,
+            "sha256": "eba21dc2fe281d74233271d26129e4b4cf525d69cdbb7845b71ed33870402761"
         },
         "app-core/app/Http/Controllers/ProfileController.php": {
             "size": 1416,
@@ -278,12 +282,16 @@
             "sha256": "4c69f124dbabada58ad9780e3ad4d2fa7f8124d6bbfaa6e028c57e3c9b45a2c0"
         },
         "app-core/app/Mail/NuovaIscrizioneAttivita.php": {
-            "size": 890,
-            "sha256": "00e7055593c54031c64b45ef1354db86f5a1bed9bcb03de8436d2e45ec865f58"
+            "size": 902,
+            "sha256": "bb099857b1f7063b349bd6d4cc5d203292b0508d668886161a8dff65ad6c522c"
         },
         "app-core/app/Mail/NuovaRichiestaIscrizione.php": {
             "size": 1180,
             "sha256": "9788193bfe82d3d74c669f578aeb4e387d4c93b5002533fafd95bc32b012e0f8"
+        },
+        "app-core/app/Mail/PagamentoIscrizioneSegnalato.php": {
+            "size": 1393,
+            "sha256": "3339ce582aa6fe1e0fb17405c29646c1176711e6698a5ea8ca7370f2a53a870a"
         },
         "app-core/app/Mail/PagamentoPaypalRicevuto.php": {
             "size": 803,
@@ -302,8 +310,8 @@
             "sha256": "b69dbc366996436479461e3c9f07750eb65342fa0dacfcad5272404f90b2537e"
         },
         "app-core/app/Models/Attivita.php": {
-            "size": 10152,
-            "sha256": "b71dd0bdc2f30487c3d7ddd95ccda28095dbe661c42dea441e389e613c996016"
+            "size": 9981,
+            "sha256": "c44679e0ac73b4f8c614ec451f9c32b002a84ad8cae2e04cd8be34a8a92f21ee"
         },
         "app-core/app/Models/Convenzione.php": {
             "size": 3785,
@@ -322,8 +330,8 @@
             "sha256": "cc5aa09f338452cb7c69df970960117a84ae7f29c8eb1563de76681b8d43e506"
         },
         "app-core/app/Models/IscrizioneAttivita.php": {
-            "size": 4129,
-            "sha256": "96987884ca4b701bdc998e747bbe8d00885edc4e60bc2a42d4df79dcce88fe02"
+            "size": 6326,
+            "sha256": "145c26c7890b670eb04337b5c58ea0daa2a2cfea9dc594fb4bf5b3ae33d40ecb"
         },
         "app-core/app/Models/Libro.php": {
             "size": 2026,
@@ -346,8 +354,8 @@
             "sha256": "001b12208eb1826cf1e3c9f8a325f893594949dd4e972a000803108f1e602571"
         },
         "app-core/app/Services/DatiAzienda.php": {
-            "size": 3935,
-            "sha256": "ecbb496473bbf8a8d9ec09d8860bfd7b10b8083d1247139a0572bc10833961fb"
+            "size": 4764,
+            "sha256": "c584f6ea0ea03b808bdd9292660a9a4f0b20c6d95ff1f55944c511c355dd4140"
         },
         "app-core/app/Services/GalleriaService.php": {
             "size": 5621,
@@ -358,8 +366,8 @@
             "sha256": "6a09813f86d8bb5ca6678dc11a78e3149aef1189cec8a18c22dd428d16e1a029"
         },
         "app-core/app/Services/IscrizioneAttivitaService.php": {
-            "size": 7573,
-            "sha256": "01f526b86139d6dae755abcfa52c9a3020e93b5feb456eb3d03e22d6cdaf5150"
+            "size": 10223,
+            "sha256": "e356c1c7edafd89c3d41ce4bab0aaeb4339938f49cfb8ff63f0067d5cf5955d7"
         },
         "app-core/app/Services/LibraryThingImporter.php": {
             "size": 10723,
@@ -402,8 +410,8 @@
             "sha256": "cae5305bb1d2798398d19cf1928b25d60bfd0361c8d160e654a23b1eff66b7ab"
         },
         "app-core/config/app.php": {
-            "size": 4272,
-            "sha256": "78dcd36b226fd7b24057cb95f567cb6e96561c2406653892d8aef6dcea8461e4"
+            "size": 4394,
+            "sha256": "0ec9c7005431cccb34a9326cb7fdd3722422f2a98e3114963651c3ecec98e2cf"
         },
         "app-core/config/auth.php": {
             "size": 4040,
@@ -414,8 +422,8 @@
             "sha256": "b8bcf382283330b94c0a602ff06452de819041ea709e28eea5065d51d1d7d085"
         },
         "app-core/config/cral.php": {
-            "size": 2215,
-            "sha256": "528222752c49115873c8abbdaaac157afe02de301017dbc557b53e9ac10a6ced"
+            "size": 2732,
+            "sha256": "c97b942aea236391af3e0e6a537aba20f314c449d9cac2e3d2b9d912be2fb255"
         },
         "app-core/config/database.php": {
             "size": 6982,
@@ -513,6 +521,10 @@
             "size": 1004,
             "sha256": "f2a6a0b646f0ca0a228a542d835b0605bea3c141629dc7e50c48c66fbe0247d0"
         },
+        "app-core/database/migrations/2026_11_18_150000_iscrizione_automatica_e_pagamento_attivita.php": {
+            "size": 1375,
+            "sha256": "6af69b7de73020b747862b5b8db76ee605e432f1a24d6e0eee9a6d8ef254f72e"
+        },
         "app-core/database/post-aggiornamento.php": {
             "size": 9247,
             "sha256": "ee18c7c430acdc7f45f2982e75ead8221a8ce89bfdde7eb795fb406b98beaca3"
@@ -542,8 +554,8 @@
             "sha256": "ca5726c7b8a02637d3aebda9d949778b181b90908331802e53ed8a5048c45305"
         },
         "app-core/resources/views/attivita/show.blade.php": {
-            "size": 16341,
-            "sha256": "b482baae50d968b6d5578dabf0242f58300cd17c1577bb7ea2d96d694a98386c"
+            "size": 15629,
+            "sha256": "b3689ba31246cf1d71c65cd833190877986a14cb52b451095ab0da98bd095af7"
         },
         "app-core/resources/views/auth/confirm-password.blade.php": {
             "size": 741,
@@ -573,6 +585,10 @@
             "size": 125,
             "sha256": "3e81b70837f694e4088fdeba3f4f7b3df0ec95484e81d60fe3b5bda80e9f4003"
         },
+        "app-core/resources/views/components/attivita-pagamento.blade.php": {
+            "size": 6898,
+            "sha256": "8e6d46e89b2c809cb964b66a2ec717f0e4a339bc308e146ff780e6f105d148e7"
+        },
         "app-core/resources/views/components/attivita/card.blade.php": {
             "size": 2398,
             "sha256": "05b264827438cbe902a7dc9a7e6b93492228c8fdafe07624bf58a9bbecd0dfcb"
@@ -586,8 +602,8 @@
             "sha256": "21a065afc99edbdf38a7c68aed7306368bdc2958ffcf126b02f4b1df0f1f212a"
         },
         "app-core/resources/views/components/dati-bonifico.blade.php": {
-            "size": 2521,
-            "sha256": "7d2e1de7e56056838b0e0db2798b4ee6f0d795425021886583b06cb9d8197218"
+            "size": 2747,
+            "sha256": "8a774541c3d1c01a32aa64491c11523b9d1664c9d3bf1f615f8e7053e19d59bd"
         },
         "app-core/resources/views/components/foto-miniatura.blade.php": {
             "size": 2656,
@@ -625,10 +641,6 @@
             "size": 1819,
             "sha256": "0bb70dd08c7a8c6e5871b8331171d1ed3a490935150db91c5852a380f6761ab9"
         },
-        "app-core/resources/views/components/paypal-button.blade.php": {
-            "size": 1276,
-            "sha256": "9514dea2e2060a2e72699a46baa252d0eb078682f29800070e8bb9ff66fbb621"
-        },
         "app-core/resources/views/components/primary-button.blade.php": {
             "size": 112,
             "sha256": "05fce38ac9d4f0ca07ca30590ec104e2e426d68ec7fb7548f3e03190f914e330"
@@ -638,16 +650,16 @@
             "sha256": "023184b93e429f890c9eb45d5412ef0d2783275d8bd6a4f2e22b3a57d04c2689"
         },
         "app-core/resources/views/components/scelta-pagamento.blade.php": {
-            "size": 2681,
-            "sha256": "be64352e0c16eefde49867d2c39429836779b0456e6e6d8e21722d4b842b01d9"
+            "size": 2717,
+            "sha256": "8a385c5d837437f895e14ff05990e8e934e3dd1767ea12a166f2b9e3a88ff881"
         },
         "app-core/resources/views/components/secondary-button.blade.php": {
             "size": 110,
             "sha256": "a55ca815a842ef0ad648889b2419c3910374491d0d0703ad6c017bbdb2a85028"
         },
         "app-core/resources/views/components/tessera-pagamento.blade.php": {
-            "size": 7553,
-            "sha256": "bac609cfc64dd60b869a3ec00d99ea6c63945de5026fd947b3e947dfe1e77eed"
+            "size": 7603,
+            "sha256": "7b21cc61407bcacbcbb0707465b3e0a6c486ba3777a7e28b836f887c312d9e4c"
         },
         "app-core/resources/views/components/text-input.blade.php": {
             "size": 127,
@@ -682,8 +694,12 @@
             "sha256": "cfe110637df0e8e72e70ab6e861054d2da06474198e218b688ca614e5f39f4a8"
         },
         "app-core/resources/views/emails/iscrizione-attivita-nuova.blade.php": {
-            "size": 2829,
-            "sha256": "c9728b9ddbb7467db04a758e99c7d6dafc8663abc8b24805fc09236a7a2e6b85"
+            "size": 3136,
+            "sha256": "f7bdd29cdba2440a0e795e802d5e7ff03ec9a1c7e6fe7bfe71222a6e81d26741"
+        },
+        "app-core/resources/views/emails/iscrizione-attivita-pagamento.blade.php": {
+            "size": 2974,
+            "sha256": "bd6f7ab8ad92af1ba40ccc67abc6b3a118052a145f8d345ad113e5dc913a573b"
         },
         "app-core/resources/views/emails/iscrizione-sito-approvata.blade.php": {
             "size": 1876,
@@ -790,12 +806,12 @@
             "sha256": "9adccc33e7dd400683e434774077c7fdb2f299c5712cedf16a43fdf56f2850fa"
         },
         "app-core/routes/web.php": {
-            "size": 5925,
-            "sha256": "58f2041184279aef11b4a3b2a29020c342c7ffb50a7528c5c9b26322948b5ec5"
+            "size": 6706,
+            "sha256": "b93e247723b568049f4e70d45f73cd4abfbab5002261a06a007b77cc0954e9ef"
         },
-        "build/assets/app-CB88sy25.css": {
-            "size": 70589,
-            "sha256": "f5a6a91c906eb3d700034eb3d77390e2242db591b1d2bc27fffd9a574e963245"
+        "build/assets/app-BhhTcNvc.css": {
+            "size": 70257,
+            "sha256": "f54197bbef58bd102d7c2c6378dcedffac902c5431cd467af77c9c32e1fc7e7a"
         },
         "build/assets/app-D1HP7bxF.js": {
             "size": 56216,
@@ -803,7 +819,7 @@
         },
         "build/manifest.json": {
             "size": 331,
-            "sha256": "23332da601f1940e29604180cc73761b0c1ce7a39705640c144dc65601f2ab8d"
+            "sha256": "398fb0824db173f64f0064a7b2d7b690380aa707c79f8412f8d358c40fb11b66"
         },
         "favicon.ico": {
             "size": 0,
