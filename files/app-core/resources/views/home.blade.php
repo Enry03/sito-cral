@@ -30,7 +30,7 @@
 
             {{-- Prossime attività --}}
             <div data-reveal="scale" data-delay="0.5" data-parallax="-0.06">
-                <div class="animate-float-slow rounded-[2rem] bg-white/12 p-4 shadow-lift backdrop-blur-xl sm:p-5">
+                <div class="animate-float-slow rounded-[2rem] bg-white/10 p-4 shadow-lift backdrop-blur-xl sm:p-5">
                     <p class="px-3 pb-3 pt-1 text-sm font-semibold text-white/80">Prossime attività</p>
 
                     @if($prossimeAttivita->isEmpty())

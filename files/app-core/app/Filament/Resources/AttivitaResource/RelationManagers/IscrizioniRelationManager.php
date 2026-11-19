@@ -5,8 +5,10 @@ namespace App\Filament\Resources\AttivitaResource\RelationManagers;
 use App\Filament\Resources\IscrizioneAttivitaResource;
 use App\Models\IscrizioneAttivita;
 use App\Models\User;
+use App\Services\EsportaIscrizioni;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,6 +29,13 @@ class IscrizioniRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Select::make('user_id')
                     ->label('Persona')
+                    ->live()
+                    // La quota proposta dipende da chi è: i soci pagano la quota ridotta.
+                    ->afterStateUpdated(function ($state, Set $set) {
+                        $quota = $this->getOwnerRecord()->prezzoPer($state ? User::find($state) : null);
+
+                        $set('importo', $quota !== null && $quota > 0 ? $quota : null);
+                    })
                     ->options(fn () => User::query()
                         ->whereIn('ruolo', ['socio', 'iscritto'])
                         ->where('stato_iscrizione', 'attivo')
@@ -44,7 +53,7 @@ class IscrizioniRelationManager extends RelationManager
                 Forms\Components\TextInput::make('importo')
                     ->numeric()
                     ->prefix('€')
-                    ->default(fn () => $this->getOwnerRecord()->haPrezzo() ? $this->getOwnerRecord()->prezzo : null),
+                    ->default(fn () => $this->getOwnerRecord()->prezzoNonSoci()),
                 Forms\Components\Select::make('metodo_pagamento')
                     ->label('Modo di pagamento')
                     ->options(User::metodiPagamento())
@@ -74,10 +83,10 @@ class IscrizioniRelationManager extends RelationManager
                     ->color(fn (string $state): string => $state === IscrizioneAttivita::RIFIUTATA ? 'danger' : 'success'),
                 Tables\Columns\TextColumn::make('user.email')
                     ->label('Email')
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.telefono')
                     ->label('Telefono')
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Iscritto il')
                     ->dateTime('d/m/Y H:i'),
@@ -86,11 +95,17 @@ class IscrizioniRelationManager extends RelationManager
                     ->placeholder('—'),
                 IscrizioneAttivitaResource::colonnaMetodoPagamento(),
                 IscrizioneAttivitaResource::colonnaStatoPagamento(),
+                IscrizioneAttivitaResource::colonnaRisposte(),
             ])
             ->filters([
                 IscrizioneAttivitaResource::filtroPagamento(),
             ])
             ->headerActions([
+                Tables\Actions\Action::make('esporta')
+                    ->label('Scarica elenco (Excel)')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('gray')
+                    ->action(fn () => app(EsportaIscrizioni::class)->scarica($this->getOwnerRecord())),
                 Tables\Actions\CreateAction::make()
                     ->label('Iscrivi una persona')
                     ->mutateFormDataUsing(function (array $data): array {

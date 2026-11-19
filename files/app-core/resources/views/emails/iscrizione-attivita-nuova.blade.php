@@ -41,6 +41,12 @@
                     <td style="padding:9px 0;">€ {{ number_format((float) $iscrizione->importo, 2, ',', '.') }}</td>
                 </tr>
                 @endif
+                @foreach($iscrizione->risposteTesto() as $domanda => $risposta)
+                <tr>
+                    <td style="padding:9px 0; color:#4A5878; vertical-align:top;">{{ $domanda }}</td>
+                    <td style="padding:9px 0;">{{ $risposta }}</td>
+                </tr>
+                @endforeach
             </table>
 
             <a href="{{ url('/admin/iscrizioni-attivita') }}" style="display:inline-block; margin-top:24px; background:#E4002B; color:#ffffff; text-decoration:none; padding:14px 26px; border-radius:999px; font-size:14px; font-weight:bold;">

@@ -38,6 +38,7 @@ class IscrizioneAttivita extends Model
         'attivita_id',
         'stato',
         'importo',
+        'risposte',
         'pagato',
         'pagato_il',
         'gestita_il',
@@ -48,6 +49,7 @@ class IscrizioneAttivita extends Model
 
     protected $casts = [
         'importo' => 'decimal:2',
+        'risposte' => 'array',
         'pagato' => 'boolean',
         'pagato_il' => 'datetime',
         'gestita_il' => 'datetime',
@@ -101,6 +103,57 @@ class IscrizioneAttivita extends Model
     public function rifiutata(): bool
     {
         return $this->stato === self::RIFIUTATA;
+    }
+
+    // ------------------------------------------------- risposte al modulo
+
+    /**
+     * Le risposte date, come coppie "domanda" => "risposta" in forma di testo.
+     *
+     * @return array<string, string>
+     */
+    public function risposteTesto(): array
+    {
+        return collect($this->risposte ?? [])
+            ->mapWithKeys(fn (array $r) => [(string) $r['etichetta'] => is_array($r['valore']) ? implode(', ', $r['valore']) : (string) $r['valore']])
+            ->all();
+    }
+
+    /**
+     * La risposta a una domanda precisa (per codice), nella forma usata dal modulo:
+     * "si"/"no" per le domande sì/no, "1" per le caselle da accettare.
+     *
+     * @return array<string, string|list<string>>
+     */
+    public function valoriPerModulo(): array
+    {
+        $valori = [];
+
+        foreach ($this->risposte ?? [] as $risposta) {
+            $valori[$risposta['id']] = match ($risposta['valore']) {
+                'Sì' => 'si',
+                'No' => 'no',
+                'Accettato' => '1',
+                default => $risposta['valore'],
+            };
+        }
+
+        return $valori;
+    }
+
+    /**
+     * Domande obbligatorie del modulo a cui questa iscrizione non ha ancora risposto
+     * (succede se l'amministratore aggiunge una domanda dopo l'iscrizione).
+     *
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    public function domandeSenzaRisposta()
+    {
+        $date = collect($this->risposte ?? [])->pluck('id')->all();
+
+        return $this->attivita->campi()
+            ->filter(fn (array $campo) => $campo['obbligatorio'] && ! in_array($campo['id'], $date, true))
+            ->values();
     }
 
     /**

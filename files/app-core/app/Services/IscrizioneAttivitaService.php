@@ -28,15 +28,21 @@ class IscrizioneAttivitaService
      * Iscrive la persona all'attività. Possono farlo iscritti al sito, soci CRAL e
      * amministratori (cioè chi ha un account approvato).
      *
+     * Se l'attività ha domande nel modulo di iscrizione, le risposte (già validate
+     * dal controller, nella forma codice => risposta) vengono salvate con l'iscrizione.
+     * L'importo è quello che spetta alla persona: la quota ridotta se è socio CRAL.
+     *
+     * @param  array<string, mixed>  $risposte
+     *
      * @throws OperazioneNonConsentita
      */
-    public function iscrivi(User $utente, Attivita $attivita): IscrizioneAttivita
+    public function iscrivi(User $utente, Attivita $attivita, array $risposte = []): IscrizioneAttivita
     {
         if (! $utente->haAccessoSito()) {
             throw new OperazioneNonConsentita('Per iscriverti a un\'attività serve un account approvato.');
         }
 
-        $iscrizione = DB::transaction(function () use ($utente, $attivita) {
+        $iscrizione = DB::transaction(function () use ($utente, $attivita, $risposte) {
             // Si rilegge l'attività bloccandola: i posti si contano senza che
             // nessun altro possa iscriversi nello stesso istante.
             $attivita = Attivita::whereKey($attivita->getKey())->lockForUpdate()->firstOrFail();
@@ -60,16 +66,62 @@ class IscrizioneAttivitaService
                 default => throw new OperazioneNonConsentita('Per questa attività non sono previste iscrizioni.'),
             };
 
+            $date = $attivita->preparaRisposte($risposte);
+            $mancanti = $attivita->campi()->filter(fn (array $c) => $c['obbligatorio'] && ! in_array($c['id'], array_column($date, 'id'), true));
+
+            if ($mancanti->isNotEmpty()) {
+                throw new OperazioneNonConsentita('Rispondi a tutte le domande obbligatorie: manca «'.$mancanti->first()['etichetta'].'».');
+            }
+
+            $importo = $attivita->prezzoPer($utente);
+
             return IscrizioneAttivita::create([
                 'user_id' => $utente->id,
                 'attivita_id' => $attivita->id,
                 'stato' => IscrizioneAttivita::CONFERMATA,
                 'gestita_il' => now(),
-                'importo' => $attivita->haPrezzo() ? $attivita->prezzo : null,
+                'importo' => $importo !== null && $importo > 0 ? $importo : null,
+                'risposte' => $date ?: null,
             ]);
         });
 
         $this->invia(config('mail.admin_address'), new NuovaIscrizioneAttivita($iscrizione->load(['user', 'attivita'])));
+
+        return $iscrizione;
+    }
+
+    /**
+     * La persona corregge le risposte date al modulo di iscrizione (finché
+     * l'attività non è conclusa).
+     *
+     * @param  array<string, mixed>  $risposte
+     *
+     * @throws OperazioneNonConsentita
+     */
+    public function aggiornaRisposte(User $utente, Attivita $attivita, array $risposte): IscrizioneAttivita
+    {
+        $iscrizione = $attivita->iscrizioni()->where('user_id', $utente->id)->first();
+
+        if (! $iscrizione || ! $iscrizione->confermata()) {
+            throw new OperazioneNonConsentita('Non risulti iscritto a questa attività.');
+        }
+
+        if ($attivita->isPassata()) {
+            throw new OperazioneNonConsentita('Questa attività si è già conclusa.');
+        }
+
+        if (! $attivita->haCampi()) {
+            throw new OperazioneNonConsentita('Questa attività non ha un modulo da compilare.');
+        }
+
+        $date = $attivita->preparaRisposte($risposte);
+        $mancanti = $attivita->campi()->filter(fn (array $c) => $c['obbligatorio'] && ! in_array($c['id'], array_column($date, 'id'), true));
+
+        if ($mancanti->isNotEmpty()) {
+            throw new OperazioneNonConsentita('Rispondi a tutte le domande obbligatorie: manca «'.$mancanti->first()['etichetta'].'».');
+        }
+
+        $iscrizione->update(['risposte' => $date ?: null]);
 
         return $iscrizione;
     }

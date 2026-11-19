@@ -97,6 +97,21 @@ class IscrizioneAttivitaResource extends Resource
             ->placeholder('—');
     }
 
+    /** Le risposte date al modulo di iscrizione, una per riga ("Domanda: risposta"). */
+    public static function colonnaRisposte(bool $nascostaDiDefault = false): Tables\Columns\TextColumn
+    {
+        return Tables\Columns\TextColumn::make('risposte')
+            ->label('Risposte al modulo')
+            ->state(fn (IscrizioneAttivita $record): array => collect($record->risposteTesto())
+                ->map(fn (string $risposta, string $domanda): string => $domanda.': '.$risposta)
+                ->values()
+                ->all())
+            ->listWithLineBreaks()
+            ->wrap()
+            ->placeholder('—')
+            ->toggleable(isToggledHiddenByDefault: $nascostaDiDefault);
+    }
+
     public static function filtroPagamento(): Tables\Filters\SelectFilter
     {
         return Tables\Filters\SelectFilter::make('pagamento')
@@ -156,6 +171,7 @@ class IscrizioneAttivitaResource extends Resource
                     ->placeholder('—'),
                 static::colonnaMetodoPagamento(),
                 static::colonnaStatoPagamento(),
+                static::colonnaRisposte(nascostaDiDefault: true),
                 Tables\Columns\TextColumn::make('user.email')
                     ->label('Email')
                     ->toggleable(isToggledHiddenByDefault: true),

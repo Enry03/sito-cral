@@ -96,6 +96,9 @@ Route::middleware(['auth', 'socio.attivo'])->group(function () {
     Route::post('/attivita/{slug}/partecipa', [AttivitaController::class, 'partecipa'])
         ->middleware('throttle:20,1')
         ->name('attivita.partecipa');
+    Route::put('/attivita/{slug}/risposte', [AttivitaController::class, 'aggiornaRisposte'])
+        ->middleware('throttle:20,1')
+        ->name('attivita.risposte');
     Route::delete('/attivita/{slug}/partecipa', [AttivitaController::class, 'annullaPartecipazione'])
         ->middleware('throttle:20,1')
         ->name('attivita.annulla');

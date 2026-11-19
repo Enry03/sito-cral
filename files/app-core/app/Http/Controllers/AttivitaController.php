@@ -7,6 +7,7 @@ use App\Services\IscrizioneAttivitaService;
 use App\Services\OperazioneNonConsentita;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AttivitaController extends Controller
 {
@@ -65,10 +66,16 @@ class AttivitaController extends Controller
     {
         $attivita = Attivita::where('slug', $slug)->where('pubblicata', true)->firstOrFail();
 
+        $validatore = $this->validatoreRisposte($request, $attivita);
+
+        if ($validatore->fails()) {
+            return redirect(route('attivita.show', $slug).'#iscrizione')->withErrors($validatore)->withInput();
+        }
+
         try {
-            $iscrizione = $servizio->iscrivi($request->user(), $attivita);
+            $iscrizione = $servizio->iscrivi($request->user(), $attivita, $this->risposte($request));
         } catch (OperazioneNonConsentita $e) {
-            return redirect(route('attivita.show', $slug).'#iscrizione')->with('errore_iscrizione', $e->getMessage());
+            return redirect(route('attivita.show', $slug).'#iscrizione')->with('errore_iscrizione', $e->getMessage())->withInput();
         }
 
         return redirect(route('attivita.show', $slug).'#iscrizione')->with(
@@ -77,6 +84,26 @@ class AttivitaController extends Controller
                 ? 'Sei iscritto! Ora scegli come pagare la quota.'
                 : 'Sei iscritto! Ti aspettiamo.',
         );
+    }
+
+    /** La persona corregge le risposte date al modulo di iscrizione. */
+    public function aggiornaRisposte(Request $request, string $slug, IscrizioneAttivitaService $servizio): RedirectResponse
+    {
+        $attivita = Attivita::where('slug', $slug)->where('pubblicata', true)->firstOrFail();
+
+        $validatore = $this->validatoreRisposte($request, $attivita);
+
+        if ($validatore->fails()) {
+            return redirect(route('attivita.show', $slug).'#iscrizione')->withErrors($validatore)->withInput();
+        }
+
+        try {
+            $servizio->aggiornaRisposte($request->user(), $attivita, $this->risposte($request));
+        } catch (OperazioneNonConsentita $e) {
+            return redirect(route('attivita.show', $slug).'#iscrizione')->with('errore_iscrizione', $e->getMessage())->withInput();
+        }
+
+        return redirect(route('attivita.show', $slug).'#iscrizione')->with('ok_iscrizione', 'Le tue risposte sono state aggiornate.');
     }
 
     public function annullaPartecipazione(Request $request, string $slug, IscrizioneAttivitaService $servizio): RedirectResponse
@@ -90,5 +117,18 @@ class AttivitaController extends Controller
         }
 
         return redirect(route('attivita.show', $slug).'#iscrizione')->with('ok_iscrizione', 'La tua iscrizione è stata annullata.');
+    }
+
+    private function validatoreRisposte(Request $request, Attivita $attivita)
+    {
+        return Validator::make(['risposte' => $this->risposte($request)], $attivita->regoleRisposte(), [], $attivita->nomiRisposte());
+    }
+
+    /** @return array<string, mixed> */
+    private function risposte(Request $request): array
+    {
+        $risposte = $request->input('risposte', []);
+
+        return is_array($risposte) ? $risposte : [];
     }
 }

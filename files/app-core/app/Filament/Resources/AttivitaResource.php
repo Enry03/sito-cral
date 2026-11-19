@@ -110,7 +110,7 @@ class AttivitaResource extends Resource
                     ->columns(2),
 
                 Forms\Components\Section::make('Iscrizioni dei soci')
-                    ->description('Vale per ogni tipo di attività (torneo, gita, uscita...). Chi ha un account approvato (iscritto al sito o socio) si iscrive da solo, subito, senza che tu debba confermare nulla. Se indichi una quota, dopo l\'iscrizione sceglie come pagare (contanti, bonifico o PayPal): dalla voce "Iscrizioni attività" vedi chi è iscritto e chi ha pagato. Gli orari sono in ora italiana.')
+                    ->description('Vale per ogni tipo di attività (torneo, gita, uscita...). Chi ha un account approvato (iscritto al sito o socio) si iscrive da solo, subito, senza che tu debba confermare nulla. Se indichi una quota (puoi fissare un prezzo più basso per i soci CRAL), dopo l\'iscrizione sceglie come pagare (contanti, bonifico o PayPal): dalla voce "Iscrizioni attività" vedi chi è iscritto e chi ha pagato. Gli orari sono in ora italiana.')
                     ->schema([
                         Forms\Components\Toggle::make('iscrizione_abilitata')
                             ->label('Permetti l\'iscrizione a questa attività')
@@ -137,17 +137,118 @@ class AttivitaResource extends Resource
                             ->helperText('Lascia vuoto per posti illimitati.')
                             ->numeric()
                             ->minValue(1)
-                            ->visible(fn (Get $get): bool => (bool) $get('iscrizione_abilitata')),
+                            ->visible(fn (Get $get): bool => (bool) $get('iscrizione_abilitata'))
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('prezzo')
-                            ->label('Quota di partecipazione')
-                            ->helperText('Se indichi un importo, dopo l\'iscrizione la persona sceglie come pagare: contanti, bonifico o PayPal.')
+                            ->label('Quota intera (non soci)')
+                            ->helperText('È la quota di chi non ha la tessera. Se è uguale per tutti, compila solo questa. Dopo l\'iscrizione la persona sceglie come pagare: contanti, bonifico o PayPal.')
                             ->numeric()
                             ->minValue(0)
                             ->step(0.01)
                             ->prefix('€')
+                            ->live(onBlur: true)
                             ->visible(fn (Get $get): bool => (bool) $get('iscrizione_abilitata')),
+                        Forms\Components\TextInput::make('prezzo_soci')
+                            ->label('Quota ridotta per i soci CRAL')
+                            ->helperText('Facoltativa. I soci vedono questa quota e il prezzo intero barrato; chi non è socio vede quanto risparmierebbe con la tessera. Scrivi 0 per l\'ingresso gratuito ai soci.')
+                            ->numeric()
+                            ->minValue(0)
+                            ->step(0.01)
+                            ->prefix('€')
+                            ->visible(fn (Get $get): bool => (bool) $get('iscrizione_abilitata'))
+                            ->rules([
+                                fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    if (blank($value)) {
+                                        return;
+                                    }
+
+                                    if (blank($get('prezzo')) || (float) $get('prezzo') <= 0) {
+                                        $fail('Per indicare la quota dei soci compila prima la quota intera.');
+                                    } elseif ((float) $value > (float) $get('prezzo')) {
+                                        $fail('La quota dei soci non può essere più alta di quella intera.');
+                                    }
+                                },
+                            ]),
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('Modulo di iscrizione')
+                    ->description('Facoltativo. Aggiungi le domande a cui chi si iscrive deve rispondere (ruolo in campo, taglia della maglietta, intolleranze, accettazione del regolamento...). Le risposte le vedi nell\'elenco degli iscritti e le scarichi in Excel.')
+                    ->visible(fn (Get $get): bool => (bool) $get('iscrizione_abilitata'))
+                    ->schema([
+                        Forms\Components\Placeholder::make('domande_pronte_titolo')
+                            ->label('Domande pronte')
+                            ->content('Aggiungi con un clic una domanda già fatta, poi modificala come vuoi:')
+                            ->columnSpanFull(),
+                        Forms\Components\Actions::make([
+                            ...collect(static::domandePronte())->map(
+                                fn (array $pronta, string $chiave) => Forms\Components\Actions\Action::make('pronta_'.$chiave)
+                                    ->label('+ '.$pronta['etichetta'])
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->action(function (Get $get, Set $set) use ($pronta) {
+                                        $set('campi_iscrizione', [
+                                            ...($get('campi_iscrizione') ?? []),
+                                            (string) \Illuminate\Support\Str::uuid() => $pronta,
+                                        ]);
+                                    })
+                            )->values()->all(),
+                        ])->label('Domande pronte')->key('domande_pronte'),
+
+                        Forms\Components\Repeater::make('campi_iscrizione')
+                            ->label('Domande')
+                            ->addActionLabel('Aggiungi una domanda')
+                            ->reorderable()
+                            ->collapsible()
+                            ->collapsed(fn (?Attivita $record): bool => (bool) $record?->haCampi())
+                            ->cloneable()
+                            ->itemLabel(fn (array $state): ?string => filled($state['etichetta'] ?? null) ? $state['etichetta'] : 'Nuova domanda')
+                            ->schema([
+                                Forms\Components\Hidden::make('id'),
+                                Forms\Components\TextInput::make('etichetta')
+                                    ->label('Domanda')
+                                    ->placeholder('Es. Giochi in attacco o in difesa?')
+                                    ->required()
+                                    ->maxLength(150)
+                                    ->columnSpanFull(),
+                                Forms\Components\Select::make('tipo')
+                                    ->label('Tipo di risposta')
+                                    ->options(Attivita::tipiCampo())
+                                    ->default(Attivita::CAMPO_TESTO)
+                                    ->required()
+                                    ->live()
+                                    ->native(false),
+                                Forms\Components\Toggle::make('obbligatorio')
+                                    ->label('Risposta obbligatoria')
+                                    ->default(true)
+                                    ->inline(false)
+                                    ->disabled(fn (Get $get): bool => $get('tipo') === Attivita::CAMPO_ACCETTAZIONE)
+                                    ->helperText(fn (Get $get): ?string => $get('tipo') === Attivita::CAMPO_ACCETTAZIONE ? 'Chi non spunta la casella non può iscriversi.' : null),
+                                Forms\Components\TagsInput::make('opzioni')
+                                    ->label('Opzioni tra cui scegliere')
+                                    ->placeholder('Scrivi un\'opzione e premi Invio')
+                                    ->helperText('Almeno due. Per esempio: Junior, Senior.')
+                                    ->visible(fn (Get $get): bool => in_array($get('tipo'), Attivita::tipiConOpzioni(), true))
+                                    ->required(fn (Get $get): bool => in_array($get('tipo'), Attivita::tipiConOpzioni(), true))
+                                    ->rules(fn (Get $get): array => in_array($get('tipo'), Attivita::tipiConOpzioni(), true) ? ['array', 'min:2'] : [])
+                                    ->validationMessages(['min' => 'Servono almeno due opzioni.'])
+                                    ->columnSpanFull(),
+                                Forms\Components\TextInput::make('aiuto')
+                                    ->label('Spiegazione sotto la domanda (facoltativa)')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->defaultItems(0)
+                            ->columnSpanFull(),
+
+                        Forms\Components\Textarea::make('messaggio_iscritti')
+                            ->label('Informazioni per gli iscritti (facoltativo)')
+                            ->helperText('Le vedono solo le persone iscritte, sulla pagina dell\'attività: ritrovo, orario, cosa portare, regole...')
+                            ->rows(3)
+                            ->maxLength(2000)
+                            ->columnSpanFull(),
+                    ]),
 
                 Forms\Components\Section::make('Foto dell\'attività')
                     ->description('Le foto le vede solo chi è iscritto al sito o socio CRAL: gli altri vedono anteprime sfocate. Con più di una foto l\'album viene creato automaticamente; con una sola foto resta una foto singola, a meno che tu non scelga di creare un album.')
@@ -176,6 +277,42 @@ class AttivitaResource extends Resource
                     ->columns(2)
                     ->collapsible(),
             ]);
+    }
+
+    /**
+     * Domande già pronte da aggiungere con un clic al modulo di iscrizione.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public static function domandePronte(): array
+    {
+        return [
+            'taglia' => [
+                'etichetta' => 'Taglia maglietta',
+                'tipo' => Attivita::CAMPO_SCELTA,
+                'opzioni' => ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+                'obbligatorio' => true,
+            ],
+            'intolleranze' => [
+                'etichetta' => 'Allergie o intolleranze alimentari',
+                'tipo' => Attivita::CAMPO_TESTO,
+                'opzioni' => [],
+                'obbligatorio' => false,
+                'aiuto' => 'Lascia vuoto se non ne hai.',
+            ],
+            'regolamento' => [
+                'etichetta' => 'Ho letto e accetto il regolamento',
+                'tipo' => Attivita::CAMPO_ACCETTAZIONE,
+                'opzioni' => [],
+                'obbligatorio' => true,
+            ],
+            'note' => [
+                'etichetta' => 'Note per gli organizzatori',
+                'tipo' => Attivita::CAMPO_TESTO_LUNGO,
+                'opzioni' => [],
+                'obbligatorio' => false,
+            ],
+        ];
     }
 
     public static function table(Table $table): Table

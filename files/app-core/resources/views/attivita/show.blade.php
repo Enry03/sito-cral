@@ -35,9 +35,7 @@
                         {{ $attivita->luogo }}
                     </span>
                 @endif
-                @if($attivita->prezzoLabel())
-                    <span class="chip chip-glass !px-4 !py-2 !text-sm">Quota: {{ $attivita->prezzoLabel() }}</span>
-                @endif
+                <x-attivita-prezzo :attivita="$attivita" :utente="auth()->user()" variante="chip" />
             </div>
         </div>
 
@@ -90,12 +88,7 @@
                             <dd class="mt-1 font-semibold">{{ $attivita->postiRimasti() }} liberi su {{ $attivita->posti_max }}</dd>
                         </div>
                     @endif
-                    @if($attivita->prezzoLabel())
-                        <div>
-                            <dt class="font-semibold text-white/60">Quota</dt>
-                            <dd class="mt-1 font-semibold">{{ $attivita->prezzoLabel() }}</dd>
-                        </div>
-                    @endif
+                    <x-attivita-prezzo :attivita="$attivita" :utente="auth()->user()" />
                 </dl>
 
                 <div class="mt-8">
@@ -117,6 +110,50 @@
                                     @elseif($iscrizione->richiedePagamento())
                                         <x-attivita-pagamento :iscrizione="$iscrizione" class="mt-5" />
                                     @endif
+
+                                    {{-- Informazioni per chi è iscritto: ritrovo, cosa portare... --}}
+                                    @if($attivita->messaggio_iscritti)
+                                        <div class="mt-5 rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/20">
+                                            <p class="text-sm font-semibold text-white/70">Informazioni per gli iscritti</p>
+                                            <p class="mt-1.5 whitespace-pre-line leading-relaxed">{{ $attivita->messaggio_iscritti }}</p>
+                                        </div>
+                                    @endif
+
+                                    {{-- Le risposte date al modulo, con la possibilità di correggerle --}}
+                                    @if($attivita->haCampi())
+                                        @php
+                                            $senzaRisposta = $iscrizione->domandeSenzaRisposta();
+                                            $risposteDate = $iscrizione->risposteTesto();
+                                        @endphp
+                                        <div class="mt-5 rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/20">
+                                            <p class="text-sm font-semibold text-white/70">Le tue risposte</p>
+                                            @if($risposteDate)
+                                                <dl class="mt-2 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                                                    @foreach($risposteDate as $domanda => $risposta)
+                                                        <div>
+                                                            <dt class="text-white/60">{{ $domanda }}</dt>
+                                                            <dd class="font-semibold">{{ $risposta }}</dd>
+                                                        </div>
+                                                    @endforeach
+                                                </dl>
+                                            @endif
+                                            @if($senzaRisposta->isNotEmpty())
+                                                <p class="mt-3 rounded-xl bg-cral-red px-3 py-2 text-sm font-semibold" role="status">Mancano delle risposte: completa il modulo qui sotto.</p>
+                                            @endif
+
+                                            @unless($attivita->isPassata())
+                                                <details class="mt-3" {{ $senzaRisposta->isNotEmpty() || $errors->any() ? 'open' : '' }}>
+                                                    <summary class="cursor-pointer text-sm font-semibold text-white/80 underline underline-offset-4 transition hover:text-white">{{ $senzaRisposta->isNotEmpty() ? 'Completa le risposte' : 'Modifica le risposte' }}</summary>
+                                                    <form method="POST" action="{{ route('attivita.risposte', $attivita->slug) }}" class="mt-4 rounded-[1.25rem] bg-white p-5 text-cral-navy">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <x-attivita-campi :attivita="$attivita" :valori="$iscrizione->valoriPerModulo()" />
+                                                        <button type="submit" class="btn btn-primary btn-sm mt-5">Salva le risposte</button>
+                                                    </form>
+                                                </details>
+                                            @endunless
+                                        </div>
+                                    @endif
                                 @else
                                     <p class="text-lg font-bold">Non risulti iscritto a questa attività.</p>
                                     <p class="mt-2 text-white/75">Per saperne di più scrivi a <a href="mailto:{{ config('mail.admin_address') }}" class="font-semibold underline underline-offset-4">{{ config('mail.admin_address') }}</a>.</p>
@@ -130,14 +167,30 @@
                                     </form>
                                 @endif
                             @elseif($statoIscrizioni === 'aperte')
+                                @php
+                                    $miaQuota = $attivita->prezzoPer(auth()->user());
+                                    $miaQuotaLabel = $attivita->prezzoLabelPer(auth()->user());
+                                @endphp
                                 <form method="POST" action="{{ route('attivita.partecipa', $attivita->slug) }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-primary">
-                                        Iscriviti{{ $attivita->prezzoLabel() ? ' — '.$attivita->prezzoLabel() : '' }}
+                                    @if($attivita->haCampi())
+                                        <div class="rounded-[1.5rem] bg-white p-5 text-cral-navy sm:p-6">
+                                            <h3 class="font-display text-xl font-bold tracking-tight">Prima di iscriverti</h3>
+                                            <p class="mt-1 text-sm text-cral-navy-soft">Rispondi a queste domande: servono a chi organizza. I campi con <span class="text-cral-red">*</span> sono obbligatori e potrai correggere le risposte anche dopo.</p>
+                                            <x-attivita-campi :attivita="$attivita" class="mt-5" />
+                                        </div>
+                                    @endif
+                                    <button type="submit" class="btn btn-primary {{ $attivita->haCampi() ? 'mt-6' : '' }}">
+                                        Iscriviti{{ $miaQuotaLabel ? ' — '.$miaQuotaLabel : '' }}
                                     </button>
                                 </form>
                                 <p class="mt-3 max-w-md text-sm text-white/70">
-                                    Un clic e sei iscritto: non devi compilare nulla e non serve nessuna conferma.{{ $attivita->haPrezzo() ? ' Subito dopo scegli come pagare la quota.' : '' }}
+                                    @if($attivita->haCampi())
+                                        Compili il modulo e sei iscritto: non serve nessuna conferma.
+                                    @else
+                                        Un clic e sei iscritto: non devi compilare nulla e non serve nessuna conferma.
+                                    @endif
+                                    {{ ($miaQuota ?? 0) > 0 ? 'Subito dopo scegli come pagare la quota.' : '' }}
                                 </p>
                             @else
                                 <p class="text-lg font-bold">
