@@ -9,6 +9,59 @@
 
 $restanti = $restanti ?? 0;
 
+// ------------------------------------------------ 0. sicurezza: file riservati e upload
+// Nella cartella pubblica (quella raggiungibile da internet) non deve esserci nessun
+// file con le password: il .env vero sta in app-core, che il server non serve.
+echo "== 0. Sicurezza ==\n";
+
+$cartellaPubblica = isset($radice) ? (string) $radice : dirname($base);
+
+if (basename($base) === 'app-core' && is_dir($cartellaPubblica)) {
+    $envInUso = @realpath($app->environmentFilePath());
+    $quarantena = $base.'/storage/app/private';
+
+    foreach (array_merge(['.env'], array_map('basename', glob($cartellaPubblica.'/.env.*') ?: [])) as $nome) {
+        $esposto = $cartellaPubblica.'/'.$nome;
+
+        if (! is_file($esposto)) {
+            continue;
+        }
+
+        $inUso = $envInUso !== false && @realpath($esposto) === $envInUso;
+
+        if ($inUso || ! is_file($base.'/.env')) {
+            echo "  ATTENZIONE: {$nome} è nella cartella pubblica ed è quello che il sito usa. Non lo tocco: spostalo in app-core con FTP.\n";
+            $problemi = ($problemi ?? 0) + 1;
+
+            continue;
+        }
+
+        // Si sposta in una cartella che il server non serve (non si cancella: resta recuperabile).
+        @mkdir($quarantena, 0755, true);
+        $destinazione = $quarantena.'/'.ltrim($nome, '.').'.tolto-dalla-cartella-pubblica-'.date('Ymd-His');
+
+        if (@rename($esposto, $destinazione)) {
+            echo "  RIMOSSO dalla cartella pubblica: {$nome} (scaricabile da chiunque). Era una copia del file con le password: CAMBIA la password del database e la chiave del sito.\n";
+        } else {
+            echo "  ATTENZIONE: {$nome} è scaricabile da internet e non riesco a spostarlo. Cancellalo con FTP dalla cartella principale e cambia la password del database.\n";
+            $problemi = ($problemi ?? 0) + 1;
+        }
+    }
+
+    // Nella cartella delle foto caricate non si eseguono mai programmi PHP.
+    $regoleUpload = "# Qui ci sono solo foto e documenti: nessun programma PHP viene eseguito.\n"
+        ."<IfModule mod_authz_core.c>\n    <FilesMatch \"\\.(php[0-9]?|phtml|phar|pl|cgi)\$\">\n        Require all denied\n    </FilesMatch>\n</IfModule>\n"
+        ."<IfModule mod_php.c>\n    php_flag engine off\n</IfModule>\n";
+    $cartellaUpload = $cartellaPubblica.'/uploads';
+
+    if (is_dir($cartellaUpload) && is_writable($cartellaUpload) && (! is_file($cartellaUpload.'/.htaccess') || md5_file($cartellaUpload.'/.htaccess') !== md5($regoleUpload))) {
+        @file_put_contents($cartellaUpload.'/.htaccess', $regoleUpload);
+        echo "  Protetta la cartella delle foto caricate (niente PHP).\n";
+    }
+}
+
+echo "  Controllo completato.\n\n";
+
 // ------------------------------------------------------------ 1. migration
 echo "== 1. Database ==\n";
 \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);

@@ -32,7 +32,10 @@
             </p>
         @endif
         @if(! $passata && $item->iscrizione_abilitata)
-            <p class="mt-3"><span class="chip chip-soft">Iscrizioni per i soci</span></p>
+            <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span class="chip chip-soft">Iscrizioni per i soci</span>
+                <x-attivita-prezzo :attivita="$item" :utente="auth()->user()" variante="riga" />
+            </p>
         @endif
     </div>
 </a>

@@ -9,7 +9,7 @@
                         <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7" /></svg>
                     </span>
                     <p class="mt-5"><span class="chip chip-navy">Tessera valida</span></p>
-                    <h1 class="mt-4 text-3xl font-bold tracking-[-0.03em]">{{ $socio->name }}</h1>
+                    <h1 class="mt-4 text-3xl font-bold tracking-[-0.03em]">{{ $nomeMascherato }}</h1>
                     <p class="mt-2 text-cral-navy-soft">è un socio attivo del CRAL.</p>
                     <p class="mt-4 text-sm font-semibold text-cral-navy-soft">Tessera n. {{ $socio->numero_tessera }}</p>
                 @else

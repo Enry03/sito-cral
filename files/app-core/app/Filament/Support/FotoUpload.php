@@ -15,6 +15,8 @@ class FotoUpload
     {
         return FileUpload::make($nome)
             ->image()
+            // Solo formati fotografici: niente SVG (può contenere script) né altri file travestiti.
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
             ->maxSize(8192)
             ->directory($cartella)
             ->imageResizeMode('contain')

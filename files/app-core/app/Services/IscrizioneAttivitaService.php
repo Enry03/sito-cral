@@ -30,19 +30,20 @@ class IscrizioneAttivitaService
      *
      * Se l'attività ha domande nel modulo di iscrizione, le risposte (già validate
      * dal controller, nella forma codice => risposta) vengono salvate con l'iscrizione.
-     * L'importo è quello che spetta alla persona: la quota ridotta se è socio CRAL.
+     * L'importo è quello che spetta alla persona (quota ridotta se è socio CRAL) e il pagamento
+     * è obbligatorio: con una quota da pagare serve scegliere subito come pagarla.
      *
      * @param  array<string, mixed>  $risposte
      *
      * @throws OperazioneNonConsentita
      */
-    public function iscrivi(User $utente, Attivita $attivita, array $risposte = []): IscrizioneAttivita
+    public function iscrivi(User $utente, Attivita $attivita, array $risposte = [], ?string $metodo = null): IscrizioneAttivita
     {
         if (! $utente->haAccessoSito()) {
             throw new OperazioneNonConsentita('Per iscriverti a un\'attività serve un account approvato.');
         }
 
-        $iscrizione = DB::transaction(function () use ($utente, $attivita, $risposte) {
+        $iscrizione = DB::transaction(function () use ($utente, $attivita, $risposte, $metodo) {
             // Si rilegge l'attività bloccandola: i posti si contano senza che
             // nessun altro possa iscriversi nello stesso istante.
             $attivita = Attivita::whereKey($attivita->getKey())->lockForUpdate()->firstOrFail();
@@ -74,13 +75,20 @@ class IscrizioneAttivitaService
             }
 
             $importo = $attivita->prezzoPer($utente);
+            $dovuto = $importo !== null && $importo > 0;
+
+            // La quota è obbligatoria: non ci si iscrive senza aver scelto come pagarla.
+            if ($dovuto && ! in_array($metodo, IscrizioneAttivita::metodiAmmessi(), true)) {
+                throw new OperazioneNonConsentita('Per iscriverti scegli come pagare la quota.');
+            }
 
             return IscrizioneAttivita::create([
                 'user_id' => $utente->id,
                 'attivita_id' => $attivita->id,
                 'stato' => IscrizioneAttivita::CONFERMATA,
                 'gestita_il' => now(),
-                'importo' => $importo !== null && $importo > 0 ? $importo : null,
+                'importo' => $dovuto ? $importo : null,
+                'metodo_pagamento' => $dovuto ? $metodo : null,
                 'risposte' => $date ?: null,
             ]);
         });

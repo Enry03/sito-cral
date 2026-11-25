@@ -70,6 +70,12 @@ class Attivita extends Model
 
     protected static function booted(): void
     {
+        static::saved(function (Attivita $attivita) {
+            if ($attivita->wasChanged(['prezzo', 'prezzo_soci'])) {
+                $attivita->riallineaImporti($attivita->getPrevious());
+            }
+        });
+
         static::saving(function (Attivita $attivita) {
             if (empty($attivita->slug)) {
                 $attivita->slug = Str::slug($attivita->titolo).'-'.Str::random(6);
@@ -412,11 +418,55 @@ class Attivita extends Model
      */
     public function prezzoPer(?User $utente): ?float
     {
-        if (! $this->haPrezzo()) {
+        return self::prezzoPerValori($utente, $this->prezzo, $this->prezzo_soci);
+    }
+
+    /**
+     * Come prezzoPer(), ma con quote date (serve per sapere quanto spettava con i
+     * prezzi di prima, quando l'amministratore li cambia).
+     *
+     * @param  numeric|null  $prezzo  quota intera (non soci)
+     * @param  numeric|null  $prezzoSoci  quota ridotta dei soci
+     */
+    public static function prezzoPerValori(?User $utente, $prezzo, $prezzoSoci): ?float
+    {
+        if ($prezzo === null || (float) $prezzo <= 0) {
             return null;
         }
 
-        return $utente?->isSocioCral() ? $this->prezzoPerSoci() : $this->prezzoNonSoci();
+        $ridotta = $prezzoSoci !== null && (float) $prezzoSoci < (float) $prezzo ? (float) $prezzoSoci : (float) $prezzo;
+
+        return $utente?->isSocioCral() ? $ridotta : (float) $prezzo;
+    }
+
+    /**
+     * Quando l'amministratore cambia le quote, chi è già iscritto e non ha ancora
+     * pagato (né dichiarato di aver pagato) paga la quota nuova che gli spetta. Le
+     * quote cambiate a mano per una singola persona (sconti, esenzioni) restano.
+     *
+     * @param  array<string, mixed>  $prima  valori precedenti degli attributi cambiati
+     */
+    public function riallineaImporti(array $prima): void
+    {
+        // Un attributo cambiato che non compare tra i valori precedenti era vuoto.
+        $cambiati = $this->getChanges();
+        $vecchioPrezzo = array_key_exists('prezzo', $cambiati) ? ($prima['prezzo'] ?? null) : $this->prezzo;
+        $vecchioSoci = array_key_exists('prezzo_soci', $cambiati) ? ($prima['prezzo_soci'] ?? null) : $this->prezzo_soci;
+
+        $normalizza = fn ($importo): ?float => $importo !== null && (float) $importo > 0 ? round((float) $importo, 2) : null;
+
+        $this->iscrizioni()
+            ->confermate()
+            ->where('pagato', false)
+            ->whereNull('pagamento_dichiarato_il')
+            ->with('user')
+            ->each(function (IscrizioneAttivita $iscrizione) use ($vecchioPrezzo, $vecchioSoci, $normalizza) {
+                $eraPrevista = $normalizza(self::prezzoPerValori($iscrizione->user, $vecchioPrezzo, $vecchioSoci));
+
+                if ($normalizza($iscrizione->importo) === $eraPrevista) {
+                    $iscrizione->update(['importo' => $normalizza($this->prezzoPer($iscrizione->user))]);
+                }
+            });
     }
 
     /** Quanto si risparmia essendo soci. */

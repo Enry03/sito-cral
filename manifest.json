@@ -1,5 +1,5 @@
 {
-    "generato": "2026-11-19T11:55:14+01:00",
+    "generato": "2026-11-25T14:28:28+01:00",
     "file": {
         "app-core/app/Filament/Pages/ModificaDatiAzienda.php": {
             "size": 6026,
@@ -158,16 +158,16 @@
             "sha256": "9e2d7fd272d6266a8c0704a4657531aeab8b196d0aa35fbe057f7be394c4261c"
         },
         "app-core/app/Filament/Support/FotoUpload.php": {
-            "size": 781,
-            "sha256": "042243492235fad2eb1eaedba03ed97bb6296b0a3771e1339d4ba2456351fc6f"
+            "size": 972,
+            "sha256": "a23f4d46face6f2f5663d85a0eb71e62b46138adf132afbd439d93dd3351268b"
         },
         "app-core/app/Http/Controllers/AccountController.php": {
             "size": 1980,
             "sha256": "5ddb6ffc14e51011bc1a9d36b8c0ac43395a8d7f9698bfb726033149f1e4de9e"
         },
         "app-core/app/Http/Controllers/AttivitaController.php": {
-            "size": 5093,
-            "sha256": "6a6b48dea67f61cf7c1636d85910ff37a5cdbcff7b80b50e7fa4ec0c29bae6b0"
+            "size": 5877,
+            "sha256": "518698180bd990ee9f900b6ba0269b81c4c4accd3f0168b4c76e074224380170"
         },
         "app-core/app/Http/Controllers/Auth/AuthenticatedSessionController.php": {
             "size": 1038,
@@ -238,8 +238,8 @@
             "sha256": "0ec695ea1a18cc1881179c7d0f8838e70f2f035a95acb9c9b7c968ed06e728cf"
         },
         "app-core/app/Http/Controllers/PaypalIpnController.php": {
-            "size": 5820,
-            "sha256": "eba21dc2fe281d74233271d26129e4b4cf525d69cdbb7845b71ed33870402761"
+            "size": 8356,
+            "sha256": "7f8fe53970004510fc580b2dd9b32946110d19375caf4f0ee65f5fd04eb46578"
         },
         "app-core/app/Http/Controllers/ProfileController.php": {
             "size": 1416,
@@ -250,8 +250,8 @@
             "sha256": "0bfdee95c52f3e3c598542bfcc943e7a14ccacf7e275a359e97a55a4a3e62181"
         },
         "app-core/app/Http/Controllers/TesseraVerificaController.php": {
-            "size": 310,
-            "sha256": "231b46dcac6ba52d369fdc74d6236d500e7610c23be506d590276abbc54d7ea2"
+            "size": 1410,
+            "sha256": "88921d1e1040608093bf8fa369248301c331842f4cb71d435f8df07b887829b2"
         },
         "app-core/app/Http/Middleware/EnsureSocioAttivo.php": {
             "size": 444,
@@ -262,8 +262,8 @@
             "sha256": "c2a2c4c6dd5897e8969586f6a5c08a6f70bc523727fe780d1e94bbcb207fb2ea"
         },
         "app-core/app/Http/Middleware/SecurityHeaders.php": {
-            "size": 776,
-            "sha256": "64806a8ad1eda9ea35c3597d96e370ef2e17a21b082986b8dc508dd44bc64a0d"
+            "size": 1274,
+            "sha256": "afc5921abcb818542a53d1f5de7fe7e18e2859232e634dd29afe616d9a390c61"
         },
         "app-core/app/Http/Requests/Auth/LoginRequest.php": {
             "size": 2206,
@@ -310,8 +310,8 @@
             "sha256": "b69dbc366996436479461e3c9f07750eb65342fa0dacfcad5272404f90b2537e"
         },
         "app-core/app/Models/Attivita.php": {
-            "size": 20033,
-            "sha256": "64e8febb4e6020b790a7947d17880457f3c9682f905f11b54c124f4a945026d1"
+            "size": 22381,
+            "sha256": "2955a0f30db846f196dbb97e55269f94a9a049d2a4ddea79e2272de810f1cf15"
         },
         "app-core/app/Models/Convenzione.php": {
             "size": 3785,
@@ -370,8 +370,8 @@
             "sha256": "6a09813f86d8bb5ca6678dc11a78e3149aef1189cec8a18c22dd428d16e1a029"
         },
         "app-core/app/Services/IscrizioneAttivitaService.php": {
-            "size": 12450,
-            "sha256": "01800467f56e73d765a80b3603f8e2ab6c472d622e4d3530d58bf2e9b8af4cb1"
+            "size": 12972,
+            "sha256": "1fefcde31ab20ab8ad6e2db664ca5152522ab522b34299092b803316ded9f3e0"
         },
         "app-core/app/Services/LibraryThingImporter.php": {
             "size": 10723,
@@ -392,6 +392,10 @@
         "app-core/app/Services/TesseraCard.php": {
             "size": 4773,
             "sha256": "7544ced618186f1f965176c37a232de81c94862c2640baf8a2ab4467c86cd801"
+        },
+        "app-core/app/Support/HtmlSicuro.php": {
+            "size": 1292,
+            "sha256": "c93ee819d7d2bd5edef1a7f5dc160fd005af98c59b749e8ae2582a9f6324622a"
         },
         "app-core/app/Support/Iban.php": {
             "size": 1378,
@@ -533,9 +537,13 @@
             "size": 1289,
             "sha256": "6b820ba855f4b13096e5197a25d1d26c641561eaa6456010d9cbf95063f9dfc3"
         },
+        "app-core/database/migrations/2026_11_25_100000_riallinea_quote_iscrizioni_attivita.php": {
+            "size": 1794,
+            "sha256": "2201a2ffe5055babe87a4dd2e64285a5c6878c99899506c319022ea25693a731"
+        },
         "app-core/database/post-aggiornamento.php": {
-            "size": 9247,
-            "sha256": "ee18c7c430acdc7f45f2982e75ead8221a8ce89bfdde7eb795fb406b98beaca3"
+            "size": 11982,
+            "sha256": "b1ee326b391efa382c483ff2d0133c28d1ccb84fb47ffc5be2989cbf422cdaa2"
         },
         "app-core/lang/it.json": {
             "size": 3006,
@@ -562,8 +570,8 @@
             "sha256": "ca5726c7b8a02637d3aebda9d949778b181b90908331802e53ed8a5048c45305"
         },
         "app-core/resources/views/attivita/show.blade.php": {
-            "size": 20406,
-            "sha256": "38dd0585e6e1e47d2973cddd100a5610aea3c814d6b26d1e7a0b5e6fb6d9d1c8"
+            "size": 21467,
+            "sha256": "98db065f5f8baa0d552770dd005643a010d99849f699acdfaf7b4b6285de267e"
         },
         "app-core/resources/views/auth/confirm-password.blade.php": {
             "size": 741,
@@ -597,17 +605,21 @@
             "size": 5062,
             "sha256": "655a1955a9afdb07cfd5eeacf468e734e2ddb2f91868565ea16f36e14c4f8907"
         },
+        "app-core/resources/views/components/attivita-metodo.blade.php": {
+            "size": 2475,
+            "sha256": "8e7e4c43ce67dae562a49bdc472b42965274b3c6225b9ca3c25526bb7febec36"
+        },
         "app-core/resources/views/components/attivita-pagamento.blade.php": {
             "size": 6898,
             "sha256": "8e6d46e89b2c809cb964b66a2ec717f0e4a339bc308e146ff780e6f105d148e7"
         },
         "app-core/resources/views/components/attivita-prezzo.blade.php": {
-            "size": 3368,
-            "sha256": "e302eeca5664de78c72a26fad1233e9f660b930276ea2c39a246106e19f08494"
+            "size": 5091,
+            "sha256": "2d4aee61bcc14ea60832d8b1cd59484c1e367e1d0e02476074472aea0fd2d382"
         },
         "app-core/resources/views/components/attivita/card.blade.php": {
-            "size": 2398,
-            "sha256": "05b264827438cbe902a7dc9a7e6b93492228c8fdafe07624bf58a9bbecd0dfcb"
+            "size": 2569,
+            "sha256": "a51b82ac1f9411df3621372d2136c9a24db84c67b30fc97fb99a26a3b79a9bc6"
         },
         "app-core/resources/views/components/auth-session-status.blade.php": {
             "size": 146,
@@ -806,8 +818,8 @@
             "sha256": "6b6039d20473078180688c085347f53042f02caecfeee0b66c2767729988fa08"
         },
         "app-core/resources/views/tessera/verifica.blade.php": {
-            "size": 2113,
-            "sha256": "f0611e3c687f9d14011e2b8304e9a6dcbff7bb53b8d26dab9c5597971f2b55c9"
+            "size": 2116,
+            "sha256": "bbf951625ab66cf116c9ecb30d07a43ca18488a18d74d60df1b94b5eaa74b0c7"
         },
         "app-core/resources/views/vendor/pagination/tailwind.blade.php": {
             "size": 2091,
@@ -822,20 +834,20 @@
             "sha256": "9adccc33e7dd400683e434774077c7fdb2f299c5712cedf16a43fdf56f2850fa"
         },
         "app-core/routes/web.php": {
-            "size": 6742,
-            "sha256": "4f6e846969b60eeb58a7cae3fd3bd64662af1ecb5eff5876781aca772fcd5fa4"
+            "size": 6771,
+            "sha256": "7894c04c14b52efa378561332e838d18ef27b2afb2e8e065fe0bb18a17c0cd3e"
+        },
+        "build/assets/app-BwATJi5z.css": {
+            "size": 70789,
+            "sha256": "5288396363edfa8c79fab2b586ff2693d95c183d62b701be878f746c8e84ff14"
         },
         "build/assets/app-D1HP7bxF.js": {
             "size": 56216,
             "sha256": "bf9e851264ba1e52be49428c6a1798d8d080a4174ea3a27573c7d9eff51d9e7e"
         },
-        "build/assets/app-DcRdEblX.css": {
-            "size": 70725,
-            "sha256": "0f8587d9e71a28f35b39ad738b8c2b67f4680a77b78d93bbd9231efa529dffb5"
-        },
         "build/manifest.json": {
             "size": 331,
-            "sha256": "0c5dd115de83dfb65fbeb08cf1c5b625f1eeab65a8d616c894286b37fa5e86a1"
+            "sha256": "a04a4eb54a2cb46af4796409588a0f80c6ce8b7a9210be28c242989fd33e01af"
         },
         "favicon.ico": {
             "size": 0,

@@ -40,7 +40,7 @@ Route::get('/convenzioni/{slug}', [ConvenzioneController::class, 'show'])->name(
 // Notifica automatica di PayPal: arriva da PayPal, non da un utente (niente login né CSRF).
 Route::post('/paypal/ipn', PaypalIpnController::class)->middleware('throttle:60,1')->name('paypal.ipn');
 
-Route::get('/tessera/{numeroTessera}', [TesseraVerificaController::class, 'show'])->name('tessera.verifica');
+Route::get('/tessera/{numeroTessera}', [TesseraVerificaController::class, 'show'])->middleware('throttle:30,1')->name('tessera.verifica');
 
 Route::get('/privacy-policy', function () {
     return view('privacy');

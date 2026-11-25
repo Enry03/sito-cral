@@ -46,13 +46,23 @@ class PaypalIpnController extends Controller
         $corpo = $request->getContent();
         $dati = $request->all();
 
-        if (! $this->verificataDaPaypal($corpo)) {
-            Log::warning('Notifica PayPal non verificata, ignorata.');
+        // Un pagamento stornato (rimborso, contestazione) non è più incassato.
+        if (in_array($dati['payment_status'] ?? '', ['Refunded', 'Reversed'], true)) {
+            $this->registraStorno($dati, $corpo);
 
             return;
         }
 
+        // Prima i controlli che non costano nulla: chi manda notifiche inventate non deve
+        // far partire una richiesta verso PayPal per ognuna.
         if (($dati['payment_status'] ?? '') !== 'Completed') {
+            return;
+        }
+
+        $transazione = (string) ($dati['txn_id'] ?? '');
+        $custom = (string) ($dati['custom'] ?? '');
+
+        if ($transazione === '' || strlen($transazione) > 64 || ! preg_match('/^(iscrizione|tessera)-\d{1,12}$/', $custom)) {
             return;
         }
 
@@ -61,18 +71,18 @@ class PaypalIpnController extends Controller
 
         if ($contoAtteso === '' || $contoRicevente !== $contoAtteso
             || strtoupper((string) ($dati['mc_currency'] ?? '')) !== strtoupper((string) config('cral.paypal.valuta'))) {
-            Log::warning('Notifica PayPal con conto o valuta non corretti, ignorata.', ['txn' => $dati['txn_id'] ?? null]);
+            Log::warning('Notifica PayPal con conto o valuta non corretti, ignorata.', ['txn' => $transazione]);
 
             return;
         }
 
-        $transazione = (string) ($dati['txn_id'] ?? '');
-        $custom = (string) ($dati['custom'] ?? '');
+        if (! $this->verificataDaPaypal($corpo)) {
+            Log::warning('Notifica PayPal non verificata, ignorata.');
+
+            return;
+        }
+
         $importo = (float) ($dati['mc_gross'] ?? 0);
-
-        if ($transazione === '') {
-            return;
-        }
 
         if (preg_match('/^iscrizione-(\d+)$/', $custom, $m)) {
             $this->registraIscrizione((int) $m[1], $transazione, $importo);
@@ -149,6 +159,50 @@ class PaypalIpnController extends Controller
             Mail::to(config('mail.admin_address'))->send(new PagamentoIscrizioneSegnalato($iscrizione->load(['user', 'attivita'])));
         } catch (\Throwable $e) {
             Log::warning('Invio email pagamento PayPal attività fallito: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Rimborso o contestazione di un pagamento già registrato: la quota dell'attività
+     * torna "da pagare" e gli amministratori vengono avvisati. Per la tessera si avvisa
+     * soltanto: decide l'amministratore cosa fare.
+     *
+     * @param  array<string, mixed>  $dati
+     */
+    private function registraStorno(array $dati, string $corpo): void
+    {
+        $originale = (string) ($dati['parent_txn_id'] ?? '');
+        $contoAtteso = strtolower((string) app(\App\Services\DatiAzienda::class)->paypalEmail());
+
+        if ($originale === '' || strlen($originale) > 64 || $contoAtteso === ''
+            || strtolower((string) ($dati['receiver_email'] ?? $dati['business'] ?? '')) !== $contoAtteso
+            || ! $this->verificataDaPaypal($corpo)) {
+            return;
+        }
+
+        $descrizione = null;
+
+        $iscrizione = IscrizioneAttivita::where('paypal_txn_id', $originale)->first();
+
+        if ($iscrizione && $iscrizione->pagato) {
+            $iscrizione->update(['pagato' => false, 'pagato_il' => null]);
+            $descrizione = 'La quota di "'.$iscrizione->attivita?->titolo.'" pagata da '.$iscrizione->user?->name.' è stata '.($dati['payment_status'] === 'Refunded' ? 'rimborsata' : 'contestata').' su PayPal: ora risulta di nuovo da pagare.';
+        } elseif ($utente = User::where('paypal_txn_id', $originale)->first()) {
+            $descrizione = 'La quota di tessera pagata da '.$utente->name.' è stata '.($dati['payment_status'] === 'Refunded' ? 'rimborsata' : 'contestata').' su PayPal. Controlla la sua tessera dal pannello.';
+        }
+
+        if ($descrizione === null) {
+            return;
+        }
+
+        Log::warning('Storno PayPal registrato.', ['txn' => $originale]);
+
+        try {
+            Mail::raw($descrizione."
+
+Operazione PayPal: ".$originale, fn ($mail) => $mail->to(config('mail.admin_address'))->subject('Pagamento PayPal stornato'));
+        } catch (\Throwable $e) {
+            Log::warning('Invio email storno PayPal fallito: '.$e->getMessage());
         }
     }
 

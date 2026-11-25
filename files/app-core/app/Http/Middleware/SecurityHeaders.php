@@ -17,6 +17,14 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
+        // Regole che non possono rompere il sito: niente <base> o <object> iniettati, il sito
+        // non si incorpora in altre pagine e i moduli possono inviare i dati solo al sito
+        // stesso o a PayPal (il pulsante "Paga con PayPal").
+        $response->headers->set(
+            'Content-Security-Policy',
+            "base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self' https://www.paypal.com https://paypal.com https://www.sandbox.paypal.com"
+        );
+
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }

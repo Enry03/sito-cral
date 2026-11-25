@@ -1,4 +1,4 @@
-<x-public-layout :title="$attivita->titolo.' — CRAL'" :description="\Illuminate\Support\Str::limit(strip_tags((string) $attivita->descrizione), 150)">
+<x-public-layout :title="$attivita->titolo.' — CRAL'" :description="\Illuminate\Support\Str::limit(strip_tags(\App\Support\HtmlSicuro::pulisci($attivita->descrizione)), 150)">
 
     {{-- ===================================================== copertina --}}
     <section class="navy-bg relative isolate overflow-hidden text-white">
@@ -56,7 +56,7 @@
         @endif
 
         <div class="prose-cral mt-10" data-reveal>
-            {!! $attivita->descrizione !!}
+            {!! \App\Support\HtmlSicuro::pulisci($attivita->descrizione) !!}
         </div>
 
         {{-- Iscrizione all'attività: chi ha un account approvato si iscrive da solo, subito, e poi paga la quota se c'è --}}
@@ -108,7 +108,14 @@
                                     @if($iscrizione->pagato)
                                         <p class="mt-2 text-white/75">Quota saldata{{ $iscrizione->metodo_pagamento === 'paypal' ? ' con PayPal' : '' }}. Grazie!</p>
                                     @elseif($iscrizione->richiedePagamento())
-                                        <x-attivita-pagamento :iscrizione="$iscrizione" class="mt-5" />
+                                        <p class="mt-3 rounded-2xl bg-cral-red px-4 py-3 text-sm font-semibold" role="status">
+                                            @if($iscrizione->pagamento_dichiarato_il)
+                                                Stiamo verificando il tuo pagamento: l'iscrizione sarà completa appena la quota risulta pagata.
+                                            @else
+                                                L'iscrizione è completa solo con il pagamento: paga la quota qui sotto.
+                                            @endif
+                                        </p>
+                                        <x-attivita-pagamento :iscrizione="$iscrizione" class="mt-4" />
                                     @endif
 
                                     {{-- Informazioni per chi è iscritto: ritrovo, cosa portare... --}}
@@ -180,17 +187,21 @@
                                             <x-attivita-campi :attivita="$attivita" class="mt-5" />
                                         </div>
                                     @endif
-                                    <button type="submit" class="btn btn-primary {{ $attivita->haCampi() ? 'mt-6' : '' }}">
+                                    @if(($miaQuota ?? 0) > 0)
+                                        <x-attivita-metodo :importo="$miaQuotaLabel" class="{{ $attivita->haCampi() ? 'mt-4' : '' }}" />
+                                    @endif
+                                    <button type="submit" class="btn btn-primary {{ $attivita->haCampi() || ($miaQuota ?? 0) > 0 ? 'mt-6' : '' }}">
                                         Iscriviti{{ $miaQuotaLabel ? ' — '.$miaQuotaLabel : '' }}
                                     </button>
                                 </form>
                                 <p class="mt-3 max-w-md text-sm text-white/70">
-                                    @if($attivita->haCampi())
+                                    @if(($miaQuota ?? 0) > 0)
+                                        Il pagamento della quota è obbligatorio: scegli come pagare e ti iscrivi subito, senza conferma dell'amministratore.
+                                    @elseif($attivita->haCampi())
                                         Compili il modulo e sei iscritto: non serve nessuna conferma.
                                     @else
                                         Un clic e sei iscritto: non devi compilare nulla e non serve nessuna conferma.
                                     @endif
-                                    {{ ($miaQuota ?? 0) > 0 ? 'Subito dopo scegli come pagare la quota.' : '' }}
                                 </p>
                             @else
                                 <p class="text-lg font-bold">

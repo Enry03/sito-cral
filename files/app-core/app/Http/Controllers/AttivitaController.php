@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attivita;
+use App\Models\IscrizioneAttivita;
 use App\Services\IscrizioneAttivitaService;
 use App\Services\OperazioneNonConsentita;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AttivitaController extends Controller
 {
@@ -66,14 +68,15 @@ class AttivitaController extends Controller
     {
         $attivita = Attivita::where('slug', $slug)->where('pubblicata', true)->firstOrFail();
 
-        $validatore = $this->validatoreRisposte($request, $attivita);
+        $dovuto = ($attivita->prezzoPer($request->user()) ?? 0) > 0;
+        $validatore = $this->validatoreRisposte($request, $attivita, $dovuto);
 
         if ($validatore->fails()) {
             return redirect(route('attivita.show', $slug).'#iscrizione')->withErrors($validatore)->withInput();
         }
 
         try {
-            $iscrizione = $servizio->iscrivi($request->user(), $attivita, $this->risposte($request));
+            $iscrizione = $servizio->iscrivi($request->user(), $attivita, $this->risposte($request), $dovuto ? $request->string('metodo_pagamento')->toString() : null);
         } catch (OperazioneNonConsentita $e) {
             return redirect(route('attivita.show', $slug).'#iscrizione')->with('errore_iscrizione', $e->getMessage())->withInput();
         }
@@ -81,7 +84,7 @@ class AttivitaController extends Controller
         return redirect(route('attivita.show', $slug).'#iscrizione')->with(
             'ok_iscrizione',
             $iscrizione->richiedePagamento()
-                ? 'Sei iscritto! Ora scegli come pagare la quota.'
+                ? 'Sei iscritto! Ora completa il pagamento della quota.'
                 : 'Sei iscritto! Ti aspettiamo.',
         );
     }
@@ -119,9 +122,21 @@ class AttivitaController extends Controller
         return redirect(route('attivita.show', $slug).'#iscrizione')->with('ok_iscrizione', 'La tua iscrizione è stata annullata.');
     }
 
-    private function validatoreRisposte(Request $request, Attivita $attivita)
+    private function validatoreRisposte(Request $request, Attivita $attivita, bool $conPagamento = false)
     {
-        return Validator::make(['risposte' => $this->risposte($request)], $attivita->regoleRisposte(), [], $attivita->nomiRisposte());
+        $dati = ['risposte' => $this->risposte($request), 'metodo_pagamento' => $request->input('metodo_pagamento')];
+        $regole = $attivita->regoleRisposte();
+        $messaggi = [];
+
+        if ($conPagamento) {
+            $regole['metodo_pagamento'] = ['required', 'string', Rule::in(IscrizioneAttivita::metodiAmmessi())];
+            $messaggi = [
+                'metodo_pagamento.required' => 'Scegli come vuoi pagare la quota: il pagamento è obbligatorio.',
+                'metodo_pagamento.in' => 'Questo modo di pagamento non è disponibile.',
+            ];
+        }
+
+        return Validator::make($dati, $regole, $messaggi, $attivita->nomiRisposte());
     }
 
     /** @return array<string, mixed> */
