@@ -42,11 +42,14 @@ class AttivitaController extends Controller
 
         $fotoSingole = $attivita->foto()->pubbliche()->sciolte()->oldest()->get();
 
+        // Sulla pagina dell'attività stanno gli album principali (anche i macro-album): i
+        // sotto-album si aprono da lì.
         $album = $attivita->album()
-            ->has('foto')
+            ->principali()
+            ->visibili()
             ->with('copertinaFoto')
-            ->withCount('foto')
-            ->oldest()
+            ->conConteggi()
+            ->cronologici('asc')
             ->get();
 
         $utente = $request->user();

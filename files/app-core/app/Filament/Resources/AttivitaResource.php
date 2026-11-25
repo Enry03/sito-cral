@@ -265,7 +265,7 @@ class AttivitaResource extends Resource
                             ->maxLength(255),
                         Forms\Components\Select::make('album_esistente')
                             ->label('Aggiungi a un album esistente di questa attività')
-                            ->options(fn (?Attivita $record) => $record ? $record->album()->pluck('titolo', 'id') : [])
+                            ->options(fn (?Attivita $record) => $record ? $record->album()->with('macroAlbum')->get()->sortBy(fn ($a) => $a->titoloCompleto())->mapWithKeys(fn ($a) => [$a->id => $a->titoloCompleto()]) : [])
                             ->placeholder('Nessuno')
                             ->visible(fn (?Attivita $record): bool => $record !== null && $record->album()->exists()),
                         Forms\Components\Toggle::make('crea_album')

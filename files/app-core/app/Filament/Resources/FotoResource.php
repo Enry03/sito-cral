@@ -32,6 +32,12 @@ class FotoResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    /** Nel menu c'è "Galleria foto" con gli album; le foto singole e l'archivio si aprono da lì. */
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form

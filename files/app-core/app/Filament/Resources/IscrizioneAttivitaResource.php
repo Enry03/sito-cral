@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IscrizioneAttivitaResource\Pages;
+use App\Filament\Support\CampiIscrizioneForm;
 use App\Models\Attivita;
 use App\Models\IscrizioneAttivita;
 use App\Services\IscrizioneAttivitaService;
@@ -139,6 +140,25 @@ class IscrizioneAttivitaResource extends Resource
     {
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['user', 'attivita']))
+            // Le iscrizioni sono divise per attività (si aprono e si chiudono): le attività più recenti per prime.
+            ->groups([
+                Tables\Grouping\Group::make('attivita_id')
+                    ->label('Attività')
+                    ->collapsible()
+                    ->getKeyFromRecordUsing(fn (IscrizioneAttivita $record): string => (string) $record->attivita_id)
+                    ->getTitleFromRecordUsing(fn (IscrizioneAttivita $record): string => $record->attivita->titolo)
+                    ->getDescriptionFromRecordUsing(fn (IscrizioneAttivita $record): ?string => collect([
+                        $record->attivita->periodoLabel(),
+                        $record->attivita->iscrittiCount().' iscritti'.($record->attivita->posti_max ? ' su '.$record->attivita->posti_max : ''),
+                    ])->filter()->implode(' · '))
+                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('attivita_id', 'desc')),
+                Tables\Grouping\Group::make('user_id')
+                    ->label('Persona')
+                    ->collapsible()
+                    ->getTitleFromRecordUsing(fn (IscrizioneAttivita $record): string => $record->user->name),
+            ])
+            ->defaultGroup('attivita_id')
+            ->groupingSettingsInDropdownOnDesktop()
             ->defaultSort('created_at', 'desc')
             ->emptyStateHeading('Nessuna iscrizione')
             ->emptyStateDescription('Quando qualcuno si iscrive a un\'attività lo vedrai qui, con lo stato del pagamento.')
@@ -191,6 +211,7 @@ class IscrizioneAttivitaResource extends Resource
             ])
             ->actions([
                 static::azioneSegnaPagato(),
+                static::azioneModificaRisposte(),
                 static::azioneConferma(),
                 static::azioneRifiuta(),
             ]);
@@ -216,6 +237,29 @@ class IscrizioneAttivitaResource extends Resource
                 app(IscrizioneAttivitaService::class)->segnaPagata($record);
 
                 Notification::make()->success()->title('Quota segnata come pagata: '.$record->user->name)->send();
+            });
+    }
+
+    /**
+     * Compila o corregge al posto della persona le risposte al modulo di iscrizione (ruolo in
+     * campo, taglia...). Si vede solo per le attività che hanno un modulo.
+     */
+    public static function azioneModificaRisposte(): Tables\Actions\Action
+    {
+        return Tables\Actions\Action::make('modificaRisposte')
+            ->label('Risposte')
+            ->icon('heroicon-o-pencil-square')
+            ->color('gray')
+            ->visible(fn (IscrizioneAttivita $record): bool => $record->attivita->haCampi())
+            ->modalHeading(fn (IscrizioneAttivita $record): string => 'Risposte di '.$record->user->name)
+            ->modalDescription(fn (IscrizioneAttivita $record): string => 'Modulo di iscrizione a "'.$record->attivita->titolo.'". La persona le vede e può cambiarle anche dalla pagina dell\'attività.')
+            ->modalSubmitActionLabel('Salva le risposte')
+            ->form(fn (IscrizioneAttivita $record): array => CampiIscrizioneForm::componenti($record->attivita))
+            ->fillForm(fn (IscrizioneAttivita $record): array => CampiIscrizioneForm::statoDa($record))
+            ->action(function (IscrizioneAttivita $record, array $data) {
+                $record->update(['risposte' => $record->attivita->preparaRisposte((array) ($data[CampiIscrizioneForm::STATO] ?? [])) ?: null]);
+
+                Notification::make()->success()->title('Risposte salvate: '.$record->user->name)->send();
             });
     }
 

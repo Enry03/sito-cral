@@ -13,7 +13,8 @@ use Filament\Tables\Table;
 
 /**
  * Aziende e negozi convenzionati: l'amministratore le aggiunge, modifica ed
- * elimina da qui. Sul sito le vedono solo i soci con tessera.
+ * elimina da qui. Sul sito le vedono gli iscritti, i soci e gli amministratori,
+ * divise per categoria.
  */
 class ConvenzioneResource extends Resource
 {
@@ -36,12 +37,19 @@ class ConvenzioneResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make('Azienda o negozio')
-                    ->description('Le convenzioni le vedono solo i soci CRAL con tessera, non gli iscritti al solo sito né gli ospiti.')
+                    ->description('Le convenzioni le vedono gli iscritti al sito, i soci CRAL e gli amministratori. Chi non ha un account vede solo un\'anteprima sfocata.')
                     ->schema([
                         Forms\Components\TextInput::make('nome')
                             ->label('Nome dell\'azienda o del negozio')
                             ->required()
                             ->maxLength(255)
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('categoria')
+                            ->label('Categoria')
+                            ->placeholder('Es. Food & Beverage')
+                            ->helperText('La scegli tu: scrivi una categoria nuova o una di quelle già usate (te le suggerisce). Sul sito le convenzioni con la stessa categoria stanno insieme. Vuota = "Altre convenzioni".')
+                            ->datalist(fn (): array => Convenzione::categorie())
+                            ->maxLength(100)
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('convenzione')
                             ->label('Che convenzione abbiamo')
@@ -68,7 +76,7 @@ class ConvenzioneResource extends Resource
                             })
                             ->columnSpanFull(),
                         Forms\Components\Toggle::make('pubblicata')
-                            ->label('Visibile ai soci')
+                            ->label('Visibile sul sito')
                             ->helperText('Disattivala per nascondere la convenzione senza eliminarla.')
                             ->default(true)
                             ->inline(false),
@@ -92,6 +100,16 @@ class ConvenzioneResource extends Resource
     {
         return $table
             ->defaultSort('nome')
+            ->groups([
+                Tables\Grouping\Group::make('categoria')
+                    ->label('Categoria')
+                    ->collapsible()
+                    ->getTitleFromRecordUsing(fn (Convenzione $record): string => $record->categoria ?? 'Altre convenzioni (senza categoria)')
+                    ->orderQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query, string $direction) => $query
+                        ->orderByRaw('case when categoria is null then 1 else 0 end')
+                        ->orderBy('categoria', $direction)),
+            ])
+            ->defaultGroup('categoria')
             ->columns([
                 Tables\Columns\ImageColumn::make('copertina')
                     ->label('')
@@ -100,6 +118,11 @@ class ConvenzioneResource extends Resource
                 Tables\Columns\TextColumn::make('nome')
                     ->searchable()
                     ->weight('bold'),
+                Tables\Columns\TextColumn::make('categoria')
+                    ->label('Categoria')
+                    ->badge()
+                    ->placeholder('—')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('convenzione')
                     ->label('Convenzione')
                     ->limit(60)
@@ -112,6 +135,14 @@ class ConvenzioneResource extends Resource
                     ->label('Visibile')
                     ->boolean(),
             ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('categoria')
+                    ->label('Categoria')
+                    ->options(fn (): array => array_combine(Convenzione::categorie(), Convenzione::categorie()) ?: [])
+                    ->searchable(),
+                Tables\Filters\TernaryFilter::make('pubblicata')
+                    ->label('Visibile sul sito'),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
@@ -123,7 +154,7 @@ class ConvenzioneResource extends Resource
                 ]),
             ])
             ->emptyStateHeading('Nessuna convenzione')
-            ->emptyStateDescription('Aggiungi le aziende e i negozi convenzionati: i soci con tessera le vedranno nella sezione Convenzioni del sito.')
+            ->emptyStateDescription('Aggiungi le aziende e i negozi convenzionati: gli iscritti e i soci le vedranno, divise per categoria, nella sezione Convenzioni del sito.')
             ->emptyStateIcon('heroicon-o-tag');
     }
 

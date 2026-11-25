@@ -78,10 +78,13 @@ class User extends Authenticatable implements FilamentUser
     protected static function booted(): void
     {
         static::saving(function (User $user) {
-            // La tessera spetta solo ai soci CRAL approvati: si genera quando un
+            // La tessera spetta ai soci CRAL approvati e agli amministratori: si genera quando un
             // account diventa "socio" e "attivo" (sia per una nuova iscrizione
             // approvata, sia per un iscritto promosso a socio) e non ce l'ha ancora.
-            if ($user->ruolo === 'socio' && $user->stato_iscrizione === 'attivo' && empty($user->numero_tessera)) {
+            // Gli amministratori sono anche soci: hanno la loro tessera come tutti gli altri.
+            $haDirittoAllaTessera = ($user->ruolo === 'socio' && $user->stato_iscrizione === 'attivo') || $user->ruolo === 'admin';
+
+            if ($haDirittoAllaTessera && empty($user->numero_tessera)) {
                 $user->numero_tessera = static::prossimoNumeroTessera();
 
                 if (empty($user->data_iscrizione)) {

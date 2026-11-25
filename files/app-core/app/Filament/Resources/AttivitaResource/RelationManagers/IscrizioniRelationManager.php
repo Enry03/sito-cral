@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AttivitaResource\RelationManagers;
 
 use App\Filament\Resources\IscrizioneAttivitaResource;
+use App\Filament\Support\CampiIscrizioneForm;
 use App\Models\IscrizioneAttivita;
 use App\Models\User;
 use App\Services\EsportaIscrizioni;
@@ -37,7 +38,7 @@ class IscrizioniRelationManager extends RelationManager
                         $set('importo', $quota !== null && $quota > 0 ? $quota : null);
                     })
                     ->options(fn () => User::query()
-                        ->whereIn('ruolo', ['socio', 'iscritto'])
+                        ->whereIn('ruolo', ['socio', 'iscritto', 'admin'])
                         ->where('stato_iscrizione', 'attivo')
                         ->orderBy('name')
                         ->get()
@@ -61,6 +62,9 @@ class IscrizioniRelationManager extends RelationManager
                 Forms\Components\Toggle::make('pagato')
                     ->label('Quota pagata')
                     ->inline(false),
+                // Le scelte e i testi del modulo di iscrizione (ruolo in campo, taglia...): si
+                // compilano qui al posto della persona e si correggono quando serve.
+                ...CampiIscrizioneForm::componenti($this->getOwnerRecord()),
             ]);
     }
 
@@ -112,7 +116,7 @@ class IscrizioniRelationManager extends RelationManager
                         $data['pagato_il'] = ! empty($data['pagato']) ? now() : null;
                         $data['gestita_il'] = now();
 
-                        return $data;
+                        return CampiIscrizioneForm::applica($data, $this->getOwnerRecord());
                     }),
             ])
             ->actions([
@@ -120,10 +124,11 @@ class IscrizioniRelationManager extends RelationManager
                 IscrizioneAttivitaResource::azioneConferma(),
                 IscrizioneAttivitaResource::azioneRifiuta(),
                 Tables\Actions\EditAction::make()
+                    ->mutateRecordDataUsing(fn (array $data, IscrizioneAttivita $record): array => $data + CampiIscrizioneForm::statoDa($record))
                     ->mutateFormDataUsing(function (array $data, IscrizioneAttivita $record): array {
                         $data['pagato_il'] = ! empty($data['pagato']) ? ($record->pagato_il ?? now()) : null;
 
-                        return $data;
+                        return CampiIscrizioneForm::applica($data, $this->getOwnerRecord());
                     }),
                 Tables\Actions\DeleteAction::make()
                     ->modalDescription('La persona non risulterà più iscritta a questa attività.'),

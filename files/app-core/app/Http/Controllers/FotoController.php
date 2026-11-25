@@ -15,10 +15,12 @@ class FotoController extends Controller
 {
     public function index(Request $request)
     {
-        $album = Album::has('foto')
+        // Sulla galleria stanno gli album principali; i sotto-album si aprono dal loro macro-album.
+        $album = Album::principali()
+            ->visibili()
             ->with('copertinaFoto')
-            ->withCount('foto')
-            ->latest()
+            ->conConteggi()
+            ->cronologici('desc')
             ->get();
 
         $foto = Foto::pubbliche()->sciolte()->with('attivita')->latest()->paginate(24);
@@ -32,12 +34,25 @@ class FotoController extends Controller
 
     public function album(Request $request, Album $album)
     {
-        abort_unless($album->foto()->exists(), 404);
+        abort_unless(Album::visibili()->whereKey($album->getKey())->exists(), 404);
 
-        $album->load(['foto' => fn ($query) => $query->oldest(), 'attivita']);
+        $album->load([
+            'foto' => fn ($query) => $query->oldest(),
+            'attivita',
+            'macroAlbum',
+        ]);
+
+        // Gli album contenuti: solo quelli che hanno foto da mostrare.
+        $sottoAlbum = $album->sottoAlbum()
+            ->has('foto')
+            ->with('copertinaFoto')
+            ->conConteggi()
+            ->cronologici('asc')
+            ->get();
 
         return view('foto.album', [
             'album' => $album,
+            'sottoAlbum' => $sottoAlbum,
             'accesso' => (bool) $request->user()?->puoVedereFoto(),
         ]);
     }

@@ -120,10 +120,10 @@ class GalleriaService
      *
      * @param  array<int, int|string>  $fotoIds
      */
-    public function creaAlbum(string $titolo, ?int $attivitaId = null, array $fotoIds = []): Album
+    public function creaAlbum(string $titolo, ?int $attivitaId = null, array $fotoIds = [], ?int $macroAlbumId = null, ?string $dataAlbum = null): Album
     {
-        return DB::transaction(function () use ($titolo, $attivitaId, $fotoIds) {
-            $album = Album::create(['titolo' => $titolo, 'attivita_id' => $attivitaId]);
+        return DB::transaction(function () use ($titolo, $attivitaId, $fotoIds, $macroAlbumId, $dataAlbum) {
+            $album = Album::create(['titolo' => $titolo, 'attivita_id' => $attivitaId, 'parent_id' => $macroAlbumId, 'data_album' => $dataAlbum]);
 
             $this->spostaInAlbum($album, $fotoIds);
 
@@ -162,7 +162,7 @@ class GalleriaService
         }
 
         if ($numeroFoto > 1 || $creaAlbum) {
-            return $attivita->album()->oldest()->first()
+            return $attivita->album()->principali()->oldest()->first()
                 ?? Album::create(['titolo' => $attivita->titolo, 'attivita_id' => $attivita->id]);
         }
 

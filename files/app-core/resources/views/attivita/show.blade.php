@@ -238,22 +238,9 @@
                 @endunless
 
                 @if($album->isNotEmpty())
-                    <div class="mt-6 grid gap-5 sm:grid-cols-2" data-stagger="0.08">
+                    <div class="mt-6 grid gap-x-5 gap-y-10 sm:grid-cols-2" data-stagger="0.08">
                         @foreach($album as $albumItem)
-                            <a href="{{ route('foto.album', $albumItem) }}" class="group block" data-reveal @unless($accesso) data-foto-riservata @endunless>
-                                <div class="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-cral-navy shadow-soft transition duration-500 ease-premium group-hover:-translate-y-1 group-hover:shadow-lift">
-                                    <img src="{{ $accesso ? $albumItem->copertinaFoto->miniaturaUrl() : $albumItem->copertinaFoto->sfocataUrl() }}" alt="" loading="lazy" decoding="async"
-                                        class="h-full w-full object-cover transition duration-[900ms] ease-premium group-hover:scale-110 {{ $accesso ? '' : 'scale-110 blur-md' }}">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-cral-navy-deep/70 via-transparent to-transparent"></div>
-                                    <span class="chip chip-glass absolute left-4 top-4">Album · {{ $albumItem->foto_count }} foto</span>
-                                    @unless($accesso)
-                                        <span class="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-cral-red shadow-soft" aria-hidden="true">
-                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>
-                                        </span>
-                                    @endunless
-                                </div>
-                                <h3 class="mt-4 px-1 font-display text-xl font-bold tracking-tight transition group-hover:text-cral-red">{{ $albumItem->titolo }}</h3>
-                            </a>
+                            <x-album-card :album="$albumItem" :accesso="$accesso" :lazy="$loop->index > 1" />
                         @endforeach
                     </div>
                 @endif

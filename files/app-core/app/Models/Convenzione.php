@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * Azienda o negozio convenzionato con il CRAL. Le convenzioni le vedono solo i
- * soci con tessera (vedi ConvenzioneController).
+ * Azienda o negozio convenzionato con il CRAL. Le convenzioni le vedono gli iscritti
+ * al sito, i soci e gli amministratori; gli ospiti vedono solo un'anteprima sfocata
+ * (vedi ConvenzioneController). La categoria (es. "Food & Beverage") la sceglie
+ * l'amministratore: sul sito le convenzioni sono raggruppate per categoria.
  */
 class Convenzione extends Model
 {
@@ -17,6 +19,7 @@ class Convenzione extends Model
 
     protected $fillable = [
         'nome',
+        'categoria',
         'slug',
         'convenzione',
         'descrizione',
@@ -37,6 +40,24 @@ class Convenzione extends Model
     {
         // L'indirizzo della pagina si crea una volta sola dal nome e poi non cambia
         // più (anche se il nome viene corretto), così i link restano validi.
+        // La categoria si scrive a mano: spazi ripuliti e, se esiste già con maiuscole
+        // diverse ("food" / "Food"), si usa quella esistente, così il gruppo è uno solo.
+        static::saving(function (Convenzione $convenzione) {
+            $categoria = trim(preg_replace('/\s+/u', ' ', (string) $convenzione->categoria));
+
+            if ($categoria === '') {
+                $convenzione->categoria = null;
+
+                return;
+            }
+
+            $categoria = Str::limit($categoria, 100, '');
+
+            $convenzione->categoria = static::whereRaw('lower(categoria) = ?', [mb_strtolower($categoria)])
+                ->whereKeyNot($convenzione->getKey() ?? 0)
+                ->value('categoria') ?? $categoria;
+        });
+
         static::creating(function (Convenzione $convenzione) {
             if (blank($convenzione->slug)) {
                 $convenzione->slug = static::slugUnico($convenzione->nome);
@@ -81,6 +102,21 @@ class Convenzione extends Model
                 report($e);
             }
         }
+    }
+
+    /**
+     * Le categorie già usate, in ordine alfabetico (per i suggerimenti nel pannello).
+     *
+     * @return array<int, string>
+     */
+    public static function categorie(): array
+    {
+        return static::query()
+            ->whereNotNull('categoria')
+            ->distinct()
+            ->orderBy('categoria')
+            ->pluck('categoria')
+            ->all();
     }
 
     public function scopePubblicate($query)
