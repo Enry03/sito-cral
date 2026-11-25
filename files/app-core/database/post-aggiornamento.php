@@ -122,16 +122,23 @@ if (! \App\Services\ImageOptimizer::disponibile() || ! function_exists('exif_rea
     $foto = \App\Models\Foto::query()->pluck('percorso')->unique()->values();
     $copertine = \App\Models\Attivita::query()->whereNotNull('immagine_copertina')->pluck('immagine_copertina')->unique()->values();
 
+    // Le foto già provate (e che non si riescono ad alleggerire di più: già ottimizzate o in un
+    // formato non supportato) si ricordano, così l'aggiornamento arriva a "FATTO" invece di
+    // riprovarle all'infinito. Se il file cambia, si riprova.
+    $registroProvate = $app->storagePath('framework/foto-gia-provate.json');
+    $provate = is_file($registroProvate) ? (array) json_decode((string) file_get_contents($registroProvate), true) : [];
+    $firma = fn (string $percorso): string => $percorso.'|'.(int) @filesize($disco->path($percorso)).'|'.(int) @filemtime($disco->path($percorso));
+
     $daFare = [];
 
     foreach ($foto as $percorso) {
-        if (! $disco->exists(\App\Services\ImageOptimizer::percorsoMiniatura($percorso)) && $disco->exists($percorso)) {
+        if (! $disco->exists(\App\Services\ImageOptimizer::percorsoMiniatura($percorso)) && $disco->exists($percorso) && ! in_array($firma($percorso), $provate, true)) {
             $daFare[] = [$percorso, true];
         }
     }
 
     foreach ($copertine as $percorso) {
-        if (! $disco->exists($percorso)) {
+        if (! $disco->exists($percorso) || in_array($firma($percorso), $provate, true)) {
             continue;
         }
 
@@ -161,6 +168,11 @@ if (! \App\Services\ImageOptimizer::disponibile() || ! function_exists('exif_rea
         clearstatcache(true, $disco->path($percorso));
         $risparmiati += max(0, $prima - (int) filesize($disco->path($percorso)));
         $elaborate++;
+        $provate[] = $firma($percorso);
+    }
+
+    if ($elaborate > 0) {
+        @file_put_contents($registroProvate, json_encode(array_values(array_unique(array_slice($provate, -2000)))));
     }
 
     $restanti = count($daFare) - $elaborate;

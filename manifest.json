@@ -1,5 +1,5 @@
 {
-    "generato": "2026-11-25T14:28:28+01:00",
+    "generato": "2026-11-25T14:34:31+01:00",
     "file": {
         "app-core/app/Filament/Pages/ModificaDatiAzienda.php": {
             "size": 6026,
@@ -542,8 +542,8 @@
             "sha256": "2201a2ffe5055babe87a4dd2e64285a5c6878c99899506c319022ea25693a731"
         },
         "app-core/database/post-aggiornamento.php": {
-            "size": 11982,
-            "sha256": "b1ee326b391efa382c483ff2d0133c28d1ccb84fb47ffc5be2989cbf422cdaa2"
+            "size": 12884,
+            "sha256": "6453f496a7ec7d25f1478fcdcde101ce5111e9517b8c9d68f609ce5b61cfa760"
         },
         "app-core/lang/it.json": {
             "size": 3006,
